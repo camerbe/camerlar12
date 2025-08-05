@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,6 +48,20 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+        ];
+    }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    public function getJWTCustomClaims(): array
+    {
+        return [
+            'role' => $this->role,
+            'fullName' => $this->nom . ' ' . $this->prenom,
+            'expires_in' => Carbon::now()->addMinutes(30)->format('d/m/Y H:i:s'),
+            'userId'=>$this->id
+
         ];
     }
 }
