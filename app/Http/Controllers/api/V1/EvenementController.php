@@ -118,7 +118,7 @@ class EvenementController extends Controller
                     $media->delete();
                 }
                 $parsedUrl = parse_url($image);
-                dd($parsedUrl);
+                //dd($parsedUrl);
                 $path = $parsedUrl['path'];
                 $filePath = str_replace(url('/storage'), 'storage', $path);
                 $absolutePath = public_path($filePath);
