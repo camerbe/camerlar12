@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\api\V1\EvenementController;
+use App\Http\Controllers\api\V1\PubController;
 use App\Http\Controllers\api\V1\PubDimensionController;
 use App\Http\Controllers\api\V1\TypePubController;
 use App\Http\Controllers\api\V1\VideoController;
@@ -16,12 +18,19 @@ Route::prefix('videos')->controller(VideoController::class)->group(function () {
     Route::get('videocamer', 'getCamerVideo');
     Route::get('videofind/{videofind}', 'findAll');
 });
-
+Route::prefix('pubs')->controller(PubController::class)->group(function () {
+   Route::get('pubcached/{pubcached}', 'getCachedPub');
+});
+Route::prefix('events')->controller(EvenementController::class)->group(function () {
+   Route::get('list', 'getCachedEvenements');
+});
 
 Route::apiResources([
-    "videos"=>VideoController::class,
-    "typepubs"=>TypePubController::class,
+    "events"=>EvenementController::class,
+    "pubs"=>PubController::class,
     "pubdimensions"=>PubDimensionController::class,
+    "typepubs"=>TypePubController::class,
+    "videos"=>VideoController::class,
 
 ]);
 
