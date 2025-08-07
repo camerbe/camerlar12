@@ -3,23 +3,29 @@
 namespace App\Providers;
 
 use App\IRepository\IEvenementRepository;
+use App\IRepository\IPaysRepository;
 use App\IRepository\IPubRepository;
 use App\IRepository\IPubType;
 
 use App\IRepository\IRepository;
 use App\IRepository\IRubriqueRepository;
+use App\IRepository\ISousrubriqueRepository;
 use App\IRepository\IVideoRepository;
 use App\Repositories\EvenementRepository;
+use App\Repositories\PaysRepository;
 use App\Repositories\PubDimensionRepository;
 use App\Repositories\PubRepository;
 use App\Repositories\PubTypeRepository;
 use App\Repositories\RubriqueRepository;
+use App\Repositories\SousRubriqueRepository;
 use App\Repositories\VideoRepository;
 use App\Services\EvenementService;
+use App\Services\PaysService;
 use App\Services\PubDimensionService;
 use App\Services\PubService;
 use App\Services\PubTypeService;
 use App\Services\RubriqueService;
+use App\Services\SousrubriqueService;
 use App\Services\VideoService;
 use Illuminate\Support\ServiceProvider;
 
@@ -54,6 +60,14 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->when(RubriqueService::class)
             ->needs(IRubriqueRepository::class)
             ->give(RubriqueRepository::class);
+
+        $this->app->when(SousRubriqueService::class)
+            ->needs(ISousRubriqueRepository::class)
+            ->give(SousRubriqueRepository::class);
+
+        $this->app->when(PaysService::class)
+            ->needs(IPaysRepository::class)
+            ->give(PaysRepository::class);
     }
 
     /**

@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\api\V1\EvenementController;
+use App\Http\Controllers\api\V1\PaysController;
 use App\Http\Controllers\api\V1\PubController;
 use App\Http\Controllers\api\V1\PubDimensionController;
 use App\Http\Controllers\api\V1\RubriqueController;
+use App\Http\Controllers\api\V1\SousRubriqueController;
 use App\Http\Controllers\api\V1\TypePubController;
 use App\Http\Controllers\api\V1\VideoController;
 use Illuminate\Http\Request;
@@ -28,12 +30,23 @@ Route::prefix('events')->controller(EvenementController::class)->group(function 
 Route::prefix('rubriques')->controller(RubriqueController::class)->group(function () {
    Route::get('list', 'allRubrique');
 });
+Route::prefix('sousrubriques')->controller(SousRubriqueController::class)->group(function () {
+   Route::get('/rubrique/list', 'allRubrique');
+   Route::get('list', 'allSousRubrique');
+});
+Route::prefix('pays')->controller(PaysController::class)->group(function () {
+   Route::get('/camer/list', 'articleCameroon');
+   Route::get('/other/list', 'articleNonCameroon');
+   Route::get('list', 'allPays');
+});
 
 Route::apiResources([
     "events"=>EvenementController::class,
+    "pays"=>PaysController::class,
     "pubs"=>PubController::class,
     "pubdimensions"=>PubDimensionController::class,
     "rubriques"=>RubriqueController::class,
+    "sousrubriques"=>SousRubriqueController::class,
     "typepubs"=>TypePubController::class,
     "videos"=>VideoController::class,
 

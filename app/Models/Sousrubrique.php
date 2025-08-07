@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sousrubrique extends Model
 {
@@ -17,5 +18,8 @@ class Sousrubrique extends Model
     public function rubrique():BelongsTo
     {
         return $this->belongsTo(Rubrique::class,'fkrubrique');
+    }
+    public function articlesousrubriques():HasMany{
+        return $this->hasMany(Article::class,'fksousrubrique');
     }
 }

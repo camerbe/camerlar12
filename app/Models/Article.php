@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -20,6 +21,17 @@ class Article extends Model implements HasMedia
         'fkuser','dateparution','dateref','fksousrubrique','auteur','source',
         'keyword','image','imagewidth','imageheight','slug',
     ];
+
+    public function countries():BelongsTo{
+        return $this->belongsTo(Pays::class,'fkpays');
+    }
+    public function rubrique():BelongsTo{
+        return $this->belongsTo(Rubrique::class,'fkrubrique');
+    }
+    public function sousrubrique():BelongsTo{
+        return $this->belongsTo(Sousrubrique::class,'fksousrubrique');
+    }
+
     protected $with = ['media'];
     public function registerMediaCollections():void{
         $this->addMediaCollection('article')

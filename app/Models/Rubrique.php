@@ -17,4 +17,7 @@ class Rubrique extends Model
     {
         return $this->hasMany(Sousrubrique::class,'fkrubrique');
     }
+    public function articlerubriques():HasMany{
+        return $this->hasMany(Article::class,'fkrubrique');
+    }
 }
