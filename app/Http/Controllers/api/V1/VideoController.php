@@ -142,12 +142,17 @@ class VideoController extends Controller
                 'success'=>true,
                 'data'=>$videos,
                 'message'=>"Vidéos aléatoire",
-            ],Response::HTTP_CREATED);
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    'X-Response-Time' => now(),
+                ]);
         }
         return response()->json([
             "sucess"=>false,
             "message"=>"Vidéos aléatoire inexistante"
-        ],Response::HTTP_NO_CONTENT);
+        ],Response::HTTP_NOT_FOUND);
     }
     public function getCamerVideo(){
         $videos=$this->videoService->getCamerVideo();
@@ -156,12 +161,17 @@ class VideoController extends Controller
                 'success'=>true,
                 'data'=>$videos,
                 'message'=>"Vidéos camer",
-            ],Response::HTTP_CREATED);
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    'X-Response-Time' => now(),
+                ]);
         }
         return response()->json([
             "sucess"=>false,
             "message"=>"Vidéos camer inexistante"
-        ],Response::HTTP_NO_CONTENT);
+        ],Response::HTTP_NOT_FOUND);
     }
     public function findAll($camer='Camer')
     {
@@ -172,7 +182,19 @@ class VideoController extends Controller
                 'success'=>true,
                 'data'=>$videos,
                 'message'=>"Liste des vidéos"
-            ],Response::HTTP_OK);
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    'Content-Language' => 'fr',
+                    'X-Robots-Tag' => 'index, follow',
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($videos)),
+                    'X-Response-Time' => now(),
+                ]);
         }
         return response()->json([
             "success"=>false,

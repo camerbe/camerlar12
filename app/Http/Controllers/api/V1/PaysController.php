@@ -123,7 +123,18 @@ class PaysController extends Controller
                 'success'=>true,
                 'data'=>$countries,
                 'message'=>"Liste des pays"
-            ],Response::HTTP_OK);
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($countries)),
+                    'X-Response-Time' => now(),
+                ]);
         }
         return response()->json([
             "success"=>false,
@@ -138,7 +149,9 @@ class PaysController extends Controller
                 'success'=>true,
                 'data'=>$countries,
                 'message'=>"Liste des pays"
-            ],Response::HTTP_OK);
+            ],Response::HTTP_OK)
+                ->header('Cache-Control', 'public, max-age=3600')
+                ->header('Content-Type',  'application/json');
         }
         return response()->json([
             "success"=>false,

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\V1\ArticleController;
 use App\Http\Controllers\api\V1\EvenementController;
 use App\Http\Controllers\api\V1\PaysController;
 use App\Http\Controllers\api\V1\PubController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\api\V1\PubDimensionController;
 use App\Http\Controllers\api\V1\RubriqueController;
 use App\Http\Controllers\api\V1\SousRubriqueController;
 use App\Http\Controllers\api\V1\TypePubController;
+use App\Http\Controllers\api\V1\UserController;
 use App\Http\Controllers\api\V1\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +17,16 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 })->middleware('auth:sanctum');*/
 
+Route::prefix('articles')->controller(ArticleController::class)->group(function () {
+    Route::get('{slug}', 'getArticleBySlug');
+    Route::get('adm/{adm}', 'getArticleByUser');
+    Route::get('news/{news}', 'getArticles');
+    Route::get('period/{period}', 'getTopNews');
+    Route::get('same/{same}', 'getSameRubrique');
+    Route::get('most/{rubrique}/{pays}', 'getMostReadRubriqueByCountry');
+    Route::get('most/plus', 'getMostReaded');
+    Route::get('auteur/{auteur}', 'getNewsByAuthor');
+});
 Route::prefix('videos')->controller(VideoController::class)->group(function () {
     Route::get('videosem', 'getVideoWeek');
     Route::get('videorandom', 'getRandomVideo');
@@ -41,6 +53,7 @@ Route::prefix('pays')->controller(PaysController::class)->group(function () {
 });
 
 Route::apiResources([
+    "articles"=>ArticleController::class,
     "events"=>EvenementController::class,
     "pays"=>PaysController::class,
     "pubs"=>PubController::class,
@@ -48,6 +61,7 @@ Route::apiResources([
     "rubriques"=>RubriqueController::class,
     "sousrubriques"=>SousRubriqueController::class,
     "typepubs"=>TypePubController::class,
+    "users"=>UserController::class,
     "videos"=>VideoController::class,
 
 ]);

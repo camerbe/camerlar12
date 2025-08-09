@@ -181,7 +181,18 @@ class EvenementController extends Controller
                 'success'=>true,
                 'data'=>$events,
                 'message'=>"évènements trouvés"
-            ],Response::HTTP_OK);
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($events)),
+                    'X-Response-Time' => now(),
+                ]);
         }
         return response()->json([
             "success"=>false,
