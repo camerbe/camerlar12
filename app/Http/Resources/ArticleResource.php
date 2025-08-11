@@ -32,7 +32,27 @@ class ArticleResource extends JsonResource
             'countries'=>$this->countries,
             'rubrique'=>$this->rubrique,
             'sousrubrique'=>$this->sousrubrique,
+            'images' => $this->getFeaturedImage(),
 
         ];
+    }
+
+    protected function getFeaturedImage()
+    {
+        if (!$this->relationLoaded('media')) {
+            return null;
+        }
+        /*$media =$article->getMedia('article')->where('name',$article->slug)->first();*/
+        $media = $this->getFirstMedia('article');
+        //$media = $this->getMedia('article')->where('name',$this->slug)->first();
+        //dd($media);
+        return $media ? [
+            'url' => $media->getUrl(),
+            'mime_type' => $media->mime_type,
+            'extension' => $media->extension,
+            'width'=>$media->getCustomProperty('width'),
+            'height'=>$media->getCustomProperty('height'),
+            'meta' => $media->custom_properties
+        ] : null;
     }
 }

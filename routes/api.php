@@ -26,6 +26,7 @@ Route::prefix('articles')->controller(ArticleController::class)->group(function 
     Route::get('most/{rubrique}/{pays}', 'getMostReadRubriqueByCountry');
     Route::get('most/plus', 'getMostReaded');
     Route::get('auteur/{auteur}', 'getNewsByAuthor');
+
 });
 Route::prefix('videos')->controller(VideoController::class)->group(function () {
     Route::get('videosem', 'getVideoWeek');

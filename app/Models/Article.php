@@ -28,16 +28,19 @@ class Article extends Model implements HasMedia
             Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
+            Cache::forget('news_for_rss');
         });
         Article::updated(function ($model) {
             Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
+            Cache::forget('news_for_rss');
         });
         Article::deleted(function ($model) {
             Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
+            Cache::forget('news_for_rss');
         });
     }
     public function countries():BelongsTo{

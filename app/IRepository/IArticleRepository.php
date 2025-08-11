@@ -14,4 +14,5 @@ interface IArticleRepository
     function getMostReadRubriqueByCountry($fksousrubrique,$fkpays);
     function getMostReaded();
     function getNewsByAuthor($author);
+    function getNewsForRss();
 }

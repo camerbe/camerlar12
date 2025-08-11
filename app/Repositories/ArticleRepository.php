@@ -332,4 +332,15 @@ class ArticleRepository extends Repository implements IArticleRepository
         return ArticleResource::collection($articles);
     }
 
+    /**
+     * @return mixed
+     */
+    function getNewsForRss()
+    {
+        $cacheKey = "news_for_rss";
+        $articles= Cache::remember($cacheKey, now()->addDay(), function ()  {
+            return $this->index();
+        });
+        return ArticleResource::collection($articles);
+    }
 }

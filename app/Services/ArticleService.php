@@ -62,5 +62,8 @@ class ArticleService
     function getNewsByAuthor($author){
         return $this->articleRepository->getNewsByAuthor($author);
     }
+    function getNewsForRss(){
+        return $this->articleRepository->getNewsForRss();
+    }
 
 }

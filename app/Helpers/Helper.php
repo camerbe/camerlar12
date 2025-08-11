@@ -20,6 +20,12 @@ class Helper
         }
         return $html;
     }
+    public static function parseImageUrl(string $string): string
+    {
+        return str_starts_with($string, 'http')
+            ? $string
+            : 'https://www.camer.be' . $string;
+    }
     public static function getPubDimension($dimension){
         $data=[
             728=>1,
@@ -29,7 +35,7 @@ class Helper
     }
     public static function getTitle($pays, $titre, $country){
         if ($pays === $country) {
-            return stripos($titre, $pays) !== false ? $titre : "$pays :: $titre";
+            return stripos($titre, $pays) !== false ? $titre :  "$pays :: $titre";
         }
         $hasPays = stripos($titre, $pays) !== false;
         $hasCountry = stripos($titre, $country) !== false;
