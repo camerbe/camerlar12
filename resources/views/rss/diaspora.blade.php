@@ -10,12 +10,12 @@
         <description><![CDATA[Camer.be, l'info claire et nette]]></description>
         <language>fr-FR</language>
         <lastBuildDate>{{ now()->toRssString() }}</lastBuildDate>
-        <atom:link href="{{ url('/') }}/rss/politique" rel="self" type="application/rss+xml" />
+        <atom:link href="{{ url('/') }}/rss/diaspora" rel="self" type="application/rss+xml" />
         <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>
         @foreach($items as $item)
 
                 @php
-                    
+
                     $image= App\Helpers\Helper::extractImgSrc($item->image);
                     $image= App\Helpers\Helper::parseImageUrl($image);
                     $media = $item->getMedia('article')->where('name',$item->slug)->first();

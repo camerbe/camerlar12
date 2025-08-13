@@ -51,5 +51,12 @@ class RssController extends Controller
         $rss = View::make('rss.societe', compact('items'));
         return response($rss, 200)->header('Content-Type', 'application/xml');
     }
+    public function pointdevue(){
+        $items=$this->articleService->getNewsForRss()
+            ->where('sousrubrique.sousrubrique','POINT DE VUE')
+            ->take(20);
+        $rss = View::make('rss.pointdevue', compact('items'));
+        return response($rss, 200)->header('Content-Type', 'application/xml');
+    }
 
 }

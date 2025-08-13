@@ -10,7 +10,7 @@
         <description><![CDATA[Camer.be, l'info claire et nette]]></description>
         <language>fr-FR</language>
         <lastBuildDate>{{ now()->toRssString() }}</lastBuildDate>
-        <atom:link href="{{ url('/') }}/rss/economie" rel="self" type="application/rss+xml" />
+        <atom:link href="{{ url('/') }}/rss/pointdevue" rel="self" type="application/rss+xml" />
         <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>
         @foreach($items as $item)
 
