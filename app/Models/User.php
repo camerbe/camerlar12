@@ -6,6 +6,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -53,7 +54,8 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    public function articles():HasMany{
+    public function articles(): HasMany
+    {
         return $this->hasMany(Article::class,'fkuser');
     }
     public function getJWTIdentifier()
@@ -65,7 +67,7 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
         return [
             'role' => $this->role,
             'fullName' => $this->nom . ' ' . $this->prenom,
-            'expires_in' => Carbon::now()->addMinutes(30)->format('d/m/Y H:i:s'),
+            'expires_in' => Carbon::now()->addMinutes(45)->format('d/m/Y H:i:s'),
             'userId'=>$this->id
 
         ];

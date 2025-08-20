@@ -18,5 +18,11 @@ use Illuminate\Support\Facades\Route;
     Route::get('diaspora', [RssController::class, 'diaspora'])->name('rss.diaspora');
     Route::get('pointdevue', [RssController::class, 'pointdevue'])->name('rss.pointdevue');
     Route::get('/sitemapindex.xml', [SitemapController::class, 'index'])->name('sitemap.index');
-    Route::get('/sitemap.xml', [SitemapArticleController::class, 'article'])->name('sitemap.actualite');
+    Route::get('/sitemap-article.xml', [SitemapController::class, 'article'])->name('sitemap.articles');
+    Route::get('/sitemap-actualites', [SitemapController::class, 'googleNews'])->name('sitemap.actualite');
+    Route::get('/sitemap-politique', [SitemapController::class, 'politique'])->name('sitemap.politique');
+    Route::get('/sitemap-economie', [SitemapController::class, 'economie'])->name('sitemap.economie');
+    Route::get('/sitemap-societe', [SitemapController::class, 'societe'])->name('sitemap.societe');
+    Route::get('/sitemap-diaspora', [SitemapController::class, 'diaspora'])->name('sitemap.diaspora');
+    Route::get('/sitemap-pointdevue', [SitemapController::class, 'pointdevue'])->name('sitemap.pointdevue');
 

@@ -17,6 +17,7 @@
                 $image= App\Helpers\Helper::extractImgSrc($item->image);
                 $image= App\Helpers\Helper::parseImageUrl($image);
                 $media = $item->getMedia('article')->where('name',$item->slug)->first();
+                $auteur=str_replace("&", "et", $item->auteur);
                 //dd($media->getUrl());
                 /*->toMediaCollection('article');
                  $mimeType = $media->mime_type;
@@ -41,7 +42,7 @@
                 <content:encoded><![CDATA[{!! $item->info ?? $item->chapeau !!}]]></content:encoded>
                 <pubDate>{{ \Carbon\Carbon::parse($item->dateparution)->toRssString()}}</pubDate>
                 @if($item->auteur)
-                    <author>{{$item->auteur}}</author>
+                    <author>{{$auteur}}</author>
                 @endif
                 @if($item->sousrubrique)
                     <category>{{ $item->sousrubrique->sousrubrique }}</category>

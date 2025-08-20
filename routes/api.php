@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\V1\ArticleController;
+use App\Http\Controllers\api\V1\AuthController;
 use App\Http\Controllers\api\V1\EvenementController;
 use App\Http\Controllers\api\V1\PaysController;
 use App\Http\Controllers\api\V1\PubController;
@@ -52,18 +53,22 @@ Route::prefix('pays')->controller(PaysController::class)->group(function () {
    Route::get('/other/list', 'articleNonCameroon');
    Route::get('list', 'allPays');
 });
+Route::post('auth/login', [AuthController::class, 'login']);
 
-Route::apiResources([
-    "articles"=>ArticleController::class,
-    "events"=>EvenementController::class,
-    "pays"=>PaysController::class,
-    "pubs"=>PubController::class,
-    "pubdimensions"=>PubDimensionController::class,
-    "rubriques"=>RubriqueController::class,
-    "sousrubriques"=>SousRubriqueController::class,
-    "typepubs"=>TypePubController::class,
-    "users"=>UserController::class,
-    "videos"=>VideoController::class,
+Route::group(['middleware' => 'auth:api'], function (){
+    Route::apiResources([
+        "articles"=>ArticleController::class,
+        "events"=>EvenementController::class,
+        "pays"=>PaysController::class,
+        "pubs"=>PubController::class,
+        "pubdimensions"=>PubDimensionController::class,
+        "rubriques"=>RubriqueController::class,
+        "sousrubriques"=>SousRubriqueController::class,
+        "typepubs"=>TypePubController::class,
+        "users"=>UserController::class,
+        "videos"=>VideoController::class,
 
-]);
+    ]);
+});
+
 
