@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\IRepository\IPaysRepository;
 use App\Models\Pays;
+use Illuminate\Support\Facades\Cache;
 
 class PaysRepository extends Repository implements IPaysRepository
 {
@@ -64,7 +65,11 @@ class PaysRepository extends Repository implements IPaysRepository
      */
     function index()
     {
-       return Pays::orderBy('pays','asc')->get();
+        $cacheKey = "country-cache";
+        return Cache::remember($cacheKey, now()->addDay(), function ()  {
+            return Pays::orderBy('pays','asc')->get();
+        });
+
     }
 
     /**

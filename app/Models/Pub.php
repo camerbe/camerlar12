@@ -27,21 +27,24 @@ class Pub extends Model implements HasMedia
         Pub::created(function ($model){
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
+            Cache::forget('pub-list-cache');
         });
         Pub::updated((function ($model){
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
+            Cache::forget('pub-list-cache');
         }));
         Pub::deleted((function ($model){
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
+            Cache::forget('pub-list-cache');
         }));
     }
     public function dimensions():BelongsTo{
-        return $this->belongsTo(Pubdimension::class);
+        return $this->belongsTo(Pubdimension::class,'fkdimension');
     }
     public function typepubs():BelongsTo {
-        return $this->belongsTo(Pubtype::class);
+        return $this->belongsTo(Pubtype::class,'fktype');
     }
     public function registerMediaCollections():void{
         $this->addMediaCollection('pub')

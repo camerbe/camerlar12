@@ -193,4 +193,34 @@ class PubController extends Controller
             "message"=>"Pub inexistant"
         ],Response::HTTP_NOT_FOUND);
     }
+    public function getPubDimension()
+    {
+        $pubs=$this->pubService->getPubDimension();
+        if ($pubs){
+            return response()->json([
+                'success'=>true,
+                'data'=>$pubs,
+                'message'=>"Liste des dimensions"
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas de dimensions trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }public function getPubType()
+    {
+        dd('toto');
+        $pubs=$this->pubService->getPubType();
+        if ($pubs){
+            return response()->json([
+                'success'=>true,
+                'data'=>$pubs,
+                'message'=>"Liste des typepubs"
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas de typepubs trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }
 }

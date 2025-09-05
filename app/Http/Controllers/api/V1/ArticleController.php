@@ -47,7 +47,9 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+
         $article=$this->articleService->create($request->all());
+        //dd($article);
         $image=Helper::extractImgSrc($request->image);
         if ($article){
             if($image){
@@ -385,6 +387,58 @@ class ArticleController extends Controller
         return response()->json([
             "success"=>false,
             "message"=>"Pas d'article trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }
+    public function allCountries()
+    {
+        $countries=$this->articleService->allCountries();
+        if ($countries){
+            return response()->json([
+                'success'=>true,
+                'data'=>$countries,
+                'message'=>"Liste des pays"
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($countries)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas de pays trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }
+    public function allRubrique()
+    {
+        $rubriques=$this->articleService->allRubrique();
+        if ($rubriques){
+            return response()->json([
+                'success'=>true,
+                'data'=>$rubriques,
+                'message'=>"Liste des rubriques"
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($rubriques)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas de rubrique trouvé"
         ],Response::HTTP_NOT_FOUND);
     }
 }

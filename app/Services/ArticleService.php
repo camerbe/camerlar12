@@ -65,5 +65,11 @@ class ArticleService
     function getNewsForRss(){
         return $this->articleRepository->getNewsForRss();
     }
+    function allCountries(){
+        return $this->articleRepository->allCountries();
+    }
+    function allRubrique(){
+        return $this->articleRepository->allRubrique();
+    }
 
 }

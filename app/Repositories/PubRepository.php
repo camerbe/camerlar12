@@ -3,13 +3,16 @@
 namespace App\Repositories;
 
 use App\Helpers\Helper;
+use App\Http\Resources\PubResource;
 use App\IRepository\IPubRepository;
 use App\Models\Pub;
+use App\Traits\DimensionAndType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class PubRepository extends Repository implements IPubRepository
 {
+    use DimensionAndType;
     /**
      * @param $model
      */
@@ -68,11 +71,16 @@ class PubRepository extends Repository implements IPubRepository
      */
     function index()
     {
-        return Pub::where('endpubdate','>=', now())->orderBy('endpubdate')
-            ->join('pubtypes','pubtypes.idpubtype','=','pubs.fktype')
-            ->join('pubdimensions','pubdimensions.idpubdimension','=','pubs.fkdimension')
-            ->select('*')
-            ->get();
+        $cacheKey = "pub-list-cache";
+        return Cache::remember($cacheKey, now()->addDay(), function ()  {
+            return  PubResource::collection(
+                Pub::with(['dimensions','typepubs'])
+                ->where('endpubdate','>=', now())
+                ->orderBy('endpubdate')
+                ->get()
+            );
+        });
+
     }
 
     /**
@@ -94,4 +102,22 @@ class PubRepository extends Repository implements IPubRepository
         });
         return Cache::get($cache)->random();
     }
+
+    /**
+     * @return mixed
+     */
+    function getPubDimension()
+    {
+        return $this->getPubDimension();
+    }
+
+    /**
+     * @return mixed
+     */
+    function getPubType()
+    {
+        return $this->getPubType();
+    }
+
+
 }

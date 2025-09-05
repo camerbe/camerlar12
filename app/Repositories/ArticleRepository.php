@@ -8,10 +8,12 @@ use App\IRepository\IArticleRepository;
 use App\Models\Article;
 use App\Models\Evenement;
 use App\Models\Pays;
+use App\Models\Sousrubrique;
 use Carbon\Carbon;
 use Html2Text\Html2Text;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -42,15 +44,18 @@ class ArticleRepository extends Repository implements IArticleRepository
         /*$img = Image::read($image);
         $input['imagewidth']=$img->width();
         $input['imageheight']=$img->height();*/
-        $input['keyword']=Helper::getKeywords($input['keyword']);
+        $input['keyword']= $input['keyword'].','.$input['hashtags'];
         $input['dateparution']=Carbon::parse($input['dateparution'])->format('Y-m-d H:i:s');
         $input['dateref']=$input['dateparution'];
-        [$fksousrubrique, $fkrubrique] = explode(':', $input['fkrubrique']);
-        $input['fksousrubrique']=$fksousrubrique;
-        $input['fkrubrique']=$fkrubrique;
+        //[$fksousrubrique, $fkrubrique] = explode(':', $input['fkrubrique']);
+        //$input['fksousrubrique']=$fksousrubrique;
+        //$input['fkrubrique']=$fkrubrique;
         $input['slug']=Str::slug(Helper::getTitle($bled->pays,$input['titre'],$bled->country),'-') ;
         $input['auteur']=Str::title($input['auteur']);
         $input['source']=Str::title($input['source']);
+        $input['titre']=Helper::guillemets($input['titre']);
+        $cache="Article-By-User-".$input['fkruser'];
+        Cache::forget($cache);
         return parent::create($input);
     }
 
@@ -69,7 +74,7 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function findById($id)
     {
-        return parent::findById($id);
+        return new ArticleResource(parent::findById($id));
 
     }
 
@@ -83,7 +88,7 @@ class ArticleRepository extends Repository implements IArticleRepository
         $current=$this->findById($id);
         $bled=Pays::find($input['fkpays']);
 
-        $input['keyword']=isset($input['keyword']) ? Helper::getKeywords($input['keyword'])
+        $input['keyword']=isset($input['keyword']) ? $input['keyword'].','.$input['hashtags']
             : $current->keyword;
         if(isset($input['dateparution'])){
             $input['dateparution']=Carbon::parse($input['dateparution'])->format('Y-m-d H:i:s');
@@ -98,13 +103,20 @@ class ArticleRepository extends Repository implements IArticleRepository
         }
         if(isset($input['image'])){
             $image=Helper::extractImgSrc($input['image']);
-            $img = Image::read($image);
-            $input['imagewidth']=$img->width();
-            $input['imageheight']=$img->height();
+            $response = Http::get($image);
+            if ($response->successful()){
+                $img = Image::read($response->body());
+                $input['imagewidth']=$img->width();
+                $input['imageheight']=$img->height();
+            }
+
         }
         if(isset($input['titre']) || isset($input['fkpays'])){
             $input['slug']=Str::slug(Helper::getTitle($bled->pays,$input['titre'],$bled->country),'-') ;
         }
+        $input['titre']=Helper::guillemets($input['titre']);
+        $cache="Article-By-User-".$current->fkuser;
+        Cache::forget($cache);
         return parent::update($input, $id);
     }
 
@@ -126,17 +138,15 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticleByUser($user)
     {
-        $cache="Article-By-User";
+        $cache="Article-By-User-".$user;
         $articles= Cache::remember($cache, now()->add(1,'day'), function () use ($user){
             return Article::with(['countries','rubrique','sousrubrique'])
                 ->where('fkuser',$user)
                 ->orderByDesc('dateparution')
-                ->limit(100)
+                ->limit(50)
                 ->get();
         });
         return ArticleResource::collection($articles);
-
-
     }
 
     /**
@@ -343,4 +353,29 @@ class ArticleRepository extends Repository implements IArticleRepository
         });
         return ArticleResource::collection($articles);
     }
+
+    /**
+     * @return mixed
+     */
+    function allCountries()
+    {
+        $cacheKey = "country-cache";
+        return Cache::remember($cacheKey, now()->addDay(), function ()  {
+            return Pays::orderBy('pays','asc')->get();
+        });
+    }
+
+    /**
+     * @return mixed
+     */
+    function allRubrique()
+    {
+        $cacheKey = "sousrubrique-cache";
+        return Cache::remember($cacheKey, now()->addDay(), function ()  {
+            return Sousrubrique::with('rubrique')->orderBy('sousrubriques.sousrubrique','asc')
+                ->join('rubriques','sousrubriques.fkrubrique','=','rubriques.idrubrique')
+                ->select('*')->get();
+        });
+    }
+
 }

@@ -71,7 +71,6 @@ class AuthController extends Controller
         // ✅ Success
         return response()->json([
             'success' => true,
-            'user'    => new UserResource($user) ,
             'token'   => $token,
             'message' => 'Login OK',
         ], Response::HTTP_OK);

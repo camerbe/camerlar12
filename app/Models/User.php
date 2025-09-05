@@ -67,7 +67,7 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
         return [
             'role' => $this->role,
             'fullName' => $this->nom . ' ' . $this->prenom,
-            'expires_in' => Carbon::now()->addMinutes(45)->format('d/m/Y H:i:s'),
+            'expires_in' => Carbon::now()->addMinutes(45)->timestamp,
             'userId'=>$this->id
 
         ];

@@ -24,6 +24,7 @@ class ArticleResource extends JsonResource
             'hit'=>$this->hit,
             'fksousrubrique'=>$this->fksousrubrique,
             'auteur'=>$this->auteur,
+            'fkuser'=>$this->fkuser,
             'source'=>$this->source,
             'keyword'=>$this->keyword,
             'image'=>$this->image,

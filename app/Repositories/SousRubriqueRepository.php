@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\IRepository\ISousrubriqueRepository;
+use App\Models\Pays;
 use App\Models\Rubrique;
 use App\Models\Sousrubrique;
+use Illuminate\Support\Facades\Cache;
 
 class SousRubriqueRepository extends Repository implements ISousrubriqueRepository
 {
@@ -63,9 +65,13 @@ class SousRubriqueRepository extends Repository implements ISousrubriqueReposito
      */
     function index()
     {
-        return Sousrubrique::with('rubrique')->orderBy('sousrubriques.sousrubrique','asc')
-            ->join('rubriques','sousrubriques.fkrubrique','=','rubriques.idrubrique')
-            ->select('*')->get();
+        $cacheKey = "sousrubrique-cache";
+        return Cache::remember($cacheKey, now()->addDay(), function ()  {
+            return Sousrubrique::with('rubrique')->orderBy('sousrubriques.sousrubrique','asc')
+                ->join('rubriques','sousrubriques.fkrubrique','=','rubriques.idrubrique')
+                ->select('*')->get();
+        });
+
     }
 
     /**

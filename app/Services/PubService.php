@@ -30,4 +30,10 @@ class PubService
     function getCachedPub($dimension){
         return $this->pubRepository->getCachedPub($dimension);
     }
+    function getPubDimension(){
+        return $this->pubRepository->getPubDimension();
+    }
+    function getPubType(){
+        return $this->pubRepository->getPubType();
+    }
 }

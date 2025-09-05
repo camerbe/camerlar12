@@ -54,11 +54,13 @@ class Helper
             $item = trim($item);
 
             if (str_contains($item, '#')) {
-                $item = str_replace(' ', '', $item);
                 $item = ucfirst($item);
-            }
 
-            return Str::camel($item);
+            }
+            Str::camel($item);
         }, explode(',', $keywords)));
+    }
+    public static function guillemets(string $text):string {
+        return preg_replace('/"([^"]+)"/u', "«\u{202F}$1\u{202F}»", $text);
     }
 }

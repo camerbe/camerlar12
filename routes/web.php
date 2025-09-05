@@ -26,3 +26,5 @@ use Illuminate\Support\Facades\Route;
     Route::get('/sitemap-diaspora', [SitemapController::class, 'diaspora'])->name('sitemap.diaspora');
     Route::get('/sitemap-pointdevue', [SitemapController::class, 'pointdevue'])->name('sitemap.pointdevue');
 
+
+

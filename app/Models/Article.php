@@ -23,24 +23,37 @@ class Article extends Model implements HasMedia
         'keyword','image','imagewidth','imageheight','slug',
     ];
     protected static function boot(){
+        //$users=User::all();
         parent::boot();
         Article::created(function ($model) {
-            Cache::forget('Article-By-User');
+            //Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
+            /*foreach ($users as $user){
+                $cacheKey = "Article-By-User-".$user;
+                Cache::forget($cacheKey);
+            }*/
         });
-        Article::updated(function ($model) {
-            Cache::forget('Article-By-User');
+        Article::updated(function ($model)  {
+            //Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
+            /*foreach ($users as $user){
+                $cacheKey = "Article-By-User-".$user;
+                Cache::forget($cacheKey);
+            }*/
         });
         Article::deleted(function ($model) {
-            Cache::forget('Article-By-User');
+            //Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
+            /*foreach ($users as $user){
+                $cacheKey = "Article-By-User-".$user;
+                Cache::forget($cacheKey);
+            }*/
         });
     }
     public function countries():BelongsTo{

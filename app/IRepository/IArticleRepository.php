@@ -15,4 +15,7 @@ interface IArticleRepository
     function getMostReaded();
     function getNewsByAuthor($author);
     function getNewsForRss();
+    function allCountries();
+    function allRubrique();
+
 }
