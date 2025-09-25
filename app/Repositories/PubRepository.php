@@ -6,13 +6,16 @@ use App\Helpers\Helper;
 use App\Http\Resources\PubResource;
 use App\IRepository\IPubRepository;
 use App\Models\Pub;
+use App\Models\Pubdimension;
+use App\Models\Pubtype;
 use App\Traits\DimensionAndType;
+use App\Traits\DimensionTypeRubrique;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class PubRepository extends Repository implements IPubRepository
 {
-    use DimensionAndType;
+    use DimensionTypeRubrique;
     /**
      * @param $model
      */
@@ -120,4 +123,20 @@ class PubRepository extends Repository implements IPubRepository
     }
 
 
+    /**
+     * @return mixed
+     */
+    function allPubDimension()
+    {
+        return Pubdimension::orderBy('dimension')->get();
+        //return $this->allPubDimension();
+    }
+
+    /**
+     * @return mixed
+     */
+    function allPubType()
+    {
+        return Pubtype:: orderBy('pubtype', 'asc')->get();
+    }
 }

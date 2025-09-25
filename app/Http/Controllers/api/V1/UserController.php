@@ -116,6 +116,37 @@ class UserController extends Controller
             "message"=>"Erreur lors de la suppression d'un User"
         ],Response::HTTP_NO_CONTENT);
     }
+    public function firstLogin(Request $request){
+        //dd($request->json()->all());
+        $user=$this->userService->firstLogin($request->json()->all());
+        if ($user){
+            return response()->json([
+                'success'=>true,
+                'data'=>$user,
+                'message'=>"User activé",
+            ],Response::HTTP_CREATED);
+        }
+        return response()->json([
+            "sucess"=>false,
+            "message"=>"User non activé"
+        ],Response::HTTP_NO_CONTENT);
+
+    }
+    public function getUserByEmail(string $email)
+    {
+        $user=$this->userService->getUserByEmail($email);
+        if ($user){
+            return response()->json([
+                'success'=>true,
+                'data'=>$user,
+                'message'=>"User trouvé"
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"User inexistant"
+        ],Response::HTTP_NOT_FOUND);
+    }
 
 
 }

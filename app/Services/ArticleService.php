@@ -43,8 +43,8 @@ class ArticleService
     function getArticleBySlug($slug){
         return $this->articleRepository->getArticleBySlug($slug);
     }
-    function getArticles($cmr){
-        return $this->articleRepository->getArticles($cmr);
+    function getArticles(){
+        return $this->articleRepository->getArticles();
     }
     function getTopNews(string $period){
         return $this->articleRepository->getTopNews($period);

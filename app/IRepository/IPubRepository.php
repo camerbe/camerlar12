@@ -6,6 +6,6 @@ interface IPubRepository
 {
     function getCachedPub($dimension);
 
-    function getPubDimension();
-    function getPubType();
+    function allPubDimension();
+    function allPubType();
 }

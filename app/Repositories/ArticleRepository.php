@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Html2Text\Html2Text;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
@@ -206,26 +207,37 @@ class ArticleRepository extends Repository implements IArticleRepository
      * @param $cmr
      * @return mixed
      */
-    function getArticles($cmr = 'CM')
+    function getArticles()
     {
-        $isCmr = ($cmr==='CM');
+        //$isCmr = ($cmr==='CM');
         //Cache::forget('Article-CMR-list');
         //dd($isCmr);
-        //Cache::forget('Article-Other-list');
-        $cache = $isCmr ? 'Article-CMR-list' : 'Article-Other-list';
+       // Cache::forget('Article-Other-list');
+        $cache = 'Article-CMR-list';
         $cacheExpiry = now()->addDay();
 
-        $articles= Cache::remember($cache, $cacheExpiry, function () use ($isCmr) {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+        $articles= Cache::remember($cache, $cacheExpiry, function () {
+            $cmrIds = Article::query()
                 ->where('dateparution', '<=', now())
-                ->when($isCmr,
-                    fn($query) => $query->where('fkpays', 'CM'),
-                    fn($query) => $query->where('fkpays', '<>', 'CM')
-                )
+                ->where('fkpays', 'CM')
                 ->orderByDesc('dateparution')
-                ->limit(100)
+                ->limit(50)
+                ->pluck('idarticle');
+
+            $nonCmrIds = Article::query()
+                ->where('dateparution', '<=', now())
+                ->where('fkpays', '<>', 'CM')
+                ->orderByDesc('dateparution')
+                ->limit(50)
+                ->pluck('idarticle');
+
+            $allIds = $cmrIds->merge($nonCmrIds);
+
+            return Article::with(['countries','rubrique','sousrubrique'])
+                ->whereIn('idarticle', $allIds)
+                ->orderByDesc('dateparution')
                 ->get();
-        });
+            });
         return ArticleResource::collection($articles);
 
     }

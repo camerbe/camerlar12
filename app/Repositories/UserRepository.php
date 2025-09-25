@@ -85,7 +85,42 @@ class UserRepository extends Repository implements IUserRepository
         $current=$this->findById($id);
         $current->password_changed_at=now();
         $current->password=bcrypt($input['password']);
+        if(is_null($current->password_changed_at))
+        {
+            $current->password_changed_at=now();
+            $current->email_verified_at=now();
+        }
         $current->save();
         return new UserResource($current);
+    }
+
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    function firstLogin(array $input)
+    {
+        //dd($input['email']);
+        $user=User::where('email',$input['email'])->first();
+        //$user=new UserResource($user);
+        //dd($user->email_verified_at);
+        if(!$user) return null;
+        if((!is_null($user->password_changed_at) && (!$user) )) return null;
+        $user->password=bcrypt($input['password']);
+        $user->password_changed_at=now();
+        $user->email_verified_at=now();
+        $user->save();
+        return new UserResource($user);
+
+    }
+
+
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    function getUserByEmail(string $email)
+    {
+        return new UserResource(User::where('email',$email)->first());
     }
 }

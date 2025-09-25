@@ -20,6 +20,20 @@ class Helper
         }
         return $html;
     }
+    public static function extractWidth($html){
+        if(strpos($html, '<img') !== false){
+            preg_match('/<img[^>]+width=["\'](.*?)["\']/', $html, $matches);
+            return $matches[1] ?? null;
+        }
+        return $html;
+    }
+    public static function extractHeight($html){
+        if(strpos($html, '<img') !== false){
+            preg_match('/<img[^>]+height=["\'](.*?)["\']/', $html, $matches);
+            return $matches[1] ?? null;
+        }
+        return $html;
+    }
     public static function parseImageUrl(string $string): string
     {
         return str_starts_with($string, 'http')

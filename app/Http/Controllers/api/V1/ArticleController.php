@@ -213,8 +213,8 @@ class ArticleController extends Controller
             "message"=>"Article inexistant"
         ],Response::HTTP_NOT_FOUND);
     }
-    public function getArticles($cmr){
-        $articles=$this->articleService->getArticles($cmr);
+    public function getArticles(){
+        $articles=$this->articleService->getArticles();
         if ($articles){
             return response()->json([
                 'success'=>true,

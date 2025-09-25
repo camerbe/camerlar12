@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -34,6 +35,9 @@ class ArticleResource extends JsonResource
             'rubrique'=>$this->rubrique,
             'sousrubrique'=>$this->sousrubrique,
             'images' => $this->getFeaturedImage(),
+            'image_url' => $this->getImageUrl(),
+            'image_width' => $this->getWidth(),
+            'image_height' => $this->getHeight(),
 
         ];
     }
@@ -55,5 +59,14 @@ class ArticleResource extends JsonResource
             'height'=>$media->getCustomProperty('height'),
             'meta' => $media->custom_properties
         ] : null;
+    }
+    protected function getImageUrl(){
+        return Helper::extractImgSrc($this->image);
+    }
+    protected function getWidth(){
+        return Helper::extractWidth($this->image);
+    }
+    protected function getHeight(){
+        return Helper::extractHeight($this->image);
     }
 }

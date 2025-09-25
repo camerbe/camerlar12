@@ -29,4 +29,12 @@ class UserService
         return $this->userRepository->changePassword($input, $id);
     }
 
+    function firstLogin(array $input)
+    {
+        return $this->userRepository->firstLogin($input);
+    }
+    function getUserByEmail(string $email){
+        return $this->userRepository->getUserByEmail($email);
+    }
+
 }

@@ -27,7 +27,7 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], funct
 
 Route::prefix('articles')->controller(ArticleController::class)->group(function () {
     Route::get('slug/{slug}', 'getArticleBySlug');
-    Route::get('news/{news}', 'getArticles');
+    Route::get('news', 'getArticles');
     Route::get('period/{period}', 'getTopNews');
     Route::get('same/{same}', 'getSameRubrique');
     Route::get('most/{rubrique}/{pays}', 'getMostReadRubriqueByCountry');
@@ -61,14 +61,18 @@ Route::prefix('pays')->controller(PaysController::class)->group(function () {
    Route::get('/other/list', 'articleNonCameroon');
    Route::get('list', 'allPays');
 });
+Route::prefix('users')->controller(UserController::class)->group(function () {
+   Route::post('/activate/user', 'firstLogin');
+   Route::get('/activating/{user}', 'getUserByEmail');
+});
 Route::post('auth/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => 'auth:api'], function (){
 
 
     Route::prefix('pubs')->controller(PubController::class)->group(function () {
-        Route::get('dimensions', 'getPubDimension');
-        Route::get('pubtypes', 'getPubType');
+        Route::get('dimension/list', 'allPubDimension');
+        Route::get('pubtype/list', 'allPubType');
     });
 
     Route::apiResources([
@@ -85,10 +89,6 @@ Route::group(['middleware' => 'auth:api'], function (){
         "videos"=>VideoController::class,
     ]);
 
-    Route::prefix('pubs')->controller(PubController::class)->group(function () {
-        Route::get('dimensions', 'getPubDimension');
-        Route::get('pubtypes', 'getPubType');
-    });
 
     Route::prefix('articles')->controller(ArticleController::class)->group(function () {
         Route::get('adm/{adm}', 'getArticleByUser');

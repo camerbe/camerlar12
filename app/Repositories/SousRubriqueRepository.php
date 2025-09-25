@@ -66,10 +66,8 @@ class SousRubriqueRepository extends Repository implements ISousrubriqueReposito
     function index()
     {
         $cacheKey = "sousrubrique-cache";
-        return Cache::remember($cacheKey, now()->addDay(), function ()  {
-            return Sousrubrique::with('rubrique')->orderBy('sousrubriques.sousrubrique','asc')
-                ->join('rubriques','sousrubriques.fkrubrique','=','rubriques.idrubrique')
-                ->select('*')->get();
+        return Cache::remember($cacheKey, now()->addDay(), function ()  {return Sousrubrique::with('rubrique')->orderBy('sousrubrique','asc')
+                   ->get();
         });
 
     }

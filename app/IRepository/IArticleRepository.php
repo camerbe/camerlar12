@@ -7,7 +7,7 @@ interface IArticleRepository
     function getArticleByUser($user);
     function getScheduledArticle();
     function search($request);
-    function getArticles($cmr='CM');
+    function getArticles();
     function getArticleBySlug($slug);
     function getTopNews(string $period);
     function getSameRubrique(int $fksousrubrique);
