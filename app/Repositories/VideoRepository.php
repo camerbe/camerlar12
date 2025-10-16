@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\VideoResource;
 use App\IRepository\IVideoRepository;
 use App\Models\Video;
 use Illuminate\Support\Facades\Cache;
@@ -20,7 +21,8 @@ class VideoRepository extends Repository implements IVideoRepository{
      */
     function index()
     {
-        return Video::orderBy('idvideo','desc')->take(150)->get();
+        $videos= Video::orderBy('idvideo','desc')->take(150)->get();
+        return VideoResource::collection($videos);
     }
 
     /**
@@ -31,7 +33,7 @@ class VideoRepository extends Repository implements IVideoRepository{
     {
         $input['titre']=Str::title($input['titre']);
         $input['typevideo']=Str::ucfirst($input['typevideo']);
-        return parent::create($input);
+        return VideoResource::collection(parent::create($input)); ;
     }
 
     /**
@@ -49,7 +51,7 @@ class VideoRepository extends Repository implements IVideoRepository{
      */
     function findById($id)
     {
-        return parent::findById($id);
+        return VideoResource::collection(parent::findById($id)); ;
     }
 
     /**
@@ -65,7 +67,7 @@ class VideoRepository extends Repository implements IVideoRepository{
         $input['titre']=isset($input['titre'])? Str::title($input['titre']):$currentVideo->titre;
         $input['typevideo']=isset($input['typevideo'])? Str::ucfirst($input['typevideo']):$currentVideo->typevideo;
         $input['video']= $input['video'] ?? $currentVideo->video;
-        return parent::update($input, $id);
+        return  VideoResource::collection(parent::update($input, $id));
     }
 
     /**
@@ -77,7 +79,7 @@ class VideoRepository extends Repository implements IVideoRepository{
         if (!Cache::has($cacheKey)) {
             $this->findAll('Sopie');
         }
-        return collect(Cache::get($cacheKey))->take(5);
+        return  VideoResource::collection(collect(Cache::get($cacheKey))->take(5));
     }
 
     /**
@@ -89,7 +91,7 @@ class VideoRepository extends Repository implements IVideoRepository{
         if (!Cache::has($cacheKey)) {
             $this->findAll('Camer');
         }
-        return collect(Cache::get($cacheKey))->take(5);
+        return  VideoResource::collection(collect(Cache::get($cacheKey))->take(5));
     }
 
     /**
@@ -102,7 +104,7 @@ class VideoRepository extends Repository implements IVideoRepository{
             $this->findAll('Camer');
         }
         $videos = Cache::get($cacheKey);
-        return collect($videos)->shuffle()->take(10)->values();
+        return  VideoResource::collection(collect($videos)->shuffle()->take(10)->values());
     }
 
     /**
@@ -119,6 +121,6 @@ class VideoRepository extends Repository implements IVideoRepository{
             return Video::Where('typevideo',$camer)->orderByDesc('idvideo')->take(100)->get();
         });
 
-        return $videos;
+        return  VideoResource::collection($videos);
     }
 }

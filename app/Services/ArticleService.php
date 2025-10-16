@@ -71,5 +71,11 @@ class ArticleService
     function allRubrique(){
         return $this->articleRepository->allRubrique();
     }
-
+    function getSportArticle(){
+        return $this->articleRepository->getSportArticle();
+    }
+    function getRubriqueArticles($fksousrubrique, $fkrubrique){
+        //dd($fkrubrique);
+        return $this->articleRepository->getRubriqueArticles($fksousrubrique, $fkrubrique);
+    }
 }

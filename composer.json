@@ -19,7 +19,9 @@
         "spatie/laravel-feed": "^4.4",
         "spatie/laravel-medialibrary": "^11.13",
         "spatie/laravel-sitemap": "^7.3",
-        "unisharp/laravel-filemanager": "^2.11"
+        "unisharp/laravel-filemanager": "^2.11",
+        "ext-dom": "*",
+        "ext-libxml": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

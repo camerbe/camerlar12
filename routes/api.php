@@ -35,6 +35,8 @@ Route::prefix('articles')->controller(ArticleController::class)->group(function 
     Route::get('auteur/{auteur}', 'getNewsByAuthor');
     Route::get('pays/countries', 'allCountries');
     Route::get('rubriques/categorie', 'allRubrique');
+    Route::get('sport', 'getSportArticle');
+    Route::get('{sousrubrique}/{rubrique}', 'getRubriqueArticles');
 
 });
 Route::prefix('videos')->controller(VideoController::class)->group(function () {

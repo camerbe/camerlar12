@@ -441,4 +441,54 @@ class ArticleController extends Controller
             "message"=>"Pas de rubrique trouvé"
         ],Response::HTTP_NOT_FOUND);
     }
+    public function getSportArticle(){
+        $sport=$this->articleService->getSportArticle();
+        if ($sport){
+            return response()->json([
+               $sport
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($sport)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas de sport trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }
+    public function getRubriqueArticles($fksousrubrique, $fkrubrique){
+
+        $articles=$this->articleService->getRubriqueArticles($fksousrubrique, $fkrubrique);
+        //dd($articles);
+        if ($articles){
+            return response()->json([
+                'success'=>true,
+                'data'=>$articles,
+                'message'=>"Liste des articles"
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($articles)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas d'article trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }
 }

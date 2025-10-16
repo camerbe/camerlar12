@@ -17,5 +17,7 @@ interface IArticleRepository
     function getNewsForRss();
     function allCountries();
     function allRubrique();
+    function getSportArticle();
+    function getRubriqueArticles($fksousrubrique,$fkrubrique);
 
 }

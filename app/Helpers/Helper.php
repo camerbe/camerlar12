@@ -77,4 +77,31 @@ class Helper
     public static function guillemets(string $text):string {
         return preg_replace('/"([^"]+)"/u', "«\u{202F}$1\u{202F}»", $text);
     }
+    public static function getYouTubeThumbnail($url){
+        $pattern = '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i';
+        if(preg_match($pattern, $url, $matches)){
+            $videoId = $matches[1];
+            return "https://img.youtube.com/vi/{$videoId}/maxresdefault.jpg";
+        }
+        return null;
+    }
+
+    public static function FindYoutube($string)
+    {
+
+        $attrs="";
+        $dom = new \DOMDocument();
+        $libxml_previous_state = libxml_use_internal_errors( true );
+//        $html=  ;
+
+        $dom->loadHTML(mb_convert_encoding( $string, 'HTML-ENTITIES', 'UTF-8'),LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+
+        $iframes = $dom->getElementsByTagName('iframe');
+        foreach($iframes as $ifr)
+        {
+            $attrs = $ifr->getAttribute('src');
+            break;
+        }
+        return $attrs;
+    }
 }

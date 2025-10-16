@@ -91,4 +91,5 @@ class Article extends Model implements HasMedia
             ];
         });
     }
+
 }

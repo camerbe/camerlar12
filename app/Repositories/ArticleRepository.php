@@ -390,4 +390,42 @@ class ArticleRepository extends Repository implements IArticleRepository
         });
     }
 
+    /**
+     * @return mixed
+     */
+    function getSportArticle()
+    {
+        $response= Http::get(env('APP_CAMER_SPORT'));
+        if($response->successful()){
+            $data = $response->json();
+            //dd(array_slice($data, 0, 10));
+            return array_slice($data, 0, 10);
+        }
+        return null;
+    }
+
+    /**
+     * @param $fksousrubrique
+     * @param $fkrubrique
+     * @return mixed
+     */
+    function getRubriqueArticles($fksousrubrique, $fkrubrique)
+    {
+        //dd($fksousrubrique);
+        $cacheKey = "cache_".$fksousrubrique.'_'.$fkrubrique;
+        //dd($cacheKey);
+        //Cache::forget($cacheKey);
+        $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use($fksousrubrique,$fkrubrique) {
+            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->where('fkrubrique', $fkrubrique)
+                ->where('fksousrubrique', $fksousrubrique)
+                ->where('dateparution', '<=', now())
+                ->orderByDesc('dateparution')
+                ->limit(100)
+                ->get();
+        });
+        return ArticleResource::collection($articles);
+    }
+
+
 }
