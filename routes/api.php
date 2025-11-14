@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 })->middleware('auth:sanctum');*/
 
 
-
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
@@ -37,6 +36,7 @@ Route::prefix('articles')->controller(ArticleController::class)->group(function 
     Route::get('rubriques/categorie', 'allRubrique');
     Route::get('sport', 'getSportArticle');
     Route::get('{sousrubrique}/{rubrique}', 'getRubriqueArticles');
+    Route::get('/one/{sousrubrique}/{rubrique}', 'getOneRubriqueArticles');
 
 });
 Route::prefix('videos')->controller(VideoController::class)->group(function () {
@@ -44,6 +44,7 @@ Route::prefix('videos')->controller(VideoController::class)->group(function () {
     Route::get('videorandom', 'getRandomVideo');
     Route::get('videocamer', 'getCamerVideo');
     Route::get('videofind/{videofind}', 'findAll');
+    Route::get('{onevideo}', 'getOneVideo');
 });
 Route::prefix('pubs')->controller(PubController::class)->group(function () {
    Route::get('pubcached/{pubcached}', 'getCachedPub');
@@ -71,11 +72,15 @@ Route::post('auth/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => 'auth:api'], function (){
 
+    Route::prefix('articles')->controller(ArticleController::class)->group(function () {
+        Route::get('adm/user/{adm}', 'getArticleByUser');
 
+    });
     Route::prefix('pubs')->controller(PubController::class)->group(function () {
         Route::get('dimension/list', 'allPubDimension');
         Route::get('pubtype/list', 'allPubType');
     });
+
 
     Route::apiResources([
         "articles"=>ArticleController::class,
@@ -92,13 +97,13 @@ Route::group(['middleware' => 'auth:api'], function (){
     ]);
 
 
-    Route::prefix('articles')->controller(ArticleController::class)->group(function () {
-        Route::get('adm/{adm}', 'getArticleByUser');
 
-    });
 
 
 });
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
 
+});
 
 

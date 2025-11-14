@@ -19,5 +19,6 @@ interface IArticleRepository
     function allRubrique();
     function getSportArticle();
     function getRubriqueArticles($fksousrubrique,$fkrubrique);
+    function getOneRubriqueArticles($fksousrubrique,$fkrubrique);
 
 }

@@ -78,4 +78,7 @@ class ArticleService
         //dd($fkrubrique);
         return $this->articleRepository->getRubriqueArticles($fksousrubrique, $fkrubrique);
     }
+    function getOneRubriqueArticles($fksousrubrique, $fkrubrique){
+        return $this->articleRepository->getOneRubriqueArticles($fksousrubrique, $fkrubrique);
+    }
 }

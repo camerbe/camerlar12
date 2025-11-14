@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,11 +23,21 @@ class PubResource extends JsonResource
             'pub'=>$this->pub,
             'imagewidth'=>$this->imagewidth,
             'imageheight'=>$this->imageheight,
-            'editor'=>$this->href,
+            'editor'=>$this->editor,
+            'href'=>$this->href,
             'dimensions'=>$this->dimensions,
             'typepubs'=>$this->typepubs,
-
+            'image_url' => $this->getImageUrl(),
 
         ];
+    }
+    protected function getImageUrl(){
+        return Helper::extractImgSrc($this->pub);
+    }
+    protected function getWidth(){
+        return Helper::extractWidth($this->pub);
+    }
+    protected function getHeight(){
+        return Helper::extractHeight($this->pub);
     }
 }

@@ -42,20 +42,19 @@ class ArticleRepository extends Repository implements IArticleRepository
         $html=new Html2Text($input['info']);
         //$image=Helper::extractImgSrc($input['image']);
         $input['chapeau']=Str::of($html->getText())->limit(160);
-        /*$img = Image::read($image);
-        $input['imagewidth']=$img->width();
-        $input['imageheight']=$img->height();*/
+        $input['imageheight']=Helper::extractHeight($input['image']);
+        $input['imagewidth']=Helper::extractWidth($input['image']);
+
         $input['keyword']= $input['keyword'].','.$input['hashtags'];
         $input['dateparution']=Carbon::parse($input['dateparution'])->format('Y-m-d H:i:s');
         $input['dateref']=$input['dateparution'];
-        //[$fksousrubrique, $fkrubrique] = explode(':', $input['fkrubrique']);
-        //$input['fksousrubrique']=$fksousrubrique;
-        //$input['fkrubrique']=$fkrubrique;
+
         $input['slug']=Str::slug(Helper::getTitle($bled->pays,$input['titre'],$bled->country),'-') ;
         $input['auteur']=Str::title($input['auteur']);
         $input['source']=Str::title($input['source']);
         $input['titre']=Helper::guillemets($input['titre']);
-        $cache="Article-By-User-".$input['fkruser'];
+
+        $cache="Article-By-User-".$input['fkuser'];
         Cache::forget($cache);
         return parent::create($input);
     }
@@ -89,8 +88,11 @@ class ArticleRepository extends Repository implements IArticleRepository
         $current=$this->findById($id);
         $bled=Pays::find($input['fkpays']);
 
-        $input['keyword']=isset($input['keyword']) ? $input['keyword'].','.$input['hashtags']
-            : $current->keyword;
+
+        $input['keyword'] .= $input['hashtags'];
+
+        /*$input['keyword']=isset($input['hashtags']) ? $input['keyword'].','.$input['hashtags']
+            : $current->keyword;*/
         if(isset($input['dateparution'])){
             $input['dateparution']=Carbon::parse($input['dateparution'])->format('Y-m-d H:i:s');
             $input['dateref']=$input['dateparution'];
@@ -103,14 +105,8 @@ class ArticleRepository extends Repository implements IArticleRepository
             $input['chapeau']=Str::of($html->getText())->limit(160);
         }
         if(isset($input['image'])){
-            $image=Helper::extractImgSrc($input['image']);
-            $response = Http::get($image);
-            if ($response->successful()){
-                $img = Image::read($response->body());
-                $input['imagewidth']=$img->width();
-                $input['imageheight']=$img->height();
-            }
-
+            $input['imageheight']=Helper::extractHeight($input['image']);
+            $input['imagewidth']=Helper::extractWidth($input['image']);
         }
         if(isset($input['titre']) || isset($input['fkpays'])){
             $input['slug']=Str::slug(Helper::getTitle($bled->pays,$input['titre'],$bled->country),'-') ;
@@ -139,7 +135,10 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticleByUser($user)
     {
+
         $cache="Article-By-User-".$user;
+        //Cache::forget($cache);
+        //dd($cache);
         $articles= Cache::remember($cache, now()->add(1,'day'), function () use ($user){
             return Article::with(['countries','rubrique','sousrubrique'])
                 ->where('fkuser',$user)
@@ -147,6 +146,7 @@ class ArticleRepository extends Repository implements IArticleRepository
                 ->limit(50)
                 ->get();
         });
+        //dd($articles);
         return ArticleResource::collection($articles);
     }
 
@@ -248,7 +248,7 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticleBySlug($slug)
     {
-
+        //dd($slug);
         $article= Article::with(['countries', 'rubrique', 'sousrubrique'])
             ->where('slug', $slug)->first();
         if($article){
@@ -268,6 +268,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     function getTopNews(string $period)
     {
         $cacheKey = "top_news_{$period}";
+        //Cache::forget($cacheKey);
         $date = match ($period){
             'week'=>now()->subWeek(),
             'month'=>now()->subMonth(),
@@ -425,6 +426,27 @@ class ArticleRepository extends Repository implements IArticleRepository
                 ->get();
         });
         return ArticleResource::collection($articles);
+    }
+
+    /**
+     * @param $fksousrubrique
+     * @param $fkrubrique
+     * @return mixed
+     */
+    function getOneRubriqueArticles($fksousrubrique, $fkrubrique)
+    {
+        $cacheKey = "cache_one_{$fksousrubrique}_{$fkrubrique}";
+
+        $article = Cache::remember($cacheKey, now()->addHours(1), function () use ($fksousrubrique, $fkrubrique) {
+            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->where('fksousrubrique', $fksousrubrique)
+                ->where('fkrubrique', $fkrubrique)
+                ->where('dateparution', '<=', now())
+                ->orderByDesc('dateparution')
+                ->first();
+        });
+        return new ArticleResource($article);
+
     }
 
 

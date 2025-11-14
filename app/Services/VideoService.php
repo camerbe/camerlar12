@@ -30,6 +30,10 @@ class VideoService
     {
         return $this->videoRepository->findAll($camer);
     }
+    public function getOneVideo($camer='Camer')
+    {
+        return $this->videoRepository->getOneVideo($camer);
+    }
     public function create($data){
         return $this->videoRepository->create($data);
     }

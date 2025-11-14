@@ -201,4 +201,32 @@ class VideoController extends Controller
             "message"=>"Pas de vidéo trouvée"
         ],Response::HTTP_NOT_FOUND);
     }
+    public function getOneVideo($camer='Camer')
+    {
+        //
+        $video=$this->videoService->getOneVideo($camer);
+        if ($video){
+            return response()->json([
+                'success'=>true,
+                'data'=>$video,
+                'message'=>"Vidéo trouvée"
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    'Content-Language' => 'fr',
+                    'X-Robots-Tag' => 'index, follow',
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($video)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas de vidéo trouvée"
+        ],Response::HTTP_NOT_FOUND);
+    }
 }

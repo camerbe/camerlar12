@@ -25,7 +25,7 @@ return [
     | If both options are set to false, then shared folder will be activated.
     |
      */
-
+    'middlewares' => ['web'],
     'allow_private_folder'     => true,
 
     // Flexible way to customize client folders accessibility
@@ -61,6 +61,15 @@ return [
                 'image/webp',
                 'application/pdf',
                 'text/plain',
+                'audio/mp3',
+                'audio/mpeg',
+                'audio/wav',
+                'video/x-msvideo',
+                'video/quicktime',
+                'video/mp4',
+                'video/mpeg',
+
+
             ],
         ],
         'image' => [
@@ -76,6 +85,24 @@ return [
                 'image/webp',
                 'image/png',
                 'image/gif',
+            ],
+        ],
+        'media' => [
+            'folder_name'  => 'medias',
+            'startup_view' => 'grid',
+            'max_size'     => 50000, // size in KB
+            'thumb' => true,
+            'thumb_width' => 80,
+            'thumb_height' => 80,
+            'valid_mime'   => [
+                'audio/mp3',
+                'audio/mpeg',
+                'audio/wav',
+                'video/x-msvideo',
+                'video/quicktime',
+                'video/mp4',
+                'video/mpeg',
+
             ],
         ],
     ],
@@ -143,6 +170,8 @@ return [
         'image/pjpeg',
         'image/png',
         'image/webp',
+        'video/mp4',
+        'audio/mp3',
     ],
 
     'thumb_img_width'          => 100, // px
@@ -168,6 +197,9 @@ return [
         'png'  => 'PNG Image',
         'ppt'  => 'Microsoft PowerPoint',
         'pptx' => 'Microsoft PowerPoint',
+        'mp4' => 'MPEG-4',
+        'mp3' => 'MPEG-3',
+        'webp' => 'webp',
     ],
 
     /*

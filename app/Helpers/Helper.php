@@ -43,7 +43,7 @@ class Helper
     public static function getPubDimension($dimension){
         $data=[
             728=>1,
-            300=>2
+            300=>24
         ];
         return $data[$dimension] ?? null;
     }

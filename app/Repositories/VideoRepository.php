@@ -123,4 +123,21 @@ class VideoRepository extends Repository implements IVideoRepository{
 
         return  VideoResource::collection($videos);
     }
+
+    /**
+     * @param $camer
+     * @return mixed
+     */
+    function getOneVideo($camer = 'Camer')
+    {
+        if (!in_array($camer, ['Camer', 'Sopie'])) {
+            return null;
+        }
+        $cacheKey = $camer === 'Camer' ? 'OneVideoCamer' : 'OneVideoSopie';
+        $videos = Cache::remember($cacheKey, now()->addDay(1), function () use ($camer) {
+            return Video::Where('typevideo',$camer)->orderByDesc('idvideo')->first();
+        });
+        return new VideoResource($videos);
+    }
+
 }

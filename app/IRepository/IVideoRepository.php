@@ -8,4 +8,5 @@ interface IVideoRepository
     function getCamerVideo();
     function getRandomVideo();
     function findAll($camer='Camer');
+    function getOneVideo($camer='Camer');
 }

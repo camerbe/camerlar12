@@ -30,7 +30,10 @@ class PubRepository extends Repository implements IPubRepository
      */
     function create(array $input)
     {
+        //dd($input);
         $input['endpubdate']=Carbon::parse($input['endpubdate'])->format('Y-m-d H:i:s');
+        $input['imageheight']=Helper::extractHeight($input['pub']);
+        $input['imagewidth']=Helper::extractWidth($input['pub']);
         return parent::create($input);
     }
 
@@ -59,6 +62,7 @@ class PubRepository extends Repository implements IPubRepository
      */
     function update(array $input, $id)
     {
+
         $currentPub = $this->findById($id);
         $input['endpubdate'] = isset($input['endpubdate']) ?
             Carbon::parse($input['endpubdate'])->format('Y-m-d H:i:s') : $currentPub->endpubdate;
@@ -67,6 +71,9 @@ class PubRepository extends Repository implements IPubRepository
         $input['pub'] = $input['pub'] ?? $currentPub->pub;
         $input['editor'] = $input['editor'] ?? $currentPub->editor;
         $input['href'] = $input['href'] ?? $currentPub->href;
+        $input['imageheight']=Helper::extractHeight($input['pub']);
+        $input['imagewidth']=Helper::extractWidth($input['pub']);
+
         return parent::update($input, $id);
     }
     /**
@@ -92,10 +99,14 @@ class PubRepository extends Repository implements IPubRepository
      */
     function getCachedPub($dimension)
     {
+
         $dim=(int)$dimension;
+
         $cache=($dim===728)? 'Pub-728':'Pub-300';
+        //Cache::forget($cache);
         $fkdimension=Helper::getPubDimension($dim);
-        //dd($cache);
+        //dd($fkdimension);
+
         $pub=Cache::remember($cache, now()->add(1,'day'), function ()  use($fkdimension) {
             return Pub::with(['dimensions','typepubs'])
                 ->where('endpubdate','>=', now())
@@ -103,7 +114,8 @@ class PubRepository extends Repository implements IPubRepository
                 ->select('*')
                 ->get();
         });
-        return Cache::get($cache)->random();
+        return new PubResource($pub->random());
+        //return PubResource::collection(Cache::get($cache)->random());
     }
 
     /**

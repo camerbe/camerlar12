@@ -491,4 +491,31 @@ class ArticleController extends Controller
             "message"=>"Pas d'article trouvé"
         ],Response::HTTP_NOT_FOUND);
     }
+    public function getOneRubriqueArticles($fksousrubrique, $fkrubrique){
+
+        $article=$this->articleService->getOneRubriqueArticles($fksousrubrique, $fkrubrique);
+        //dd($articles);
+        if ($article){
+            return response()->json([
+                'success'=>true,
+                'data'=>$article,
+                'message'=>"Liste des articles"
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($article)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas d'article trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }
 }

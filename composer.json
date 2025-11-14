@@ -21,7 +21,8 @@
         "spatie/laravel-sitemap": "^7.3",
         "unisharp/laravel-filemanager": "^2.11",
         "ext-dom": "*",
-        "ext-libxml": "*"
+        "ext-libxml": "*",
+      "ext-http": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
