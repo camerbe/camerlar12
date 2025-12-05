@@ -114,6 +114,9 @@ class PubRepository extends Repository implements IPubRepository
                 ->select('*')
                 ->get();
         });
+        if ($pub->isEmpty()) {
+            return null; // Or return new PubResource(null); depending on how PubResource handles null
+        }
         return new PubResource($pub->random());
         //return PubResource::collection(Cache::get($cache)->random());
     }

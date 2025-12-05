@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\AmpController;
 use App\Http\Controllers\RssController;
 use App\Http\Controllers\SitemapArticleController;
 use App\Http\Controllers\SitemapController;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 
+    Route::get('amp', [AmpController::class, 'index'])->name('amp.index');
 
     Route::get('rss', [RssController::class, 'feed'])->name('rss.main');
     Route::get('politique', [RssController::class, 'politique'])->name('rss.politique');

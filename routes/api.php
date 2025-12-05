@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\V1\ArticleController;
 use App\Http\Controllers\api\V1\AuthController;
+use App\Http\Controllers\api\V1\ContactController;
 use App\Http\Controllers\api\V1\EvenementController;
 use App\Http\Controllers\api\V1\PaysController;
 use App\Http\Controllers\api\V1\PubController;
@@ -23,7 +24,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
-
+Route::prefix('contact')->controller(ContactController::class)->group(function () {
+    Route::post('send', 'submit');
+});
 Route::prefix('articles')->controller(ArticleController::class)->group(function () {
     Route::get('slug/{slug}', 'getArticleBySlug');
     Route::get('news', 'getArticles');

@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'recaptcha' => [
+        'secret' => env('GOOGLE_RECAPTCHA_SECRET'),
+        'sitekey' => env('GOOGLE_RECAPTCHA_KEY'),
+    ],
 
 ];
