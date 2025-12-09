@@ -1,5 +1,6 @@
 @php
     $newsArticle=\App\Helpers\Helper::convertImgToAmpImg($article['info']);
+    $newsArticle=\App\Helpers\Helper::convertYoutubeToAmp($newsArticle);
     $today = now()->format('Y-m-d\TH:i:s+00:00');
     $articleDate = \Carbon\Carbon::parse($article['dateparution'])->format('Y-m-d\TH:i:s+00:00');
     $year = \Carbon\Carbon::parse($article['dateparution'])->year;

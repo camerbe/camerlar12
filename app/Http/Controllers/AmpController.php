@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\api\V1\EvenementController;
+use App\Http\Controllers\api\V1\PubController;
 use App\Http\Controllers\api\V1\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -17,14 +18,17 @@ class AmpController extends Controller
     protected $api;
     protected $event;
     protected $video;
+    protected $pub;
     public function __construct(
         ArticleController $api,
         EvenementController $event,
         VideoController $video,
+        PubController $pub,
     ){
         $this->api=$api;
         $this->event=$event;
         $this->video=$video;
+        $this->pub=$pub;
     }
     public function index(Request $request){
 
@@ -62,7 +66,11 @@ class AmpController extends Controller
         $data=$this->video->getOneVideo('Sopie');
         $array = json_decode($data->getContent(), true);
         $sopie = collect($array['data']);
-        //dd($event);
+        //------------------ Pub
+        $data=$this->pub->getCachedPub(300);
+        $array = json_decode($data->getContent(), true);
+        $pub = collect($array['data']);
+        //dd($pub);
         $debat= Cache::remember('articles_debat_json', now()->addHours(12), function () {
             $data = $this->api->getOneRubriqueArticles(27,25);   // API call
             $array = json_decode($data->getContent(), true);
@@ -73,10 +81,34 @@ class AmpController extends Controller
             $array = json_decode($data->getContent(), true);
             return collect($array['data']); // Store as collection
         });
-        //Cache::forget($cacheKey);
+        $droit= Cache::remember('articles_droit_json', now()->addHours(12), function () {
+            $data = $this->api->getOneRubriqueArticles(33,30);   // API call
+            $array = json_decode($data->getContent(), true);
+            return collect($array['data']); // Store as collection
+        });
+        Cache::forget($cacheKey);
+        Cache::forget('archive');
+        $archives = Cache::remember('archive', now()->addHours(12), function () {
 
+            $data1 = $this->api->getTopNews('week');
+            $arrayweek = json_decode($data1->getContent(), true);
+
+            $data2 = $this->api->getTopNews('month');
+            $arraymonth = json_decode($data2->getContent(), true);
+
+            $data3 = $this->api->getTopNews('year');
+            $arrayyear = json_decode($data3->getContent(), true);
+            //dd($arrayyear);
+            return collect([
+                'week' => $arrayweek?? [],
+                'month' => $arraymonth ?? [],
+                'year' => $arrayyear ?? [],
+            ]) ;
+        });
+
+        //dd($archives);
         return Cache::remember($cacheKey, now()->addHours(12), function ()
-            use ($paginated,$debat,$droit,$event,$camer,$sopie) {
+            use ($paginated,$debat,$droit,$event,$camer,$sopie,$pub,$archives) {
             return view('index', [
                 'articles' => $paginated,
                 'debat'=> $debat,
@@ -84,6 +116,8 @@ class AmpController extends Controller
                 'event'=> $event,
                 'camer'=> $camer,
                 'sopie'=> $sopie,
+                'pub'=> $pub,
+                'archives'=> $archives,
             ])->render();
         });
     }

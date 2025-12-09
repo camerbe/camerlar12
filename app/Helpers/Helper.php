@@ -151,4 +151,69 @@ class Helper
         }
         return $dom->saveHTML();
     }
+
+    public static function convertYoutubeToAmp(string $html)
+    {
+        libxml_use_internal_errors(true);
+        $dom = new DOMDocument();
+        $dom->loadHTML(
+            mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'),
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+
+        $iframes = $dom->getElementsByTagName('iframe');
+
+        for ($i = $iframes->length - 1; $i >= 0; $i--) {
+
+            $iframe = $iframes->item($i);
+
+            // Extract src
+            $src = $iframe->getAttribute("src");
+            if (!$src) {
+                continue;
+            }
+
+            // Detect YouTube link
+            if (!preg_match('#(youtube\.com|youtu\.be)#i', $src)) {
+                continue;
+            }
+
+            // Extract video ID
+            $videoId = null;
+
+            // Format: https://www.youtube.com/embed/VIDEOID
+            if (preg_match('#youtube\.com/embed/([^?&]+)#', $src, $m)) {
+                $videoId = $m[1];
+            }
+
+            // Format: https://www.youtube.com/watch?v=VIDEOID
+            elseif (preg_match('#v=([^?&]+)#', $src, $m)) {
+                $videoId = $m[1];
+            }
+
+            // Format: https://youtu.be/VIDEOID
+            elseif (preg_match('#youtu\.be/([^?&]+)#', $src, $m)) {
+                $videoId = $m[1];
+            }
+
+            if (!$videoId) {
+                continue;
+            }
+
+            // Create <amp-youtube>
+            $ampYoutube = $dom->createElement("amp-youtube");
+            $ampYoutube->setAttribute("data-videoid", $videoId);
+            $ampYoutube->setAttribute("layout", "responsive");
+
+            // Provide default size if missing
+            $ampYoutube->setAttribute("width", "480");
+            $ampYoutube->setAttribute("height", "270");
+
+            // Replace iframe
+            $iframe->parentNode->replaceChild($ampYoutube, $iframe);
+        }
+
+        return $dom->saveHTML();
+    }
+
 }

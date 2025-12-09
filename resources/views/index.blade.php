@@ -23,9 +23,9 @@
 @section('content')
     @include('partials.amp-index')
     @include('partials.amp-video-viralize')
-    @include('partials.amp-debat')
-    @include('partials.amp-event')
-    @include('partials.amp-droit')
-    @include('partials.amp-video-sopie')
-    @include('partials.amp-video-camer')
+    @include('partials.amp-debat-droit')
+    @include('partials.amp-event-pub')
+    @include('partials.amp-video')
+    @include('partials.amp-archive')
+
 @endsection

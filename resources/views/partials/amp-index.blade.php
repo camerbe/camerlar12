@@ -141,8 +141,43 @@
 
 @endforeach
 </div>
-<div class="news-item text-center">
-    {{$articles->links()}}
+<div class="news-item">
+    <nav>
+        <ul class="pagination">
+            @if ($articles->onFirstPage())
+                <li class="page-item disabled">
+                    <span class="page-link" style="opacity:0.5;" ><</span>
+                </li>
+            @else
+                <li class="page-item">
+                    <a href="{{ $articles->previousPageUrl() }}" class="page-link"><</a>
+                </li>
+            @endif
+
+            @foreach ($articles->links()->elements[0] ?? [] as $page => $url)
+
+                @if ($page == $articles->currentPage())
+                        <li class="page-item active">
+                            <span class="page-link">{{$page}}</span>
+                        </li>
+                @else
+                        <li class="page-item">
+                            <a class="page page-link" href="{{$url}}">{{$page}}</a>
+                        </li>
+                @endif
+            @endforeach
+                @if ($articles->hasMorePages())
+                    <li class="page-item">
+                        <a href="{{ $articles->nextPageUrl() }}" class="page page-link">></a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="page-link" style="opacity:0.5;">></span>
+                    </li>
+                @endif
+
+        </ul>
+    </nav>
 </div>
 @php
     $jsonLdGlobal = [

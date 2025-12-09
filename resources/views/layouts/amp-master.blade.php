@@ -1630,13 +1630,13 @@
     <div class="footer">
         @include('partials.amp-adaptable')
         <p class="center-text">
-            &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{config('app.url')}}" class="footer-logo">Camer.be</a>
+            &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{env('BASE_APP_URL')}}/amp" class="footer-logo">Camer.be</a>
         </p>
     </div>
 
 </div>
 
-{{--@include('partials.amp-analytics')--}}
+@include('partials.amp-analytics')
 @yield('scripts')
 </body>
 </html>
