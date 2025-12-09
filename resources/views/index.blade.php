@@ -1,12 +1,17 @@
 @php
     $firstArticle=$articles->first();
+    $dynamicDescription = 'Camer.be: Info claire et nette sur le Cameroun et la Diaspora. ';
+    $dynamicDescription .="À la une : {$firstArticle['titre']}";
+    $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';
+
     //dd($firstArticle);
-    $title=\App\Helpers\Helper::getTitle($firstArticle["countries"]["pays"],$firstArticle["titre"],$firstArticle["countries"]["country"]);
-    $description=$firstArticle["chapeau"];
-    $image=$firstArticle["image_url"];
-    $image_width=$firstArticle["image_width"];
-    $image_height=$firstArticle["image_height"];
-    $keyword=trim($firstArticle["keyword"]);
+    //$title=\App\Helpers\Helper::getTitle($firstArticle["countries"]["pays"],$firstArticle["titre"],$firstArticle["countries"]["country"]);
+    $title='Actualités Cameroun, Info & Analyse – Politique, Sport, Diaspora | Camer.be';
+    $description=$dynamicDescription;
+    $image=url('assets/img/camer-logo.png');
+    $image_width=190;
+    $image_height=52;
+    $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
     $section=$firstArticle["rubrique"]["rubrique"]." / ".$firstArticle["sousrubrique"]["sousrubrique"];
     $author=$firstArticle["auteur"];
     $source=$firstArticle["source"];
@@ -16,5 +21,11 @@
 @extends('layouts.amp-master')
 
 @section('content')
-
+    @include('partials.amp-index')
+    @include('partials.amp-video-viralize')
+    @include('partials.amp-debat')
+    @include('partials.amp-event')
+    @include('partials.amp-droit')
+    @include('partials.amp-video-sopie')
+    @include('partials.amp-video-camer')
 @endsection

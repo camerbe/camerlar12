@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use DOMDocument;
 use Illuminate\Support\Str;
 
 /**
@@ -85,6 +86,13 @@ class Helper
         }
         return null;
     }
+    public static function getYouTubeId($url){
+        $pattern = '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i';
+        if(preg_match($pattern, $url, $matches)){
+            return $matches[1];
+        }
+        return null;
+    }
 
     public static function FindYoutube($string)
     {
@@ -103,5 +111,44 @@ class Helper
             break;
         }
         return $attrs;
+    }
+
+    public static function convertImgToAmpImg(string $html){
+        libxml_use_internal_errors(true);
+        $dom = new DOMDocument();
+        $dom->loadHTML(
+            mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'),
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+        $images = $dom->getElementsByTagName('img');
+        for ($i = $images->length - 1; $i >= 0; $i--) {
+
+            $img = $images->item($i);
+
+            // New amp-img
+            $ampImg = $dom->createElement("amp-img");
+
+            // Copy attributes
+            foreach ($img->attributes as $attr) {
+                $ampImg->setAttribute($attr->nodeName, $attr->nodeValue);
+            }
+
+            // AMP requirements
+            if (!$ampImg->hasAttribute("layout")) {
+                $ampImg->setAttribute("layout", "responsive");
+            }
+
+            if (!$ampImg->hasAttribute("width")) {
+                $ampImg->setAttribute("width", "800");
+            }
+
+            if (!$ampImg->hasAttribute("height")) {
+                $ampImg->setAttribute("height", "600");
+            }
+
+            // Replace original <img> with <amp-img>
+            $img->parentNode->replaceChild($ampImg, $img);
+        }
+        return $dom->saveHTML();
     }
 }

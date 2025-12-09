@@ -1430,7 +1430,7 @@
 
         .news-full h5{
             font-size:13px;
-            padding:10px 20px 0px 20px;
+            padding:10px 20px 5px 20px;
             color:#000000;
         }
         .news-full em a{display:inline;}
@@ -1534,6 +1534,10 @@
             width: 100%;
             height: 300px;
         }
+        .amp-image-container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
     </style>
     <!--<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
 
@@ -1550,9 +1554,13 @@
 <amp-auto-ads type="adsense"
               data-ad-client="ca-pub-8638642715460968">
 </amp-auto-ads>
-<header>
+<header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
     <button on="tap:sidebar.toggle" class="ampstart-btn caps m2 header-icon-1"><i class="fa fa-navicon"></i></button>
-    <a href="{{config('app.url')}}/amp/accueil" class="header-logo"></a>
+    <a href="{{env('BASE_APP_URL')}}/amp" class="header-logo">
+        <div class="mx-auto ">
+            <amp-img src="{{env('BASE_APP_URL')}}/assets/img/camer-logo.png" alt="Camer.be" height="42" width="125"></amp-img>
+        </div>
+    </a>
     <a href="contact.html" class="header-icon-2"><i class="fa fa-envelope-o"></i></a>
 </header>
 
@@ -1618,13 +1626,13 @@
     </div>
 
 {{--@include('partials.past-amp-news')--}}
-<div class="decoration decoration-margins"></div>
-<div class="footer material-box">
-    @include('partials.amp-adaptable')
-    <p class="center-text">
-        &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{config('app.url')}}" class="footer-logo">Camer.be</a>
-    </p>
-</div>
+    <div class="decoration decoration-margins"></div>
+    <div class="footer">
+        @include('partials.amp-adaptable')
+        <p class="center-text">
+            &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{config('app.url')}}" class="footer-logo">Camer.be</a>
+        </p>
+    </div>
 
 </div>
 

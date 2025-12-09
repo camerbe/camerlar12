@@ -6,7 +6,7 @@
 'image_width' => '',
 'image_height' => '',
 'keyword'=>'',
-'modified_time'=>'',
+'modified_time'=>now()->format('Y-m-d\TH:i:s+00:00'),
 'published_time'=>'',
 'section'=>'',
 'author'=>'',

@@ -30,26 +30,45 @@ class Article extends Model implements HasMedia
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
-            /*foreach ($users as $user){
-                $cacheKey = "Article-By-User-".$user;
+            Cache::forget('articles_json');
+            Cache::forget('articles_droit_json');
+            Cache::forget('articles_debat_json');
+            //Cache::forget('cahe_amp_index');
+            for($i=0;$i<10;$i++){
+                $idx=$i+1;
+                $cacheKey='cahe_amp_index_'.$idx;
                 Cache::forget($cacheKey);
-            }*/
+            }
         });
         Article::updated(function ($model)  {
             //Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
-            /*foreach ($users as $user){
-                $cacheKey = "Article-By-User-".$user;
+            Cache::forget('articles_json');
+            Cache::forget('articles_droit_json');
+            Cache::forget('articles_debat_json');
+
+            //Cache::forget('cahe_amp_index');
+            for($i=0;$i<10;$i++){
+                $idx=$i+1;
+                $cacheKey='cahe_amp_index_'.$idx;
                 Cache::forget($cacheKey);
-            }*/
+            }
         });
         Article::deleted(function ($model) {
             //Cache::forget('Article-By-User');
             Cache::forget('Article-CMR-list');
             Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
+            Cache::forget('articles_json');
+            Cache::forget('articles_droit_json');
+            Cache::forget('articles_debat_json');
+            for($i=0;$i<10;$i++){
+                $idx=$i+1;
+                $cacheKey='cahe_amp_index_'.$idx;
+                Cache::forget($cacheKey);
+            }
             /*foreach ($users as $user){
                 $cacheKey = "Article-By-User-".$user;
                 Cache::forget($cacheKey);
