@@ -8,6 +8,7 @@
         |
         | Found in views/includes/partials/ga.blade.php
         */
+        'youtube-api-key'=>'AIzaSyCfpYtqAWCqPegarr_8-rGqK0YlGfk83FQ',
         'ca-pub' => 'ca-pub-8638642715460968',
         'facebook-profile-id' => '394597600634385',
         'facebook-app-id' => '366403720656',

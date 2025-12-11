@@ -94,8 +94,8 @@
                 alt="{{$article['titre']}}"
                 title="{{$title}}"
                 src="{{$article['image_url']}}"
-                width="{{$article['image_width']}}"
-                height="{{$article['image_height']}}"
+                width="{{$article['image_width'] ?? 300}}"
+                height="{{$article['image_height'] ?? 300}}"
                 layout="responsive">
 
             </amp-img>

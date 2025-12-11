@@ -76,17 +76,24 @@
         ];
 @endphp
 <div class="material-box  full-top" style="text-align: justify;" itemscope itemtype="https://schema.org/NewsArticle">
-        <link itemprop="url" href="{{ $articleUrl }}">
+
+    <link itemprop="url" href="{{ $articleUrl }}">
+    <div class="relative">
         <amp-img
             title="{{$article['titre']}}"
             alt="{{$article['titre']}}"
             class="full-bottom"
             src="{{$article['image_url']}}"
-            width="{{$article['image_width']}}"
-            height="{{$article['image_height']}}"
+            width="{{$article['image_width'] ?? 300}}"
+            height="{{$article['image_height'] ?? 300}}"
             layout="responsive">
 
         </amp-img>
+        <div class="absolute badge"
+            style="bottom: 60px; right: -5px;"><i class="fa fa-bolt" aria-hidden="true"></i>
+            {{$article['sousrubrique']['sousrubrique']}}
+        </div>
+    </div>
         <meta itemprop="thumbnailUrl" content="{{$article['image_url']}}" />
         <meta itemprop="description" content="{{$description}}" />
         <meta itemprop="datePublished" content="{{ $articleDate }}">

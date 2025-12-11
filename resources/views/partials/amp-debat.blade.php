@@ -17,8 +17,8 @@
                    title="{{$debat['titre']}}"
                    class="responsive-img"
                    src="{{$debat['image_url']}}"
-                   width="{{$debat['image_width']}}"
-                   height="{{$debat['image_height']}}"
+                   width="{{$debat['image_width'] ?? 300}}"
+                   height="{{$debat['image_height'] ?? 300}}"
                    layout="responsive">
                </amp-img>
 

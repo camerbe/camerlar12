@@ -6,7 +6,6 @@
     <div class="full-bottom">
         <div class="news-full">
 
-
             <amp-img
                 alt="{{$pub['endpubdate']}}"
                 title="{{$pub['endpubdate']}}"
@@ -15,7 +14,6 @@
                 height="{{$pub['imageheight']}}"
                 layout="responsive">
             </amp-img>
-
 
 
         </div>

@@ -41,12 +41,12 @@
 
     <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
     <!--non-AMP page
-<link rel="canonical" href="{{config('app.url')}}">
+<link rel="canonical" href="{{config('BASE_APP_URL')}}">
 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i">
-    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <style amp-custom>
         body{font-family:'Roboto', sans-serif; font-size:13px; background-color:#ececec;}
@@ -152,18 +152,18 @@
         .skype-color{       color:#12A5F4;}
 
         /*Background Images*/
-        .bg-1{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/1.jpg')}})}
-        .bg-2{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/2.jpg')}})}
-        .bg-3{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/3.jpg')}})}
-        .bg-4{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/4.jpg')}})}
-        .bg-5{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/5.jpg')}})}
-        .bg-6{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/6.jpg')}})}
-        .bg-7{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/7.jpg')}})}
-        .bg-8{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/8.jpg')}})}
-        .bg-9{background-image:url({{secure_asset('amp/ampmaterial/images/pictures/9.jpg')}})}
-        .bg-body{background-image:url({{secure_asset('amp/ampmaterial/images/pictures_vertical/bg2.jpg')}})}
-        .bg-body-1{background-image:url({{secure_asset('amp/ampmaterial/images/pictures_vertical/bg2.jpg')}}i)}
-        .bg-body-2{background-image:url({{secure_asset('amp/ampmaterial/images/pictures_vertical/bg2.jpg')}})}
+        .bg-1{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/1.jpg')}})}
+        .bg-2{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/2.jpg')}})}
+        .bg-3{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/3.jpg')}})}
+        .bg-4{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/4.jpg')}})}
+        .bg-5{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/5.jpg')}})}
+        .bg-6{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/6.jpg')}})}
+        .bg-7{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/7.jpg')}})}
+        .bg-8{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/8.jpg')}})}
+        .bg-9{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures/9.jpg')}})}
+        .bg-body{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures_vertical/bg2.jpg')}})}
+        .bg-body-1{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures_vertical/bg2.jpg')}}i)}
+        .bg-body-2{background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures_vertical/bg2.jpg')}})}
         .overlay{background-color:rgba(0,0,0,0.8); position:absolute; top:0px; right:0px; bottom:0px; left:0px;}
 
         /*Font Settings*/
@@ -329,7 +329,7 @@
 
         .sidebar-header{
             /*	background-image:url(images/sidebar.jpg);*/
-            background-image:url({{secure_asset('amp/ampmaterial/images/sidebar.jpg')}});
+            background-image:url({{secure_asset('amp-api/ampmaterial/images/sidebar.jpg')}});
 
             background-size:270px 112px;
             width:270px;
@@ -337,7 +337,7 @@
         }
 
         .sidebar-logo{
-            background-image:url({{secure_asset('amp/ampmaterial/images/logo-camer.png')}});
+            background-image:url({{secure_asset('amp-api/ampmaterial/images/logo-camer.png')}});
             background-size:100px 34px;
             background-repeat:no-repeat;
             height:112px;
@@ -566,7 +566,7 @@
 
 
         .body-bg{
-            background-image:url({{secure_asset('amp/ampmaterial/images/pictures_vertical/bg3.jpg')}});
+            background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures_vertical/bg3.jpg')}});
             background-size:cover;
             position:fixed;
             top:0px;
@@ -606,7 +606,7 @@
         .header-icon-1{left:0px; top:0px; cursor:pointer;}
 
         .header-logo{
-            background-image:url({{secure_asset('amp/ampmaterial/images/logo-camer.png')}});
+            background-image:url({{secure_asset('amp-api/ampmaterial/images/logo-camer.png')}});
             margin-left:45px;
             background-repeat: no-repeat;
             background-position:center center;
@@ -620,7 +620,7 @@
         .footer{padding-top:20px;}
         .footer-logo{
             /*	background-image:url(images/logo.png);*/
-            background-image:url({{secure_asset('amp/ampmaterial/images/logo-camer.png')}})
+            background-image:url({{secure_asset('amp-api/ampmaterial/images/logo-camer.png')}})
             background-repeat: no-repeat;
             background-size:120px 20px;
             width:120px;
@@ -1538,6 +1538,15 @@
             max-width: 100%;
             margin: 0 auto;
         }
+        .badge{
+            background:#f1c40f;
+            color:#1a202c;
+            padding: 5px 10px;
+            width:36%;
+            display: inline-block;
+            border-radius: 15px;
+            font-weight: bold;
+        }
     </style>
     <!--<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
 
@@ -1566,7 +1575,7 @@
 
 <amp-sidebar id="sidebar" layout="nodisplay" side="left">
     <div class="sidebar-header">
-        <a class="sidebar-logo" href="{{config('app.url')}}/amp/accueil">
+        <a class="sidebar-logo" href="{{env('BASE_APP_URL')}}/amp">
             <em>Accueil</em>
         </a>
     </div>
@@ -1574,36 +1583,75 @@
 
     <amp-accordion class="submenu">
         <section>
-            <h4><i class="fa fa-newspaper-o"></i> Actualités</h4>
+            <h4><i class="fa fa-newspaper-o"></i> Actualité & Société </h4>
             <div>
-                <a href="{{config('app.url').'/amp'}}/1/37/35/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>Allo Docteur</a>
-                <a href="{{config('app.url').'/amp'}}/1/34/31/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>Diaspora</a>
-                <a href="{{config('app.url').'/amp'}}/1/12/1/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>économie</a>
-                <a href="{{config('app.url').'/amp'}}/1/32/29/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>françaiscamer</a>
-                <a href="{{config('app.url').'/amp'}}/1/26/23/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>françafrique</a>
-                <a href="{{config('app.url').'/amp'}}/1/15/1/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>insolite</a>
-                <a href="{{config('app.url').'/amp'}}/1/35/32/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>LE SAVIEZ-VOUS</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/camerounais-du-monde/diaspora" class="uppercase"><i class="fa fa-angle-right"></i>Diaspora</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/economie" class="uppercase"><i class="fa fa-angle-right"></i>économie</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/religion" class="uppercase"><i class="fa fa-angle-right"></i>réligion</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/societe" class="uppercase"><i class="fa fa-angle-right"></i>société</a>
             </div>
         </section>
     </amp-accordion>
     <amp-accordion class="submenu">
         <section>
-            <h4><i class="fa fa-camera"></i> Culture</h4>
+            <h4><i class="fa fa-globe"></i> International</h4>
             <div>
-                <a href="{{config('app.url').'/amp'}}/1/16/6/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>Art</a>
-                <a href="{{config('app.url').'/amp'}}/1/14/6/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>cinéma</a>
-                <a href="{{config('app.url').'/amp'}}/1/2/6/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>livre</a>
-                <a href="{{config('app.url').'/amp'}}/1/1/6/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>musique</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/frananglais/francaiscamer" class="uppercase"><i class="fa fa-angle-right"></i>françaiscamer</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/liens-postcoloniaux/francafrique" class="uppercase"><i class="fa fa-angle-right"></i>françafrique</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/monde-pouvoir/geopolitique" class="uppercase"><i class="fa fa-angle-right"></i>géopolitique</a>
             </div>
         </section>
     </amp-accordion>
     <amp-accordion class="submenu">
         <section>
-            <h4><i class="fa fa-image"></i>Expression libre</h4>
+            <h4><i class="fa fa-image"></i>Divertissement</h4>
             <div>
-                <a href="{{config('app.url').'/amp'}}/1/27/25/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>débat</a>
-                <a href="{{config('app.url').'/amp'}}/1/33/30/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>droit</a>
-                <a href="{{config('app.url').'/amp'}}/1/30/27/cameroun-cameroon.html" class="uppercase"><i class="fa fa-angle-right"></i>point de vue</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/insolite" class="uppercase"><i class="fa fa-angle-right"></i>insolite</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/fait-curieux/le-saviez-vous" class="uppercase"><i class="fa fa-angle-right"></i>le saviez-vous</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/people" class="uppercase"><i class="fa fa-angle-right"></i>people</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/libre-parole/sans-tabou" class="uppercase"><i class="fa fa-angle-right"></i>sans tabou</a>
+            </div>
+        </section>
+    </amp-accordion>
+    <amp-accordion class="submenu">
+        <section>
+            <h4><i class="fa fa-handshake-o"></i>Santé & Bien-être</h4>
+            <div>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/le-coin-sante/allo-docteur" class="uppercase"><i class="fa fa-angle-right"></i>allô docteur</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/sante" class="uppercase"><i class="fa fa-angle-right"></i>santé</a>
+
+            </div>
+        </section>
+    </amp-accordion>
+    <amp-accordion class="submenu">
+        <section>
+            <h4><i class="fa fa-podcast"></i>Culture</h4>
+            <div>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/art" class="uppercase"><i class="fa fa-angle-right"></i>art</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/cinema" class="uppercase"><i class="fa fa-angle-right"></i>cinéma</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/livres" class="uppercase"><i class="fa fa-angle-right"></i>livres</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/musique" class="uppercase"><i class="fa fa-angle-right"></i>musique</a>
+            </div>
+        </section>
+    </amp-accordion>
+    <amp-accordion class="submenu">
+        <section>
+            <h4><i class="fa fa-check"></i>Libre Voix</h4>
+            <div>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/tribune/le-debat" class="uppercase"><i class="fa fa-angle-right"></i>le débat</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/droit/point-du-droit" class="uppercase"><i class="fa fa-angle-right"></i>point du droit</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/analyse/point-de-vue" class="uppercase"><i class="fa fa-angle-right"></i>point de vue</a>
+
+            </div>
+        </section>
+    </amp-accordion>
+    <amp-accordion class="submenu">
+        <section>
+            <h4><i class="fa fa-video-camera"></i>Contenu audiovisuel</h4>
+            <div>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/video/Camer" class="uppercase"><i class="fa fa-angle-right"></i>Camer</a>
+                <a href="{{config('BASE_APP_URL').'/amp'}}/video/Sopie" class="uppercase"><i class="fa fa-angle-right"></i>Sopie</a>
+
             </div>
         </section>
     </amp-accordion>
