@@ -167,7 +167,7 @@ class AmpController extends Controller
         ]);
     }
     public function index2(Request $request){
-        $isVideo=false;
+        $isVideo=true;
         $perPage = 10;
         $currentPage = (int) $request->get('page', 1);
 
@@ -209,6 +209,7 @@ class AmpController extends Controller
         ];
         //dd($request->rubrique);
         if($request->rubrique!='video'){
+            $isVideo=false;
             $fksousrubrique=$rubriques[$request->sousrubrique];
             $fkrubrique=$rubriques[$request->rubrique];
             $data=$this->api->getRubriqueArticles($fksousrubrique,$fkrubrique);
@@ -217,11 +218,11 @@ class AmpController extends Controller
         }
         elseif ($request->sousrubrique!='Camer'){
             $articles=$this->sopieVideos;
-            $isVideo=true;
+
         }
         else{
             $articles=$this->camerVideos;
-            $isVideo=true;
+
         }
 
 
