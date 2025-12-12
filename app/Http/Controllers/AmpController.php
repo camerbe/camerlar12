@@ -95,13 +95,19 @@ class AmpController extends Controller
                 'year' => $arrayyear ?? [],
             ]) ;
         });
-        $data=$this->video->findAll();
-        $array = json_decode($data->getContent(), true);
-        $this->camerVideos= collect($array['data']);
 
-        $data=$this->video->findAll('Sopie');
-        $array = json_decode($data->getContent(), true);
-        $this->sopieVideos=collect($array['data']);
+
+        $this->camerVideos= Cache::remember('videoCamer', now()->addMinute(15), function () {
+            $data = $this->video->findAll();  // API call
+            $array = json_decode($data->getContent(), true);
+            return collect($array['data']); // Store as collection
+        });
+        $this->sopieVideos= Cache::remember('videoSopie', now()->addMinute(15), function () {
+            $data = $this->video->findAll('Sopie');  // API call
+            $array = json_decode($data->getContent(), true);
+            return collect($array['data']); // Store as collection
+        });
+        
 
 
     }
@@ -129,7 +135,7 @@ class AmpController extends Controller
         );
 
         $cacheKey="cache_amp_index_".$currentPage;
-        Cache::forget($cacheKey);
+        //Cache::forget($cacheKey);
         //dd($archives);
         return Cache::remember($cacheKey, now()->addHours(12), function ()
             use ($paginated) {
