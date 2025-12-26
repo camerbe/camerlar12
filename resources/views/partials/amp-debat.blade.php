@@ -20,6 +20,12 @@
                    width="{{$debat['image_width'] ?? 300}}"
                    height="{{$debat['image_height'] ?? 300}}"
                    layout="responsive">
+                   <amp-img
+                       placeholder
+                       src="https://picsum.photos/"
+                       width="{{ $article['image_width'] ?? 300 }}"
+                       height="{{ $article['image_height'] ?? 300 }}">
+                   </amp-img>
                </amp-img>
 
            </a>

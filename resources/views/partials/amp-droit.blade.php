@@ -20,6 +20,12 @@
                     width="{{$droit['image_width']}}"
                     height="{{$droit['image_height']}}"
                     layout="responsive">
+                    <amp-img
+                        placeholder
+                        src="https://picsum.photos/"
+                        width="{{ $article['image_width'] ?? 300 }}"
+                        height="{{ $article['image_height'] ?? 300 }}">
+                    </amp-img>
                 </amp-img>
 
             </a>

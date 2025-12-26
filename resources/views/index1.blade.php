@@ -20,7 +20,8 @@
     $section=$article["rubrique"]["rubrique"]." / ".$article["sousrubrique"]["sousrubrique"];
     $author=$article["auteur"];
     $source=$article["source"];
-    $canonical= url()->current()
+    $canonical= \App\Helpers\Helper::remove_amp_from_url(url()->current());
+
 @endphp
 @extends('layouts.amp-master')
 @section('content')

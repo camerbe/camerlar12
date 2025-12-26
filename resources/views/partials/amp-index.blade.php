@@ -1,5 +1,6 @@
 @php
     $listElements = [];
+
 @endphp
 <div class="material-box  full-top">
 @foreach($articles as $article)
@@ -84,6 +85,7 @@
         ]
     ];
     @endphp
+
     <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <meta itemprop="position" content="{{ $loop->iteration }}">
         <div itemscope itemtype="https://schema.org/NewsArticle">
@@ -97,7 +99,12 @@
                 width="{{$article['image_width'] ?? 300}}"
                 height="{{$article['image_height'] ?? 300}}"
                 layout="responsive">
-
+                <amp-img
+                    placeholder
+                    src="https://picsum.photos/"
+                    width="{{ $article['image_width'] ?? 300 }}"
+                    height="{{ $article['image_height'] ?? 300 }}">
+                </amp-img>
             </amp-img>
             <meta itemprop="datePublished" content="{{ $articleDate }}">
             <meta itemprop="dateModified" content="{{ $today }}">
@@ -140,6 +147,7 @@
     </div>
 
 @endforeach
+
 </div>
 <div class="news-item">
     <nav>

@@ -59,7 +59,7 @@ class AmpController extends Controller
         //------------------ Pub
         $data=$this->pub->getCachedPub(300);
         $array = json_decode($data->getContent(), true);
-        $this->pubblicite = collect($array['data']);
+        $this->pubblicite = collect($array['data'] ?? []);
         //dd($pub);
         $this->debat= Cache::remember('articles_debat_json', now()->addHours(12), function () {
             $data = $this->api->getOneRubriqueArticles(27,25);   // API call
@@ -107,7 +107,7 @@ class AmpController extends Controller
             $array = json_decode($data->getContent(), true);
             return collect($array['data']); // Store as collection
         });
-        
+
 
 
     }

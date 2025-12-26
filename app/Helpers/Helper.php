@@ -216,4 +216,20 @@ class Helper
         return $dom->saveHTML();
     }
 
+    public static function remove_amp_from_url(string $url): string {
+        $parsed = parse_url($url);
+        $path = $parsed['path'] ?? '';
+        // Remove only leading /amp or /amp/
+        $path = preg_replace('#^/amp(/|$)#', '/', $path);
+
+        // Normalize double slashes
+        $path = preg_replace('#//+#', '/', $path);
+        return ($parsed['scheme'] ?? 'http') . '://' .
+            ($parsed['host'] ?? '') .
+            (isset($parsed['port']) ? ':' . $parsed['port'] : '') .
+            $path .
+            (isset($parsed['query']) ? '?' . $parsed['query'] : '') .
+            (isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '');
+    }
+
 }

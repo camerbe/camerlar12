@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 
-    Route::get('amp', [AmpController::class, 'index'])->name('amp.index');
-    Route::get('amp/{rubrique}/{sousrubrique}/{slug}', [AmpController::class, 'index1'])->name('amp.index1');
-    Route::get('amp/{rubrique}/{sousrubrique}', [AmpController::class, 'index2'])->name('amp.index2');
+    Route::get('amp', [AmpController::class, 'index'])->name('amp.index')->middleware('cache.response');
+    Route::get('amp/{rubrique}/{sousrubrique}/{slug}', [AmpController::class, 'index1'])->name('amp.index1')->middleware('cache.response');;
+    Route::get('amp/{rubrique}/{sousrubrique}', [AmpController::class, 'index2'])->name('amp.index2')->middleware('cache.response');;
 
     Route::get('rss', [RssController::class, 'feed'])->name('rss.main');
     Route::get('politique', [RssController::class, 'politique'])->name('rss.politique');

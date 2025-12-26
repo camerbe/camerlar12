@@ -15,7 +15,9 @@
     $section=$firstArticle["rubrique"]["rubrique"]." / ".$firstArticle["sousrubrique"]["sousrubrique"];
     $author=$firstArticle["auteur"];
     $source=$firstArticle["source"];
-    $canonical= url()->current()
+    $canonical= \App\Helpers\Helper::remove_amp_from_url(url()->current());
+    $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
+    $published_time=\Carbon\Carbon::parse($firstArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
 @endphp
 
 @extends('layouts.amp-master')

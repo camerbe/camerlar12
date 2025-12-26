@@ -104,7 +104,12 @@
                             width="{{$article['image_width'] ?? 300}}"
                             height="{{$article['image_height'] ?? 300}}"
                             layout="responsive">
-
+                            <amp-img
+                                placeholder
+                                src="https://picsum.photos/"
+                                width="{{ $article['image_width'] ?? 300 }}"
+                                height="{{ $article['image_height'] ?? 300 }}">
+                            </amp-img>
                         </amp-img>
                         <meta itemprop="datePublished" content="{{ $articleDate }}">
                         <meta itemprop="dateModified" content="{{ $today }}">
@@ -199,6 +204,7 @@
                 ]
             ];
             @endphp
+
             {{-- Injection JSON-LD dans la page --}}
             <script type="application/ld+json">
                 {!! json_encode($jsonLdGlobal, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
@@ -328,9 +334,11 @@
                     ];
                 @endphp
 
+
                 <script type="application/ld+json">
                     {!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}
                 </script>
 
 
 @endif
+
