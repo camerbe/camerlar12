@@ -13,13 +13,38 @@ class Helper
     /**
      * @param $html
      * @return mixed|string|null
-     */
+
     public static function extractImgSrc($html){
         if(strpos($html, '<img') !== false){
             preg_match('/<img[^>]+src=["\'](.*?)["\']/', $html, $matches);
             return $matches[1] ?? null;
         }
         return $html;
+    }*/
+
+    public static function extractImgSrc(string $html): ?string
+    {
+        if (strpos($html, '<img') === false) {
+            return null;
+        }
+
+        preg_match('/<img[^>]+src=["\']([^"\']+)["\']/', $html, $matches);
+        $src = $matches[1] ?? null;
+
+        if (!$src) {
+            return null;
+        }
+
+        // Déjà une URL complète
+        if (str_starts_with($src, 'http://') || str_starts_with($src, 'https://')) {
+            return $src;
+        }
+
+        // URL relative → reconstruction
+        $base = 'https://www.camer.be';
+        $src  = ltrim($src, '/');
+
+        return "{$base}/{$src}";
     }
     public static function extractWidth($html){
         if(strpos($html, '<img') !== false){
@@ -44,7 +69,7 @@ class Helper
     public static function getPubDimension($dimension){
         $data=[
             728=>1,
-            300=>24
+            300=>2
         ];
         return $data[$dimension] ?? null;
     }

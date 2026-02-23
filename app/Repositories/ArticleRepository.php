@@ -209,32 +209,35 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticles()
     {
-        //$isCmr = ($cmr==='CM');
-        //Cache::forget('Article-CMR-list');
-        //dd($isCmr);
-       // Cache::forget('Article-Other-list');
-        $cache = 'Article-CMR-list';
+
+        $cache = 'Article-list';
         $cacheExpiry = now()->addDay();
 
         $articles= Cache::remember($cache, $cacheExpiry, function () {
-            $cmrIds = Article::query()
-                ->where('dateparution', '<=', now())
-                ->where('fkpays', 'CM')
+
+            $cmr = Article::Cameroon()
+                ->select('idarticle')
+                ->orderByDesc('dateparution')
+                ->limit(50);
+
+            $other = Article::Other()
+                ->select('idarticle')
+                ->orderByDesc('dateparution')
+                ->limit(50);
+
+            /*$nonCmrIds = Article::Other()
+                //->where('dateparution', '<=', now())
+                //->where('fkpays', '<>', 'CM')
                 ->orderByDesc('dateparution')
                 ->limit(50)
-                ->pluck('idarticle');
+                ->pluck('idarticle');*/
 
-            $nonCmrIds = Article::query()
-                ->where('dateparution', '<=', now())
-                ->where('fkpays', '<>', 'CM')
-                ->orderByDesc('dateparution')
-                ->limit(50)
+            //$allIds = $cmrIds->merge($nonCmrIds);
+            $ids = $cmr->unionAll($other)
                 ->pluck('idarticle');
-
-            $allIds = $cmrIds->merge($nonCmrIds);
 
             return Article::with(['countries','rubrique','sousrubrique'])
-                ->whereIn('idarticle', $allIds)
+                ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
                 ->get();
             });
@@ -252,11 +255,7 @@ class ArticleRepository extends Repository implements IArticleRepository
         $article= Article::with(['countries', 'rubrique', 'sousrubrique'])
             ->where('slug', $slug)->first();
         if($article){
-            Article::withoutEvents(function () use ($article) {
-                $article->hit++;
-                $article->save();
-            });
-
+            $article->incrementHits();
         }
         return new ArticleResource($article);
     }
@@ -343,7 +342,7 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getNewsByAuthor($author)
     {
-        $cacheKey = "news_by_author_" . md5($author);
+        $cacheKey = "news_by_author_".$author;
         $articles= Cache::remember($cacheKey, now()->addDay(), function () use($author) {
             return Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->where('auteur', $author)

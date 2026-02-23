@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -27,8 +28,8 @@ class Article extends Model implements HasMedia
         parent::boot();
         Article::created(function ($model) {
             //Cache::forget('Article-By-User');
-            Cache::forget('Article-CMR-list');
-            Cache::forget('Article-Other-list');
+            Cache::forget('Article-list');
+            //Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
             Cache::forget('articles_json');
             Cache::forget('articles_droit_json');
@@ -42,8 +43,8 @@ class Article extends Model implements HasMedia
         });
         Article::updated(function ($model)  {
             //Cache::forget('Article-By-User');
-            Cache::forget('Article-CMR-list');
-            Cache::forget('Article-Other-list');
+            Cache::forget('Article-list');
+            //Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
             Cache::forget('articles_json');
             Cache::forget('articles_droit_json');
@@ -58,8 +59,8 @@ class Article extends Model implements HasMedia
         });
         Article::deleted(function ($model) {
             //Cache::forget('Article-By-User');
-            Cache::forget('Article-CMR-list');
-            Cache::forget('Article-Other-list');
+            Cache::forget('Article-list');
+            //Cache::forget('Article-Other-list');
             Cache::forget('news_for_rss');
             Cache::forget('articles_json');
             Cache::forget('articles_droit_json');
@@ -109,6 +110,26 @@ class Article extends Model implements HasMedia
                 'height'=> $media->getCustomProperty('height'),
             ];
         });
+    }
+    // --- Helpers ---
+    public function incrementHits(): void
+    {
+        $this->increment('hit');
+    }
+    // --- Scopes (Filtres réutilisables) ---
+    public function scopePublished(Builder $query):Builder
+    {
+        return $query->where('dateparution','<=',now());
+    }
+    public function scopeCameroon(Builder $query):Builder
+    {
+        return $query->where('fkpays','=','CM')
+                     ->where('dateparution','<=',now());
+    }
+    public function scopeOther(Builder $query):Builder
+    {
+        return $query->where('fkpays','<>','CM')
+                     ->where('dateparution','<=',now());
     }
 
 }

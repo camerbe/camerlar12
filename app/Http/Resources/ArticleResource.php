@@ -38,6 +38,7 @@ class ArticleResource extends JsonResource
             'image_url' => $this->getImageUrl(),
             'image_width' => $this->getWidth(),
             'image_height' => $this->getHeight(),
+            
 
         ];
     }

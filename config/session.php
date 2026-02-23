@@ -20,6 +20,7 @@ return [
 
     'driver' => env('SESSION_DRIVER', 'database'),
 
+
     /*
     |--------------------------------------------------------------------------
     | Session Lifetime
@@ -201,6 +202,7 @@ return [
 
     'same_site' => env('SESSION_SAME_SITE', 'lax'),
 
+
     /*
     |--------------------------------------------------------------------------
     | Partitioned Cookies
@@ -213,5 +215,5 @@ return [
     */
 
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
-    
+
 ];

@@ -82,6 +82,7 @@ class UserRepository extends Repository implements IUserRepository
      */
     function changePassword(array $input, $id)
     {
+        dd($input);
         $current=$this->findById($id);
         $current->password_changed_at=now();
         $current->password=bcrypt($input['password']);

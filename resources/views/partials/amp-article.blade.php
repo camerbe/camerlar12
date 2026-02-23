@@ -89,7 +89,7 @@
             layout="responsive">
             <amp-img
                 placeholder
-                src="https://picsum.photos/"
+                src="https://picsum.photos/300"
                 width="{{ $article['image_width'] ?? 300 }}"
                 height="{{ $article['image_height'] ?? 300 }}">
             </amp-img>

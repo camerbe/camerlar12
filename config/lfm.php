@@ -26,7 +26,7 @@ return [
     |
      */
     'middlewares' => ['web'],
-    'allow_private_folder'     => true,
+    'allow_private_folder'     => false,
 
     // Flexible way to customize client folders accessibility
     // If you want to customize client folders, publish tag="lfm_handler"
@@ -59,6 +59,7 @@ return [
                 'image/png',
                 'image/gif',
                 'image/webp',
+                'image/avif',
                 'application/pdf',
                 'text/plain',
                 'audio/mp3',
@@ -85,12 +86,13 @@ return [
                 'image/webp',
                 'image/png',
                 'image/gif',
+                'image/avif'
             ],
         ],
         'media' => [
             'folder_name'  => 'medias',
             'startup_view' => 'grid',
-            'max_size'     => 50000, // size in KB
+            'max_size'     => 102400, // size in KB
             'thumb' => true,
             'thumb_width' => 80,
             'thumb_height' => 80,
@@ -102,6 +104,7 @@ return [
                 'video/quicktime',
                 'video/mp4',
                 'video/mpeg',
+                'application/octet-stream',
 
             ],
         ],
@@ -172,6 +175,7 @@ return [
         'image/webp',
         'video/mp4',
         'audio/mp3',
+        'image/avif',
     ],
 
     'thumb_img_width'          => 100, // px
@@ -200,6 +204,7 @@ return [
         'mp4' => 'MPEG-4',
         'mp3' => 'MPEG-3',
         'webp' => 'webp',
+        'avif' => 'avif',
     ],
 
     /*

@@ -7,7 +7,8 @@
     $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';
 
     // Métadonnées génériques
-    $title = 'Actualités Cameroun, Info & Analyse – Politique, Sport, Diaspora | Camer.be';
+    $sousRubrique = $firstArticle['sousrubrique']['sousrubrique'] ?? 'Vidéo';
+    $title = 'Actualités Cameroun, Info & Analyse – Politique, Sport, '. $sousRubrique. ' | Camer.be';
     $description = $dynamicDescription;
     $image = url('assets/img/camer-logo.png');
     $image_width = 190;

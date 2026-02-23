@@ -29,7 +29,9 @@ use Illuminate\Support\Facades\Route;
     Route::get('/sitemap-societe', [SitemapController::class, 'societe'])->name('sitemap.societe');
     Route::get('/sitemap-diaspora', [SitemapController::class, 'diaspora'])->name('sitemap.diaspora');
     Route::get('/sitemap-pointdevue', [SitemapController::class, 'pointdevue'])->name('sitemap.pointdevue');
-
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
 
 
 
