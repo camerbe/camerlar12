@@ -164,12 +164,19 @@ class ArticleRepository extends Repository implements IArticleRepository
     }
 
     /**
-     * @param $request
+     * @param $search
      * @return mixed
      */
-    function search($request)
+    function search($search)
     {
-        $article=(new Article)->newQuery();
+        $articles=Article::query()
+            ->with(['countries', 'rubrique', 'sousrubrique'])
+            ->Search($search)
+            ->orderByDesc('dateparution')
+            ->limit(500)
+            ->get();
+        //dd($articles);
+        /*$article=(new Article)->newQuery();
         if(isset($request['datesearch']))
         {
 
@@ -199,8 +206,9 @@ class ArticleRepository extends Repository implements IArticleRepository
                 ->join('users','users.id','=','articles.fkuser')
                 ->join('sousrubriques','sousrubriques.idsousrubrique','=','articles.fksousrubrique');
         }
-        $articles= $article->orderByDesc('dateparution')->select('*')->limit(50) ;
-        return ArticleResource::collection($articles);
+        $articles= $article->orderByDesc('dateparution')->select('*')->limit(50) ;*/
+
+        return $articles ? ArticleResource::collection($articles) : null;
     }
 
     /**

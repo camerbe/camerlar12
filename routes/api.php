@@ -39,6 +39,7 @@ Route::prefix('articles')->controller(ArticleController::class)->group(function 
     Route::get('{sousrubrique}/{rubrique}', 'getRubriqueArticles');
     Route::get('/one/{sousrubrique}/{rubrique}', 'getOneRubriqueArticles');
 
+
 });
 Route::prefix('videos')->controller(VideoController::class)->group(function () {
     Route::get('videosem', 'getVideoWeek');
@@ -60,48 +61,53 @@ Route::prefix('sousrubriques')->controller(SousRubriqueController::class)->group
    Route::get('/rubrique/list', 'allRubrique');
    Route::get('list', 'allSousRubrique');
 });
-Route::prefix('pays')->controller(PaysController::class)->group(function () {
-   Route::get('/camer/list', 'articleCameroon');
-   Route::get('/other/list', 'articleNonCameroon');
-   Route::get('list', 'allPays');
-});
-Route::prefix('users')->controller(UserController::class)->group(function () {
-   Route::post('/activate/user', 'firstLogin');
-   Route::get('/activating/{user}', 'getUserByEmail');
-});
-Route::post('auth/login', [AuthController::class, 'login']);
+/******  Pays ******/
+    Route::prefix('pays')->controller(PaysController::class)->group(function () {
+       Route::get('/camer/list', 'articleCameroon');
+       Route::get('/other/list', 'articleNonCameroon');
+       Route::get('list', 'allPays');
+    });
+/******  User ******/
+    Route::prefix('users')->controller(UserController::class)->group(function () {
+       Route::post('/activate/user', 'firstLogin');
+       Route::get('/activating/{user}', 'getUserByEmail');
+    });
+/******  Login ******/
+    Route::post('auth/login', [AuthController::class, 'login']);
+/******  Admin ******/
+    Route::group(['middleware' => 'auth:api'], function (){
 
-Route::group(['middleware' => 'auth:api'], function (){
+        Route::prefix('articles')->controller(ArticleController::class)->group(function () {
+            Route::get('search/title/{search}', 'search');
+            Route::get('adm/user/{adm}', 'getArticleByUser');
 
-    Route::prefix('articles')->controller(ArticleController::class)->group(function () {
-        Route::get('adm/user/{adm}', 'getArticleByUser');
+
+        });
+        Route::prefix('pubs')->controller(PubController::class)->group(function () {
+            Route::get('dimension/list', 'allPubDimension');
+            Route::get('pubtype/list', 'allPubType');
+        });
+
+
+        Route::apiResources([
+            "articles"=>ArticleController::class,
+            "events"=>EvenementController::class,
+            "pays"=>PaysController::class,
+            "pubs"=>PubController::class,
+            "pubdimensions"=>PubDimensionController::class,
+            "rubriques"=>RubriqueController::class,
+            "sousrubriques"=>SousRubriqueController::class,
+            "stats"=>StatsController::class,
+            "typepubs"=>TypePubController::class,
+            "users"=>UserController::class,
+            "videos"=>VideoController::class,
+        ]);
+
+
+
+
 
     });
-    Route::prefix('pubs')->controller(PubController::class)->group(function () {
-        Route::get('dimension/list', 'allPubDimension');
-        Route::get('pubtype/list', 'allPubType');
-    });
-
-
-    Route::apiResources([
-        "articles"=>ArticleController::class,
-        "events"=>EvenementController::class,
-        "pays"=>PaysController::class,
-        "pubs"=>PubController::class,
-        "pubdimensions"=>PubDimensionController::class,
-        "rubriques"=>RubriqueController::class,
-        "sousrubriques"=>SousRubriqueController::class,
-        "stats"=>StatsController::class,
-        "typepubs"=>TypePubController::class,
-        "users"=>UserController::class,
-        "videos"=>VideoController::class,
-    ]);
-
-
-
-
-
-});
 /*Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 

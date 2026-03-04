@@ -1566,7 +1566,7 @@
 </amp-auto-ads>
 <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
     <button on="tap:sidebar.toggle" class="ampstart-btn caps m2 header-icon-1"><i class="fa fa-navicon"></i></button>
-    <a href="{{env('BASE_APP_URL')}}/amp" class="header-logo">
+    <a href="{{env('BASE_APP_URL')}}/amp/accueil" class="header-logo">
         <div class="mx-auto ">
             <amp-img src="{{env('BASE_APP_URL')}}/assets/img/camer-logo.png" alt="Camer.be" height="42" width="125"></amp-img>
         </div>

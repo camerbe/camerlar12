@@ -131,5 +131,9 @@ class Article extends Model implements HasMedia
         return $query->where('fkpays','<>','CM')
                      ->where('dateparution','<=',now());
     }
+    public function scopeSearch(Builder $query,string $search)
+    {
+        return $query->whereFullText('titre',$search);
+    }
 
 }

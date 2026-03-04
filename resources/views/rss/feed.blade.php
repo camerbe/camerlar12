@@ -18,6 +18,9 @@
                 $image= App\Helpers\Helper::parseImageUrl($image);
                 $media = $item->getMedia('article')->where('name',$item->slug)->first();
                 $auteur=str_replace("&", "et", $item->auteur);
+                $rub=Illuminate\Support\Str::slug($item->rubrique->rubrique);
+                $sousrub=Illuminate\Support\Str::slug($item->sousrubrique->sousrubrique);
+                $img=App\Helpers\Helper::extractImgSrc($item->image);
                 //dd($media->getUrl());
                 /*->toMediaCollection('article');
                  $mimeType = $media->mime_type;
@@ -29,16 +32,16 @@
             @endphp
             <item>
                 <title><![CDATA[{{ $titre }}]]></title>
-                <link>{{ url('/' . $item->slug) }}</link>
+                <link>{{ url('/' . $rub.'/'.$sousrub.'/'.$item->slug) }}</link>
                 <description>
                     <![CDATA[
                         <p>{!! $item->chapeau !!}</p>
                         @if($media)
-                            <p><img src="{{ $media->getUrl() }}" alt="{{ $titre }}" width="600"/></p>
+                            <p><img src="{{ $img }}" alt="{{ $titre }}" width="600"/></p>
                         @endif
                         ]]>
                 </description>
-                <guid isPermaLink="true">{{ url('/' . $item->slug) }}</guid>
+                <guid isPermaLink="true">{{ url('/' . $rub.'/'.$sousrub.'/'.$item->slug) }}</guid>
                 <content:encoded><![CDATA[{!! $item->info ?? $item->chapeau !!}]]></content:encoded>
                 <pubDate>{{ \Carbon\Carbon::parse($item->dateparution)->toRssString()}}</pubDate>
                 @if($item->auteur)
@@ -48,8 +51,8 @@
                     <category>{{ $item->sousrubrique->sousrubrique }}</category>
                 @endif
                 @if($media)
-                    <enclosure url="{{ $media->getUrl() }}" type="{{$media->mime_type}}" length="{{$media->size}}" />
-                    <media:thumbnail url="{{ $media->getUrl() }}" />
+                    <enclosure url="{{ $img }}" type="{{$media->mime_type}}" length="{{$media->size}}" />
+                    <media:thumbnail url="{{ $img }}" />
                 @endif
             </item>
         @endforeach

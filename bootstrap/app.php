@@ -22,8 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'cache.response' => CacheResponse::class,
         ]);
         $middleware->validateCsrfTokens(except: [
-            'api/laravel-filemanager/upload',
-            'api/laravel-filemanager/*',
+            'laravel-filemanager/*',
+            'filemanager/*',
 
         ]);
     })

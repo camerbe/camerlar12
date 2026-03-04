@@ -363,6 +363,32 @@ class ArticleController extends Controller
             "message"=>"Articles inexistants"
         ],Response::HTTP_NOT_FOUND);
     }
+    public function search($request){
+
+        $articles=$this->articleService->search($request);
+        if ($articles){
+            return response()->json([
+                'success'=>true,
+                'data'=>$articles,
+                'message'=>"Articles trouvés"
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode($articles)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Articles inexistants"
+        ],Response::HTTP_NOT_FOUND);
+    }
     public function getNewsForRss()
     {
         $articles=$this->articleService->getNewsForRss();

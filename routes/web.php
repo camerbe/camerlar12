@@ -11,16 +11,28 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 
-    Route::get('amp', [AmpController::class, 'index'])->name('amp.index')->middleware('cache.response');
-    Route::get('amp/{rubrique}/{sousrubrique}/{slug}', [AmpController::class, 'index1'])->name('amp.index1')->middleware('cache.response');;
-    Route::get('amp/{rubrique}/{sousrubrique}', [AmpController::class, 'index2'])->name('amp.index2')->middleware('cache.response');;
+    Route::prefix('amp')->controller(AmpController::class)->group(function () {
+        Route::get('accueil', 'index')->name('amp.index')->middleware('cache.response');
+        Route::get('{rubrique}/{sousrubrique}/{slug}',  'index1')->name('amp.index1')->middleware('cache.response');
+        Route::get('{rubrique}/{sousrubrique}', 'index2')->name('amp.index2')->middleware('cache.response');
 
-    Route::get('rss', [RssController::class, 'feed'])->name('rss.main');
-    Route::get('politique', [RssController::class, 'politique'])->name('rss.politique');
-    Route::get('societe', [RssController::class, 'societe'])->name('rss.societe');
-    Route::get('economie', [RssController::class, 'societe'])->name('rss.economie');
-    Route::get('diaspora', [RssController::class, 'diaspora'])->name('rss.diaspora');
-    Route::get('pointdevue', [RssController::class, 'pointdevue'])->name('rss.pointdevue');
+    });
+
+    Route::prefix('rss')->controller(RssController::class)->group(function () {
+        Route::get('', 'feed')->name('rss.main');
+        Route::get('diaspora',  'diaspora')->name('rss.diaspora');
+        Route::get('economie', 'societe')->name('rss.economie');
+        Route::get('pointdevue', 'pointdevue')->name('rss.pointdevue');
+        Route::get('politique', 'politique')->name('rss.politique');
+        Route::get('societe', 'societe')->name('rss.societe');
+    });
+
+
+
+
+
+
+
     Route::get('/sitemapindex.xml', [SitemapController::class, 'index'])->name('sitemap.index');
     Route::get('/sitemap-article.xml', [SitemapController::class, 'article'])->name('sitemap.articles');
     Route::get('/sitemap-actualites', [SitemapController::class, 'googleNews'])->name('sitemap.actualite');
