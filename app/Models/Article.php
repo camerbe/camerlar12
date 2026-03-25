@@ -26,55 +26,33 @@ class Article extends Model implements HasMedia
     protected static function boot(){
         //$users=User::all();
         parent::boot();
-        Article::created(function ($model) {
-            //Cache::forget('Article-By-User');
-            Cache::forget('Article-list');
-            //Cache::forget('Article-Other-list');
-            Cache::forget('news_for_rss');
-            Cache::forget('articles_json');
-            Cache::forget('articles_droit_json');
-            Cache::forget('articles_debat_json');
-            //Cache::forget('cahe_amp_index');
-            for($i=0;$i<10;$i++){
-                $idx=$i+1;
-                $cacheKey='cahe_amp_index_'.$idx;
-                Cache::forget($cacheKey);
-            }
-        });
-        Article::updated(function ($model)  {
-            //Cache::forget('Article-By-User');
-            Cache::forget('Article-list');
-            //Cache::forget('Article-Other-list');
-            Cache::forget('news_for_rss');
-            Cache::forget('articles_json');
-            Cache::forget('articles_droit_json');
-            Cache::forget('articles_debat_json');
 
-            //Cache::forget('cahe_amp_index');
-            for($i=0;$i<10;$i++){
-                $idx=$i+1;
-                $cacheKey='cahe_amp_index_'.$idx;
-                Cache::forget($cacheKey);
-            }
+        Article::created(function ($model) {
+            static::clearArticleCache($model);
         });
+
         Article::deleted(function ($model) {
-            //Cache::forget('Article-By-User');
-            Cache::forget('Article-list');
-            //Cache::forget('Article-Other-list');
-            Cache::forget('news_for_rss');
-            Cache::forget('articles_json');
-            Cache::forget('articles_droit_json');
-            Cache::forget('articles_debat_json');
-            for($i=0;$i<10;$i++){
-                $idx=$i+1;
-                $cacheKey='cahe_amp_index_'.$idx;
-                Cache::forget($cacheKey);
-            }
-            /*foreach ($users as $user){
-                $cacheKey = "Article-By-User-".$user;
-                Cache::forget($cacheKey);
-            }*/
+            static::clearArticleCache($model);
         });
+
+        Article::updated(function ($model) {
+            static::clearArticleCache($model);
+        });
+
+
+    }
+    protected static function clearArticleCache(self $model): void{
+
+        Cache::forget('Article-list');
+        Cache::forget('news_for_rss');
+        Cache::forget('articles_json');
+        Cache::forget('articles_droit_json');
+        Cache::forget('articles_debat_json');
+        for($i=0;$i<10;$i++){
+            $idx=$i+1;
+            $cacheKey='cahe_amp_index_'.$idx;
+            Cache::forget($cacheKey);
+        }
     }
     public function countries():BelongsTo{
         return $this->belongsTo(Pays::class,'fkpays');
@@ -133,7 +111,20 @@ class Article extends Model implements HasMedia
     }
     public function scopeSearch(Builder $query,string $search)
     {
-        return $query->whereFullText('titre',$search);
+        $search = trim($search);
+        if (empty($search)) {
+            return $query;
+        }
+        return $query
+            ->whereFullText(
+                ['titre'],   // chercher dans plusieurs colonnes
+                $search,
+                ['mode' => 'boolean']   // mode boolean pour + de contrôle
+            )
+            ->orderByRaw(
+                'MATCH(titre, contenu) AGAINST(? IN BOOLEAN MODE) DESC',
+                [$search]              // trier par pertinence
+            );
     }
 
 }

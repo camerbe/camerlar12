@@ -175,38 +175,6 @@ class ArticleRepository extends Repository implements IArticleRepository
             ->orderByDesc('dateparution')
             ->limit(500)
             ->get();
-        //dd($articles);
-        /*$article=(new Article)->newQuery();
-        if(isset($request['datesearch']))
-        {
-
-            $article->where('articles.dateref',Carbon::parse($request['searcheddate'])->format('Y-m-d'))
-                ->join('pays','pays.idpays','=','articles.fkpays')
-                ->join('rubriques','rubriques.idrubrique','=','articles.fkrubrique')
-                ->join('users','users.id','=','articles.fkuser')
-                ->join('sousrubriques','sousrubriques.idsousrubrique','=','articles.fksousrubrique');
-
-        }
-
-        if(isset($request['titre']))
-        {
-
-            $article->where('articles.titre','like',"%".$request['titre']."%")
-                ->join('pays','pays.idpays','=','articles.fkpays')
-                ->join('rubriques','rubriques.idrubrique','=','articles.fkrubrique')
-                ->join('users','users.id','=','articles.fkuser')
-                ->join('sousrubriques','sousrubriques.idsousrubrique','=','articles.fksousrubrique');
-        }
-        if(isset($request['idarticle']))
-        {
-
-            $article->where('articles.idarticle',$request['idarticle'])
-                ->join('pays','pays.idpays','=','articles.fkpays')
-                ->join('rubriques','rubriques.idrubrique','=','articles.fkrubrique')
-                ->join('users','users.id','=','articles.fkuser')
-                ->join('sousrubriques','sousrubriques.idsousrubrique','=','articles.fksousrubrique');
-        }
-        $articles= $article->orderByDesc('dateparution')->select('*')->limit(50) ;*/
 
         return $articles ? ArticleResource::collection($articles) : null;
     }
@@ -300,10 +268,15 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         $cacheKey = "same_rubrique_{$fksousrubrique}";
         $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use ($fksousrubrique) {
+            $ids=Article::select('idarticle')
+                        ->where('fksousrubrique',$fksousrubrique)
+                        ->orderByDesc('dateparution')
+                        ->limit(10)
+                        ->pluck('idarticle');
             return Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->where('fksousrubrique',$fksousrubrique)
+                ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
-                ->limit(10)
+                ->select('*')
                 ->get();
         });
         return ArticleResource::collection($articles);
@@ -352,11 +325,17 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         $cacheKey = "news_by_author_".$author;
         $articles= Cache::remember($cacheKey, now()->addDay(), function () use($author) {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->where('auteur', $author)
+            $ids=Article::select('idarticle')
+                ->where('auteur',$author)
                 ->where('dateparution', '<=', now())
                 ->orderByDesc('dateparution')
                 ->limit(100)
+                ->pluck('idarticle');
+
+            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->whereIn('idarticle', $ids)
+                ->orderByDesc('dateparution')
+                ->select('*')
                 ->get();
         });
         return ArticleResource::collection($articles);
@@ -424,12 +403,18 @@ class ArticleRepository extends Repository implements IArticleRepository
         //dd($cacheKey);
         //Cache::forget($cacheKey);
         $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use($fksousrubrique,$fkrubrique) {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            $ids=Article::select('idarticle')
                 ->where('fkrubrique', $fkrubrique)
                 ->where('fksousrubrique', $fksousrubrique)
                 ->where('dateparution', '<=', now())
                 ->orderByDesc('dateparution')
                 ->limit(100)
+                ->pluck('idarticle');
+
+            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->whereIn('idarticle', $ids)
+                ->orderByDesc('dateparution')
+                ->select('*')
                 ->get();
         });
         return ArticleResource::collection($articles);
