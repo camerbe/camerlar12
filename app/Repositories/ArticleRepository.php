@@ -238,10 +238,9 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         //dd($slug);
         $article= Article::with(['countries', 'rubrique', 'sousrubrique'])
-            ->where('slug', $slug)->first();
-        if($article){
-            $article->incrementHits();
-        }
+            ->where('slug', $slug)->firstOrFail();
+        $article->incrementHits();
+
         return new ArticleResource($article);
     }
 
