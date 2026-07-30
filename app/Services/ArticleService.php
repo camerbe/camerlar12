@@ -81,4 +81,10 @@ class ArticleService
     function getOneRubriqueArticles($fksousrubrique, $fkrubrique){
         return $this->articleRepository->getOneRubriqueArticles($fksousrubrique, $fkrubrique);
     }
+    function getCategories(){
+        return $this->articleRepository->getCategories();
+    }
+    function getArticlesByCategory($fksousrubrique){
+        return $this->articleRepository->getArticlesByCategory();
+    }
 }

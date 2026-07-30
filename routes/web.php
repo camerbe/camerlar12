@@ -5,10 +5,18 @@ use App\Http\Controllers\AmpController;
 use App\Http\Controllers\RssController;
 use App\Http\Controllers\SitemapArticleController;
 use App\Http\Controllers\SitemapController;
+use App\Services\ArticleService;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function (ArticleService $articleService) {
+    $heroArticle = collect($articleService->getArticles())->first();
+    return view('home', compact('heroArticle'));
+});
 /*Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/home', function () {
+    return view('home');
 });*/
 
     Route::prefix('amp')->controller(AmpController::class)->group(function () {

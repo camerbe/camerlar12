@@ -1,4 +1,9 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@import '../../vendor/livewire/flux/dist/flux.css';
+@custom-variant dark (&:where(.dark, .dark *));
+
+
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,6 +11,40 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Palette Rouge Camer.be */
+    --color-brand-50: #fff1f2;
+    --color-brand-100: #ffe4e6;
+    --color-brand-500: #d90429;
+    --color-brand-600: #ba0322;
+    --color-brand-700: #9e021b;
+
+    /* Palette Vert Émeraude */
+    --color-accent-50: #f0fdfa;
+    --color-accent-500: #2a9d8f;
+    --color-accent-600: #238378;
+
+    /* Palette Jaune Or */
+    --color-highlight-400: #ffca28;
+    --color-highlight-500: #ffbe0b;
+    --color-highlight-600: #d9a000;
+
+    /* Neutres Mode Sombre */
+    --color-dark-bg: #0f172a;
+    --color-dark-surface: #1e293b;
+    --color-dark-border: #334155;
+
+    /* Polices */
+    --font-sans: "Inter", sans-serif;
+    --font-heading: "Poppins", sans-serif;
+}
+/* Animation du Ticker Flash Info */
+@keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 25s linear infinite;
 }

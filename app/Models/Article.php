@@ -48,12 +48,15 @@ class Article extends Model implements HasMedia
         Cache::forget('articles_json');
         Cache::forget('articles_droit_json');
         Cache::forget('articles_debat_json');
+        Cache::forget('index');
         for($i=0;$i<10;$i++){
             $idx=$i+1;
             $cacheKey='cahe_amp_index_'.$idx;
             Cache::forget($cacheKey);
         }
     }
+
+
     public function countries():BelongsTo{
         return $this->belongsTo(Pays::class,'fkpays');
     }
@@ -62,6 +65,10 @@ class Article extends Model implements HasMedia
     }
     public function sousrubrique():BelongsTo{
         return $this->belongsTo(Sousrubrique::class,'fksousrubrique');
+    }
+
+    public function user():BelongsTo{
+        return $this->belongsTo(User::class,'fkuser');
     }
 
     protected $with = ['media'];
@@ -104,6 +111,7 @@ class Article extends Model implements HasMedia
         return $query->where('fkpays','=','CM')
                      ->where('dateparution','<=',now());
     }
+
     public function scopeOther(Builder $query):Builder
     {
         return $query->where('fkpays','<>','CM')

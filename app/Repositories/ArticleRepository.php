@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Helpers\Helper;
 use App\Http\Resources\ArticleResource;
+use App\Http\Resources\SousrubriqueResource;
 use App\IRepository\IArticleRepository;
 use App\Models\Article;
 use App\Models\Evenement;
@@ -122,11 +123,17 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function index()
     {
-        $articles= Article::with(['countries','rubrique','sousrubrique'])
-            ->orderByDesc('dateparution')
-            ->limit(100)
-            ->get();
-        return ArticleResource::collection($articles);
+        $cache="index";
+        $articles= Cache::remember($cache, now()->add(1,'day'), function () {
+            $data= $articles= Article::Published()
+            ->with(['countries','rubrique','sousrubrique'])
+                ->orderByDesc('dateparution')
+                ->limit(100)
+                ->get();
+            return ArticleResource::collection($data)->resolve();
+        });
+
+        return $articles;
     }
 
     /**
@@ -140,14 +147,15 @@ class ArticleRepository extends Repository implements IArticleRepository
         //Cache::forget($cache);
         //dd($cache);
         $articles= Cache::remember($cache, now()->add(1,'day'), function () use ($user){
-            return Article::with(['countries','rubrique','sousrubrique'])
+            $data= Article::with(['countries','rubrique','sousrubrique'])
                 ->where('fkuser',$user)
                 ->orderByDesc('dateparution')
                 ->limit(50)
                 ->get();
+            return ArticleResource::collection($data)->resolve();
         });
         //dd($articles);
-        return ArticleResource::collection($articles);
+        return $articles;
     }
 
     /**
@@ -188,7 +196,7 @@ class ArticleRepository extends Repository implements IArticleRepository
 
         $cache = 'Article-list';
         $cacheExpiry = now()->addDay();
-
+        //Cache::forget($cache);
         $articles= Cache::remember($cache, $cacheExpiry, function () {
 
             $cmr = Article::Cameroon()
@@ -212,12 +220,13 @@ class ArticleRepository extends Repository implements IArticleRepository
             $ids = $cmr->unionAll($other)
                 ->pluck('idarticle');
 
-            return Article::with(['countries','rubrique','sousrubrique'])
+            $data= Article::with(['countries','rubrique','sousrubrique'])
                 ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
                 ->get();
+            return ArticleResource::collection($data)->resolve();
             });
-        return ArticleResource::collection($articles);
+        return $articles;
 
     }
 
@@ -251,13 +260,14 @@ class ArticleRepository extends Repository implements IArticleRepository
             default => throw new InvalidArgumentException("Invalid period: {$period}"),
         };
         $articles= Cache::remember($cacheKey, now()->addDay(), function () use ($date) {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->whereDate('dateref', $date->toDateString())
                 ->orderByDesc('hit')
                 ->limit(5)
                 ->get();
+            return ArticleResource::collection($data)->resolve();
         });
-        return ArticleResource::collection($articles);
+        return $articles;
     }
 
     /**
@@ -273,13 +283,14 @@ class ArticleRepository extends Repository implements IArticleRepository
                         ->orderByDesc('dateparution')
                         ->limit(10)
                         ->pluck('idarticle');
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
                 ->select('*')
                 ->get();
+            return ArticleResource::collection($data)->resolve();
         });
-        return ArticleResource::collection($articles);
+        return $articles;
     }
 
     /**
@@ -291,14 +302,15 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         $cacheKey = "most_read_rubrique_country_{$fksousrubrique}{$fkpays}";
         $articles= Cache::remember($cacheKey, now()->addDay(), function () use ($fksousrubrique,$fkpays) {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->where('fksousrubrique',$fksousrubrique)
                 ->where('fkpays',$fkpays)
                 ->orderByDesc('hit')
                 ->limit(5)
                 ->get();
+            return ArticleResource::collection($data)->resolve();
         });
-        return ArticleResource::collection($articles);
+        return $articles;
 
     }
 
@@ -309,12 +321,13 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         $cacheKey = "most_read";
         $articles= Cache::remember($cacheKey, now()->addDay(), function ()  {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->orderByDesc('hit')
                 ->limit(5)
                 ->get();
+            return ArticleResource::collection($data)->resolve();
         });
-        return ArticleResource::collection($articles);
+        return $articles;
     }
 
     /**
@@ -332,13 +345,14 @@ class ArticleRepository extends Repository implements IArticleRepository
                 ->limit(100)
                 ->pluck('idarticle');
 
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
                 ->select('*')
                 ->get();
+            return ArticleResource::collection($data)->resolve();
         });
-        return ArticleResource::collection($articles);
+        return $articles;
     }
 
     /**
@@ -348,9 +362,9 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         $cacheKey = "news_for_rss";
         $articles= Cache::remember($cacheKey, now()->addDay(), function ()  {
-            return $this->index();
+            return ArticleResource::collection($this->index())->resolve();
         });
-        return ArticleResource::collection($articles);
+        return $articles;
     }
 
     /**
@@ -411,13 +425,14 @@ class ArticleRepository extends Repository implements IArticleRepository
                 ->limit(100)
                 ->pluck('idarticle');
 
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
                 ->select('*')
                 ->get();
+            return ArticleResource::collection($data)->resolve();
         });
-        return ArticleResource::collection($articles);
+        return $articles;
     }
 
     /**
@@ -438,6 +453,29 @@ class ArticleRepository extends Repository implements IArticleRepository
                 ->first();
         });
         return new ArticleResource($article);
+
+    }
+
+    public function getArticlesByCategory($fksousrubrique){
+        $cache=$fksousrubrique.'_'.MD5($fksousrubrique);
+        $articles=Cache::remember($cache,now()->addMinute(10),function () use($fksousrubrique){
+            $data=Article::CategoryRss()
+                ->with(['countries', 'rubrique', 'sousrubrique'])
+                ->where('fksousrubrique',$fksousrubrique)
+                ->orderByDesc('dateparution')
+                ->get();
+            return ArticleResource::collection($data)->resolve();
+        });
+        return $articles;
+    }
+    public function getCategories(){
+        $cache="getCategories";
+        $sousrubriques=Cache::remember($cache,now()->addMinute(15),function(){
+            $data =Sousrubrique::CategoryRss()->orderBy('sousrubrique')->get();
+            return SousrubriqueResource::collection($data)->resolve();
+        });
+
+        return $sousrubriques;
 
     }
 

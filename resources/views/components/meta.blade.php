@@ -10,9 +10,13 @@
 'published_time'=>'',
 'section'=>'',
 'author'=>'',
-'source '=>'',
+'source'=>'',
 'publisher'=>'',
 'canonical' => '',
+'ampcanonical' => '',
+'georegion' => '',
+'geoplacename' => '',
+
 ])
 
 <!-- Primary Meta Tags -->
@@ -48,5 +52,18 @@
 <meta name="twitter:creator" content="@camer.be">
 <meta name="twitter:url" content="{{$canonical}}">
 
+{{-- GEO  --}}
+<meta name="geo.region" content="{{$georegion}}">
+<meta name="geo.placename" content="{{$geoplacename}}">
+<meta name="language" content="fr">
+
+<meta name="author" content="{{$author}}">
+<link rel="publisher" href="https://www.camer.be">
+
 <!-- Canonical -->
 <link rel="canonical" href="{{ $canonical }}">
+<link rel="amphtml" href="{{ $ampcanonical }}">
+
+<link rel="preload"  as="image" href="{{$image}}" fetchpriority="high">
+
+

@@ -25,14 +25,15 @@ class Helper
     public static function extractImgSrc(string $html): ?string
     {
         if (strpos($html, '<img') === false) {
-            return null;
+
+            return 'https://picsum.photos/750/750';
         }
 
         preg_match('/<img[^>]+src=["\']([^"\']+)["\']/', $html, $matches);
         $src = $matches[1] ?? null;
 
         if (!$src) {
-            return null;
+            return 'https://picsum.photos/750/750';
         }
 
         // Déjà une URL complète

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,5 +36,24 @@ class Sousrubrique extends Model
         Sousrubrique::deleted(function ($model) use($cacheKey){
             Cache::forget($cacheKey);
         });
+    }
+    public function scopeCategoryRss(Builder $query):Builder
+    {
+        $sousrubriques=[
+            'CONTACT',
+            'ANNUAIRE',
+            'ANNONCES',
+            'LIENS',
+            'EVENEMENTS',
+            'JT',
+            'CAMER TV',
+            'DéCALAGE',
+            'SANS TABOU',
+            'Allo Docteur',
+            'PRéSIDENTIELLE 2025',
+        ];
+        return $query->whereNotIn('sousrubrique', $sousrubriques);
+
+
     }
 }

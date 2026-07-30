@@ -6,6 +6,7 @@ use App\Http\Resources\ArticleResource;
 use App\Services\ArticleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class RssController extends Controller
 {
@@ -19,9 +20,22 @@ class RssController extends Controller
         $this->articleService = $articleService;
     }
     public function feed(){
+
         $items=ArticleResource::collection($this->articleService->getNewsForRss()->take(20));
         $rss = View::make('rss.feed', compact('items'));
         return response($rss, 200)->header('Content-Type', 'application/xml');
+    }
+
+    public function categoryRss(){
+        $categories=$this->articleService->getCategories();
+        foreach ($categories as $category){
+            $items=$this->articleService->getArticlesByCategory($category->id);
+            $rssname= 'rss.'.Str::trim(strtolower($category->sousrubrique));
+            foreach ($items as $item){
+                $rss = View::make( $rssname, compact('items'));
+                return response($rss, 200)->header('Content-Type', 'application/xml');
+            }
+        }
     }
     public function politique(){
         $items=$this->articleService->getNewsForRss()
