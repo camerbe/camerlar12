@@ -31,8 +31,7 @@
     :georegion="$georegion"
     :geoplacename="$geoplacename"
 >
-    <div class="max-w-7xl mx-auto px-4 py-6">
-        {{-- On appelle simplement le composant parent Livewire --}}
-        <livewire:news />
+    <div>
+        <livewire:news :debat="$debat"/>
     </div>
 </x-layouts.app>

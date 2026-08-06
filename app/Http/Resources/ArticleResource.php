@@ -15,6 +15,7 @@ class ArticleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             'id'=>$this->idarticle,
             'info'=>$this->info,
@@ -38,7 +39,8 @@ class ArticleResource extends JsonResource
             'image_url' => $this->getImageUrl(),
             'image_width' => $this->getWidth(),
             'image_height' => $this->getHeight(),
-            
+            'image_mimetype'=>$this->getMimeType()
+
 
         ];
     }

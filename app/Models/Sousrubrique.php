@@ -15,7 +15,7 @@ class Sousrubrique extends Model
     public $timestamps = false;
     protected $table='sousrubriques';
     protected $fillable = [
-        'sousrubrique', 'fkrubrique',
+        'sousrubrique', 'fkrubrique','slug'
     ];
     public function rubrique():BelongsTo
     {

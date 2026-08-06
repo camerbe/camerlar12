@@ -1,33 +1,30 @@
 <?php
 
 use Livewire\Component;
+use App\Services\ArticleService;
 use App\Helpers\Helper;
-new class extends Component
-{
-    //
-    public array $articles = [];
-
-    /*public function render()
-    {
-        return view('livewire.sidebar-news');
-    }*/
-};
-?>
-
-<?php
 
 new class extends Component
 {
     //
+    /*public $fkpays;
+    public $fksousrubrique;*/
+    public $plusluParPays=[];
+
+    public function mount(){
+        /*$rawPlusLuParPays=$articleService->getMostReadRubriqueByCountry($this->fksousrubrique,$this->fkpays);
+        $collection = collect($rawPlusLuParPays);
+        $this->plusluParPays = $collection->values()->toArray();*/
+    }
 };
 ?>
 
 <div class="bg-white dark:bg-dark-surface p-6 rounded-xl border border-gray-100 dark:border-dark-border shadow-sm">
     <h3 class="text-lg font-bold font-heading mb-4 border-l-4 border-highlight-500 pl-3">
-        🔥 Les plus lus
+        🔥{{ ucfirst(strtolower($this->plusluParPays[0]['countries']['pays']) ) }} Les + lus
     </h3>
     <div class="space-y-4">
-        @foreach($articles as $article)
+        @foreach($this->plusluParPays as $article)
             @php
                 $hit=Helper::views_format($article['hit'],false);
                 $sousrubrique=$article['sousrubrique']['sousrubrique'];
@@ -53,5 +50,3 @@ new class extends Component
 
     </div>
 </div>
-
-

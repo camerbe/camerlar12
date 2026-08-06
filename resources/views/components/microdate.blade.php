@@ -5,7 +5,6 @@
 'image' => '',
 'image_width' => '',
 'image_height' => '',
-'image_type' => '',
 'keyword'=>'',
 'modified_time'=>'',
 'published_time'=>'',
@@ -17,7 +16,6 @@
 'ampcanonical' => '',
 'georegion' => '',
 'geoplacename' => '',
-'hashtags' => [],
 
 ])
 
@@ -40,19 +38,9 @@
 <meta property="og:image:width" content="{{ $image_width }}">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="en-us">
 <meta property="og:site_name" content="Camer.be">
 <meta property="og:url" content="{{ $canonical }}">
-<meta property="og:image:type" content="{{ $image_type }}">
-<meta property="og:image:secure_url" content="{{ $image }}">
-
-@if(count($hashtags)>0)
-    @foreach($hashtags as $hashtag)
-        <meta property="og:tag" content="{{ $hashtag }}">
-    @endforeach
-
-@endif
-
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
@@ -75,6 +63,7 @@
 <!-- Canonical -->
 <link rel="canonical" href="{{ $canonical }}">
 <link rel="amphtml" href="{{ $ampcanonical }}">
+
 <link rel="preload"  as="image" href="{{$image}}" fetchpriority="high">
 
 

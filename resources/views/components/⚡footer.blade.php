@@ -13,9 +13,11 @@ new class extends Component
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <!-- Brand Info -->
             <div class="space-y-4">
+                <a href="{{route('home')}}">
                 <span class="text-3xl font-extrabold font-heading tracking-tight text-white">
                     CAMER<span class="text-brand-500">.BE</span>
                 </span>
+                </a>
                 <p class="text-xs text-gray-400 leading-relaxed">
                     Le portail de référence de l'actualité camerounaise et internationale. Retrouvez en direct toutes les informations politiques, économiques et culturelles.
                 </p>
@@ -25,10 +27,10 @@ new class extends Component
             <div>
                 <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4 border-l-2 border-brand-500 pl-2">Rubriques</h4>
                 <ul class="space-y-2 text-xs">
-                    <li><a href="#" class="hover:text-white transition">Politique Cameroun</a></li>
-                    <li><a href="#" class="hover:text-white transition">Économie & Finance</a></li>
-                    <li><a href="#" class="hover:text-white transition">Diaspora en Action</a></li>
-                    <li><a href="#" class="hover:text-white transition">Culture & Traditions</a></li>
+                    <li><a href="/actualites/politique" class="hover:text-white transition">Politique</a></li>
+                    <li><a href="/actualites/economie" class="hover:text-white transition">Économie & Finance</a></li>
+                    <li><a href="camerounais-du-monde/diaspora" class="hover:text-white transition">Diaspora en Action</a></li>
+                    <li><a href="/culture/art" class="hover:text-white transition">Culture & Traditions</a></li>
                 </ul>
             </div>
 
@@ -57,7 +59,7 @@ new class extends Component
         </div>
 
         <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
-            &copy; {{ date('Y') }} Camer.be - Tous droits réservés.
+            &copy; 2005 - {{ date('Y') }} Camer.be - Tous droits réservés.
         </div>
     </div>
 </footer>

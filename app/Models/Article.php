@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,6 +50,7 @@ class Article extends Model implements HasMedia
         Cache::forget('articles_droit_json');
         Cache::forget('articles_debat_json');
         Cache::forget('index');
+        Cache::forget('laUne');
         for($i=0;$i<10;$i++){
             $idx=$i+1;
             $cacheKey='cahe_amp_index_'.$idx;
@@ -96,7 +98,13 @@ class Article extends Model implements HasMedia
             ];
         });
     }
+    public function getMimeType(){
+        $img=Helper::extractImgSrc($this->image);
+        return Helper::getImageMimeType($img);
+    }
     // --- Helpers ---
+
+
     public function incrementHits(): void
     {
         $this->increment('hit');

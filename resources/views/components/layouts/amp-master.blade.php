@@ -41,7 +41,7 @@
 
     <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
     <!--non-AMP page
-<link rel="canonical" href="{{config('BASE_APP_URL')}}">
+<link rel="canonical" href="{{config('APP_URL')}}">
 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i">
@@ -1566,9 +1566,9 @@
 </amp-auto-ads>
 <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
     <button on="tap:sidebar.toggle" class="ampstart-btn caps m2 header-icon-1"><i class="fa fa-navicon"></i></button>
-    <a href="{{env('BASE_APP_URL')}}/amp/accueil" class="header-logo">
+    <a href="{{env('APP_URL')}}/amp/accueil" class="header-logo">
         <div class="mx-auto ">
-            <amp-img src="{{env('BASE_APP_URL')}}/assets/img/camer-logo.png" alt="Camer.be" height="42" width="125"></amp-img>
+            <amp-img src="{{env('APP_URL')}}/assets/img/camer-logo.png" alt="Camer.be" height="42" width="125"></amp-img>
         </div>
     </a>
     <a href="contact.html" class="header-icon-2"><i class="fa fa-envelope-o"></i></a>
@@ -1576,7 +1576,7 @@
 
 <amp-sidebar id="sidebar" layout="nodisplay" side="left">
     <div class="sidebar-header">
-        <a class="sidebar-logo" href="{{env('BASE_APP_URL')}}/amp">
+        <a class="sidebar-logo" href="{{env('APP_URL')}}/amp">
             <em>Accueil</em>
         </a>
     </div>
@@ -1586,10 +1586,10 @@
         <section>
             <h4><i class="fa fa-newspaper-o"></i> Actualité & Société </h4>
             <div>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/camerounais-du-monde/diaspora" class="uppercase"><i class="fa fa-angle-right"></i>Diaspora</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/economie" class="uppercase"><i class="fa fa-angle-right"></i>économie</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/religion" class="uppercase"><i class="fa fa-angle-right"></i>réligion</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/societe" class="uppercase"><i class="fa fa-angle-right"></i>société</a>
+                <a href="{{config('APP_URL').'/amp'}}/camerounais-du-monde/diaspora" class="uppercase"><i class="fa fa-angle-right"></i>Diaspora</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/economie" class="uppercase"><i class="fa fa-angle-right"></i>économie</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/religion" class="uppercase"><i class="fa fa-angle-right"></i>réligion</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/societe" class="uppercase"><i class="fa fa-angle-right"></i>société</a>
             </div>
         </section>
     </amp-accordion>
@@ -1597,9 +1597,9 @@
         <section>
             <h4><i class="fa fa-globe"></i> International</h4>
             <div>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/frananglais/francaiscamer" class="uppercase"><i class="fa fa-angle-right"></i>françaiscamer</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/liens-postcoloniaux/francafrique" class="uppercase"><i class="fa fa-angle-right"></i>françafrique</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/monde-pouvoir/geopolitique" class="uppercase"><i class="fa fa-angle-right"></i>géopolitique</a>
+                <a href="{{config('APP_URL').'/amp'}}/frananglais/francaiscamer" class="uppercase"><i class="fa fa-angle-right"></i>françaiscamer</a>
+                <a href="{{config('APP_URL').'/amp'}}/liens-postcoloniaux/francafrique" class="uppercase"><i class="fa fa-angle-right"></i>françafrique</a>
+                <a href="{{config('APP_URL').'/amp'}}/monde-pouvoir/geopolitique" class="uppercase"><i class="fa fa-angle-right"></i>géopolitique</a>
             </div>
         </section>
     </amp-accordion>
@@ -1607,10 +1607,10 @@
         <section>
             <h4><i class="fa fa-image"></i>Divertissement</h4>
             <div>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/insolite" class="uppercase"><i class="fa fa-angle-right"></i>insolite</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/fait-curieux/le-saviez-vous" class="uppercase"><i class="fa fa-angle-right"></i>le saviez-vous</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/people" class="uppercase"><i class="fa fa-angle-right"></i>people</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/libre-parole/sans-tabou" class="uppercase"><i class="fa fa-angle-right"></i>sans tabou</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/insolite" class="uppercase"><i class="fa fa-angle-right"></i>insolite</a>
+                <a href="{{config('APP_URL').'/amp'}}/fait-curieux/le-saviez-vous" class="uppercase"><i class="fa fa-angle-right"></i>le saviez-vous</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/people" class="uppercase"><i class="fa fa-angle-right"></i>people</a>
+                <a href="{{config('APP_URL').'/amp'}}/libre-parole/sans-tabou" class="uppercase"><i class="fa fa-angle-right"></i>sans tabou</a>
             </div>
         </section>
     </amp-accordion>
@@ -1618,8 +1618,8 @@
         <section>
             <h4><i class="fa fa-handshake-o"></i>Santé & Bien-être</h4>
             <div>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/le-coin-sante/allo-docteur" class="uppercase"><i class="fa fa-angle-right"></i>allô docteur</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/actualites/sante" class="uppercase"><i class="fa fa-angle-right"></i>santé</a>
+                <a href="{{config('APP_URL').'/amp'}}/le-coin-sante/allo-docteur" class="uppercase"><i class="fa fa-angle-right"></i>allô docteur</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/sante" class="uppercase"><i class="fa fa-angle-right"></i>santé</a>
 
             </div>
         </section>
@@ -1628,10 +1628,10 @@
         <section>
             <h4><i class="fa fa-podcast"></i>Culture</h4>
             <div>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/art" class="uppercase"><i class="fa fa-angle-right"></i>art</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/cinema" class="uppercase"><i class="fa fa-angle-right"></i>cinéma</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/livres" class="uppercase"><i class="fa fa-angle-right"></i>livres</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/culture/musique" class="uppercase"><i class="fa fa-angle-right"></i>musique</a>
+                <a href="{{config('APP_URL').'/amp'}}/culture/art" class="uppercase"><i class="fa fa-angle-right"></i>art</a>
+                <a href="{{config('APP_URL').'/amp'}}/culture/cinema" class="uppercase"><i class="fa fa-angle-right"></i>cinéma</a>
+                <a href="{{config('APP_URL').'/amp'}}/culture/livres" class="uppercase"><i class="fa fa-angle-right"></i>livres</a>
+                <a href="{{config('APP_URL').'/amp'}}/culture/musique" class="uppercase"><i class="fa fa-angle-right"></i>musique</a>
             </div>
         </section>
     </amp-accordion>
@@ -1639,9 +1639,9 @@
         <section>
             <h4><i class="fa fa-check"></i>Libre Voix</h4>
             <div>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/tribune/le-debat" class="uppercase"><i class="fa fa-angle-right"></i>le débat</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/droit/point-du-droit" class="uppercase"><i class="fa fa-angle-right"></i>point du droit</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/analyse/point-de-vue" class="uppercase"><i class="fa fa-angle-right"></i>point de vue</a>
+                <a href="{{config('APP_URL').'/amp'}}/tribune/le-debat" class="uppercase"><i class="fa fa-angle-right"></i>le débat</a>
+                <a href="{{config('APP_URL').'/amp'}}/droit/point-du-droit" class="uppercase"><i class="fa fa-angle-right"></i>point du droit</a>
+                <a href="{{config('APP_URL').'/amp'}}/analyse/point-de-vue" class="uppercase"><i class="fa fa-angle-right"></i>point de vue</a>
 
             </div>
         </section>
@@ -1650,8 +1650,8 @@
         <section>
             <h4><i class="fa fa-video-camera"></i>Contenu audiovisuel</h4>
             <div>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/video/Camer" class="uppercase"><i class="fa fa-angle-right"></i>Camer</a>
-                <a href="{{config('BASE_APP_URL').'/amp'}}/video/Sopie" class="uppercase"><i class="fa fa-angle-right"></i>Sopie</a>
+                <a href="{{config('APP_URL').'/amp'}}/video/Camer" class="uppercase"><i class="fa fa-angle-right"></i>Camer</a>
+                <a href="{{config('APP_URL').'/amp'}}/video/Sopie" class="uppercase"><i class="fa fa-angle-right"></i>Sopie</a>
 
             </div>
         </section>
@@ -1679,7 +1679,7 @@
     <div class="footer">
         @include('partials.amp-adaptable')
         <p class="center-text">
-            &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{env('BASE_APP_URL')}}/amp" class="footer-logo">Camer.be</a>
+            &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{env('APP_URL')}}/amp" class="footer-logo">Camer.be</a>
         </p>
     </div>
 

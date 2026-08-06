@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\V1;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
+use App\Http\Resources\ArticleResource;
 use App\Services\ArticleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -102,6 +103,21 @@ class ArticleController extends Controller
             "message"=>"Article inexistant"
         ],Response::HTTP_NOT_FOUND);
     }
+    public function laUne()
+    {
+        $article=$this->articleService->laUne();
+        if ($article){
+            return response()->json([
+                'success'=>true,
+                'data'=>$article,
+                'message'=>"Article trouvé"
+            ],Response::HTTP_OK);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Article inexistant"
+        ],Response::HTTP_NOT_FOUND);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -175,7 +191,7 @@ class ArticleController extends Controller
     }
     public function getArticleBySlug(string $slug)
     {
-        $article=$this->articleService->getArticleBySlug($slug);
+        $article= new ArticleResource($this->articleService->getArticleBySlug($slug)) ;
         if ($article){
             return response()->json([
                 'success'=>true,

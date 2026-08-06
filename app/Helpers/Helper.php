@@ -2,8 +2,11 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use DOMDocument;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 /**
  *
@@ -75,20 +78,11 @@ class Helper
         return $data[$dimension] ?? null;
     }
     public static function getTitle($pays, $titre, $country){
-        if ($pays === $country) {
-            return stripos($titre, $pays) !== false ? $titre :  "$pays :: $titre";
-        }
-        $hasPays = stripos($titre, $pays) !== false;
-        $hasCountry = stripos($titre, $country) !== false;
-        if ($hasPays) {
-            return "$titre :: $country";
-        }
+        $bled=Str::title($pays);
 
-        if ($hasCountry) {
-            return "$pays :: $titre";
-        }
-
-        return "$pays :: $titre :: $country";
+        return Str::contains(strtolower($titre), strtolower($pays))
+            ? $titre
+            : "$bled - $titre";
     }
     public static function getKeywords($keywords){
         return implode(',', array_map(function($item) {
@@ -257,5 +251,183 @@ class Helper
             (isset($parsed['query']) ? '?' . $parsed['query'] : '') .
             (isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '');
     }
+
+
+    public static function views_format(int $number, bool $withLabel = true): array
+    {
+        // Format court (3,4 k)
+        if ($number >= 1000000000) {
+            $short = number_format($number / 1000000000, 1, ',', ' ') . ' Md';
+        } elseif ($number >= 1000000) {
+            $short = number_format($number / 1000000, 1, ',', ' ') . ' M';
+        } elseif ($number >= 1000) {
+            $short = number_format($number / 1000, 1, ',', ' ') . ' k';
+        } else {
+            $short = number_format($number, 0, ',', ' ');
+        }
+
+        // Format long SEO (3 389 vues)
+        $full = number_format($number, 0, ',', ' ') . ' vue' . ($number > 1 ? 's' : '');
+
+        return [
+            'short' => $short,
+            'full' => $full,
+        ];
+    }
+    public static function makeUrl($rubrique,$sousrubrique,$slug):string{
+        return Str::slug($rubrique)
+            .'/'
+            .Str::slug($sousrubrique)
+            .'/'.$slug;
+    }
+    public static function formatShort(string|CarbonInterface $publishedAt): string
+    {
+        $date = $publishedAt instanceof CarbonInterface
+            ? $publishedAt
+            : Carbon::parse($publishedAt);
+
+        return $date->format('d M Y H:i');
+    }
+
+    /**
+     * Récupère le type MIME d'une image à partir de son URL.
+     *
+     * @param string $imageUrl
+     * @return string|null
+     */
+    public static function getImageMimeType(string $imageUrl): ?string
+    {
+        if (empty($imageUrl) || !filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+            return null;
+        }
+        $cacheKey = 'image_mime_' . md5($imageUrl);
+        return Cache::remember($cacheKey, now()->addDays(30), function () use ($imageUrl) {
+            // Fallback direct sur l'extension, pas de requête réseau du tout
+            $extension = strtolower(pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
+
+            $map = [
+                'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
+                'png' => 'image/png', 'gif' => 'image/gif',
+                'webp' => 'image/webp', 'svg' => 'image/svg+xml',
+                'bmp' => 'image/bmp', 'ico' => 'image/x-icon',
+            ];
+
+            if (isset($map[$extension])) {
+                return $map[$extension];
+            }
+            // Seulement si l'extension est absente/ambiguë, on tente le réseau — avec timeout court
+            try {
+                $context = stream_context_create([
+                    'http' => ['method' => 'HEAD', 'timeout' => 3],
+                ]);
+                $headers = get_headers($imageUrl, true, $context);
+                if ($headers && isset($headers['Content-Type'])) {
+                    $contentType = is_array($headers['Content-Type']) ? end($headers['Content-Type']) : $headers['Content-Type'];
+                    return trim(explode(';', $contentType)[0]);
+                }
+            } catch (\Exception $e) {
+                // silencieux
+            }
+
+            return null;
+        });
+
+        // On tente d'abord de lire les headers via une requête HEAD (rapide, pas de téléchargement complet)
+        /*try {
+            $headers = get_headers($imageUrl, true);
+
+            if ($headers && isset($headers['Content-Type'])) {
+                $contentType = is_array($headers['Content-Type'])
+                    ? end($headers['Content-Type'])
+                    : $headers['Content-Type'];
+
+                // On nettoie au cas où il y aurait un charset ajouté (ex: "image/jpeg; charset=UTF-8")
+                return trim(explode(';', $contentType)[0]);
+            }
+        } catch (\Exception $e) {
+            // On continue vers le fallback
+        }
+
+        // Fallback : déduction depuis l'extension du fichier
+        $extension = strtolower(pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
+
+        switch ($extension) {
+            case 'jpg':
+            case 'jpeg':
+                return 'image/jpeg';
+            case 'png':
+                return 'image/png';
+            case 'gif':
+                return 'image/gif';
+            case 'webp':
+                return 'image/webp';
+            case 'svg':
+                return 'image/svg+xml';
+            case 'bmp':
+                return 'image/bmp';
+            case 'ico':
+                return 'image/x-icon';
+            default:
+                return null;
+        }*/
+    }
+
+    public static function getImageDimensions(string $imageUrl): array
+    {
+        if (empty($imageUrl) || !filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+            return ['width' => null, 'height' => null];
+        }
+
+        $cacheKey = 'image_dimensions_' . md5($imageUrl);
+
+        return Cache::remember($cacheKey, now()->addDays(30), function () use ($imageUrl) {
+            try {
+                $context = stream_context_create([
+                    'http' => [
+                        'timeout' => 5,
+                        'user_agent' => 'Mozilla/5.0 (compatible; CamerBeBot/1.0)',
+                    ],
+                ]);
+
+                $size = @getimagesize($imageUrl, $info);
+
+                if ($size === false) {
+                    return ['width' => null, 'height' => null];
+                }
+
+                return ['width' => $size[0], 'height' => $size[1]];
+            } catch (\Exception $e) {
+                return ['width' => null, 'height' => null];
+            }
+        });
+    }
+
+    public static function nettoyerHashtags(array $arrkeyword, int $limite = 5): array
+    {
+        $hashtag = array_filter($arrkeyword, function ($valeur) {
+            return Str::contains($valeur, '#');
+        });
+
+        $hashtag = array_map(function ($valeur) {
+            return ltrim(trim($valeur), '#');
+        }, $hashtag);
+
+        // réindexe le tableau (array_filter garde les clés d'origine)
+        $hashtag = array_values($hashtag);
+
+        return array_slice($hashtag, 0, $limite);
+    }
+    public static function hashtagsToDisplay(array $arrkeyword, int $limite = 4): array
+    {
+        $hashtag = array_filter($arrkeyword, function ($valeur) {
+            return Str::contains($valeur, '#');
+        });
+
+       // réindexe le tableau (array_filter garde les clés d'origine)
+        $hashtag = array_values($hashtag);
+
+        return array_slice($hashtag, 0, $limite);
+    }
+
 
 }

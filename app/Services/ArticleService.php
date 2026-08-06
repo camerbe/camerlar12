@@ -87,4 +87,7 @@ class ArticleService
     function getArticlesByCategory($fksousrubrique){
         return $this->articleRepository->getArticlesByCategory();
     }
+    function laUne(){
+        return $this->articleRepository->laUne();
+    }
 }

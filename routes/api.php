@@ -27,6 +27,7 @@ Route::prefix('contact')->controller(ContactController::class)->group(function (
 });
 Route::prefix('articles')->controller(ArticleController::class)->group(function () {
     Route::get('slug/{slug}', 'getArticleBySlug');
+    Route::get('laUne', 'laUne');
     Route::get('news', 'getArticles');
     Route::get('period/{period}', 'getTopNews');
     Route::get('same/{same}', 'getSameRubrique');

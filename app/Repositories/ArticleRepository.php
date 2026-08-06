@@ -236,12 +236,23 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticleBySlug($slug)
     {
-        //dd($slug);
+
         $article= Article::with(['countries', 'rubrique', 'sousrubrique'])
             ->where('slug', $slug)->firstOrFail();
-        $article->incrementHits();
+        if($article){
+            /*Article::withoutEvents(function () use ($article){
+                $article->incrementHits();
+            });*/
+            dispatch(function () use ($article) {
+                Article::withoutEvents(function () use ($article) {
+                    $article->incrementHits();
+                });
+            })->afterResponse();
+        }
 
-        return new ArticleResource($article);
+
+
+        return $article;
     }
 
     /**
@@ -275,7 +286,8 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getSameRubrique(int $fksousrubrique)
     {
-        $cacheKey = "same_rubrique_{$fksousrubrique}";
+        $strForCache=(string)$fksousrubrique;
+        $cacheKey = "same_rubrique_".md5($strForCache);
         $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use ($fksousrubrique) {
             $ids=Article::select('idarticle')
                         ->where('fksousrubrique',$fksousrubrique)
@@ -299,7 +311,8 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getMostReadRubriqueByCountry($fksousrubrique, $fkpays)
     {
-        $cacheKey = "most_read_rubrique_country_{$fksousrubrique}{$fkpays}";
+        $strfksousrubrique=(string)$fksousrubrique.$fkpays;
+        $cacheKey = md5($strfksousrubrique);
         $articles= Cache::remember($cacheKey, now()->addDay(), function () use ($fksousrubrique,$fkpays) {
             $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->where('fksousrubrique',$fksousrubrique)
@@ -411,11 +424,11 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getRubriqueArticles($fksousrubrique, $fkrubrique)
     {
-        //dd($fksousrubrique);
-        $cacheKey = "cache_".$fksousrubrique.'_'.$fkrubrique;
+        $strForCache=(string)$fksousrubrique.(string)$fkrubrique;
+        $cacheKey = "cache_".md5($strForCache);
         //dd($cacheKey);
         //Cache::forget($cacheKey);
-        $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use($fksousrubrique,$fkrubrique) {
+        $articles= Cache::remember($cacheKey, now()->addMinute(30), function () use($fksousrubrique,$fkrubrique) {
             $ids=Article::select('idarticle')
                 ->where('fkrubrique', $fkrubrique)
                 ->where('fksousrubrique', $fksousrubrique)
@@ -443,7 +456,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         $cacheKey = "cache_one_{$fksousrubrique}_{$fkrubrique}";
 
-        $article = Cache::remember($cacheKey, now()->addHours(1), function () use ($fksousrubrique, $fkrubrique) {
+        $article = Cache::remember($cacheKey, now()->addHours(12), function () use ($fksousrubrique, $fkrubrique) {
             return Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->where('fksousrubrique', $fksousrubrique)
                 ->where('fkrubrique', $fkrubrique)
@@ -476,6 +489,18 @@ class ArticleRepository extends Repository implements IArticleRepository
 
         return $sousrubriques;
 
+    }
+    public function laUne(){
+        $cache="laUne";
+        //Cache::forget($cache);
+        $article=Cache::remember($cache,now()->addDay(),function(){
+            return Article::Published()
+                ->with(['countries', 'rubrique', 'sousrubrique'])
+                ->latest('dateparution')
+                ->first();
+        });
+        //dd(new ArticleResource($article));
+        return new ArticleResource($article);
     }
 
 
