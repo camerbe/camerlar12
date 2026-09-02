@@ -8,6 +8,7 @@ use App\Http\Controllers\api\V1\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\api\V1\ArticleController;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,29 +48,29 @@ class AmpController extends Controller
         //------------------ event
         $data=$this->event->getCachedEvenements();
         $array = json_decode($data->getContent(), true);
-        $this->evt = collect($array['data']);
+        $this->evt = $array['data'];
         //------------------ Video Camer
         $data=$this->video->getOneVideo('Camer');
         $array = json_decode($data->getContent(), true);
-        $this->camer = collect($array['data']);
+        $this->camer = $array['data'];
         //------------------ Video Camer
         $data=$this->video->getOneVideo('Sopie');
         $array = json_decode($data->getContent(), true);
-        $this->sopie = collect($array['data']);
+        $this->sopie = $array['data'];
         //------------------ Pub
         $data=$this->pub->getCachedPub(300);
         $array = json_decode($data->getContent(), true);
-        $this->pubblicite = collect($array['data'] ?? []);
+        $this->publicite = $array['data'] ?? [];
         //dd($pub);
         $this->debat= Cache::remember('articles_debat_json', now()->addHours(12), function () {
             $data = $this->api->getOneRubriqueArticles(27,25);   // API call
             $array = json_decode($data->getContent(), true);
-            return collect($array['data']); // Store as collection
+            return $array['data']; // Store as collection
         });
         $this->droit= Cache::remember('articles_droit_json', now()->addHours(12), function () {
             $data = $this->api->getOneRubriqueArticles(33,30);   // API call
             $array = json_decode($data->getContent(), true);
-            return collect($array['data']); // Store as collection
+            return $array['data']; // Store as collection
         });
         /*$droit= Cache::remember('articles_droit_json', now()->addHours(12), function () {
             $data = $this->api->getOneRubriqueArticles(33,30);   // API call
@@ -89,46 +90,60 @@ class AmpController extends Controller
             $data3 = $this->api->getTopNews('year');
             $arrayyear = json_decode($data3->getContent(), true);
             //dd($arrayyear);
-            return collect([
+            return [
                 'week' => $arrayweek?? [],
                 'month' => $arraymonth ?? [],
                 'year' => $arrayyear ?? [],
-            ]) ;
+            ] ;
         });
 
 
         $this->camerVideos= Cache::remember('videoCamer', now()->addMinute(15), function () {
             $data = $this->video->findAll();  // API call
             $array = json_decode($data->getContent(), true);
-            return collect($array['data']); // Store as collection
+            return $array['data']; // Store as collection
         });
         $this->sopieVideos= Cache::remember('videoSopie', now()->addMinute(15), function () {
             $data = $this->video->findAll('Sopie');  // API call
             $array = json_decode($data->getContent(), true);
-            return collect($array['data']); // Store as collection
+
+            return $array['data']; // Store as collection
+
         });
 
+        /****************** View share  ************************************/
+        view()->share([
 
+            /*'banner'=>$this->pub728,
+            'skypper'=>$this->pub300,*/
+            'debat'=> $this->debat,
+            'droit'=> $this->droit,
+            'event'=> $this->evt,
+            'camer'=> $this->camer,
+            'sopie'=> $this->sopie,
+            'pub'=> $this->publicite,
+            'archives'=> $this->archives,
+        ]);
 
     }
     public function index(Request $request){
-
+        //dd($request);
         $perPage = 10;
         $currentPage = (int) $request->get('page', 1);
 
         $articles = Cache::remember('articles_json', now()->addHours(12), function () {
             $data = $this->api->getArticles();   // API call
             $array = json_decode($data->getContent(), true);
-            return collect($array['data']); // Store as collection
+            return $array['data']; // Store as collection
         });
-
-        $currentItems = $articles
+        $currentItems = array_slice($articles, ($currentPage - 1) * $perPage, $perPage);
+        /*$currentItems = $articles
             ->slice(($currentPage - 1) * $perPage, $perPage)
-            ->values();
+            ->values();*/
 
         $paginated = new LengthAwarePaginator(
             $currentItems,
-            $articles->count(),
+            count($articles),
             $perPage,
             $currentPage,
             ['path' => $request->url(), 'query' => $request->query()]
@@ -139,15 +154,9 @@ class AmpController extends Controller
         //dd($archives);
         return Cache::remember($cacheKey, now()->addHours(12), function ()
             use ($paginated) {
-            return view('index', [
+            return view('index-amp', [
                 'articles' => $paginated,
-                'debat'=> $this->debat,
-                'droit'=> $this->droit,
-                'event'=> $this->evt,
-                'camer'=> $this->camer,
-                'sopie'=> $this->sopie,
-                'pub'=> $this->pubblicite,
-                'archives'=> $this->archives,
+
             ])->render();
         });
     }
@@ -160,16 +169,10 @@ class AmpController extends Controller
         $dataSamerubrique=$this->api->getSameRubrique($article['fksousrubrique']);
         $arraySamerubrique =json_decode($dataSamerubrique->getContent(), true);
         $samerubrique= collect($arraySamerubrique['data']);
-        return view('index1', [
+        return view('index1-amp', [
             'article' =>  $article,
             'samerubriques' =>  $samerubrique,
-            'debat'=> $this->debat,
-            'droit'=> $this->droit,
-            'event'=> $this->evt,
-            'camer'=> $this->camer,
-            'sopie'=> $this->sopie,
-            'pub'=> $this->pubblicite,
-            'archives'=> $this->archives,
+
         ]);
     }
     public function index2(Request $request){
@@ -177,43 +180,8 @@ class AmpController extends Controller
         $perPage = 10;
         $currentPage = (int) $request->get('page', 1);
 
-        $rubriques=[
-            "camerounais-du-monde"=>31,
-            "droit"=>30,
-            "point-de-vue"=>30,
-            "diaspora"=>34,
-            "le-saviez-vous"=>35,
-            "le-coin-sante"=>35,
-            "francafrique"=>26,
-            "liens-postcoloniaux"=>23,
-            "francaiscamer"=>32,
-            "fait-curieux"=>32,
-            "libre-parole"=>33,
-            "point-du-droit"=>33,
-            "frananglais"=>29,
-            "le-debat"=>27,
-            "analyse"=>27,
-            "tribune"=>25,
-            "actualites"=>1,
-            "musique"=>1,
-            "livres"=>2,
-            "people"=>5,
-            "culture"=>6,
-            "societe"=>11,
-            "sante"=>13,
-            "cinema"=>14,
-            "insolite"=>15,
-            "art"=>16,
-            "economie"=>12,
-            "religion"=>10,
-            "people"=>5,
-            "politique"=>6,
-            "allo-docteur"=>37,
-            "geopolitique"=>38,
-            "monde-pouvoir"=>36,
-            "sans-tabou"=>36,
-        ];
-        //dd($request->rubrique);
+        $rubriques=Config::get('rubriques.map') ;
+        //dd($rubriques["map"]);
         if($request->rubrique!='video'){
             $isVideo=false;
             $fksousrubrique=$rubriques[$request->sousrubrique];
@@ -245,14 +213,14 @@ class AmpController extends Controller
             $currentPage,
             ['path' => $request->url(), 'query' => $request->query()]
         );
-        return view('index2', [
+        return view('index2-amp', [
             'articles' => $paginated,
             'debat'=> $this->debat,
             'droit'=> $this->droit,
             'event'=> $this->evt,
             'camer'=> $this->camer,
             'sopie'=> $this->sopie,
-            'pub'=> $this->pubblicite,
+            'pub'=> $this->publicite,
             'archives'=> $this->archives,
             'isVideo'=> $isVideo,
         ])->render();

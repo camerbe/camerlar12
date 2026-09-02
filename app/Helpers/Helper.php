@@ -7,6 +7,7 @@ use Carbon\CarbonInterface;
 use DOMDocument;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 /**
  *
@@ -94,6 +95,19 @@ class Helper
             }
             Str::camel($item);
         }, explode(',', $keywords)));
+    }
+    public static function getRealKeywords($keywords)
+    {
+        // 1. Découpage de la chaîne en tableau
+        $items = explode(',', $keywords);
+
+        // 2. Nettoyage et filtrage
+        $filtered = array_filter(array_map('trim', $items), function($item) {
+            return $item !== '' && !str_contains($item, '#');
+        });
+
+        // 3. Recomposition de la chaîne finale
+        return implode(',', $filtered);
     }
     public static function guillemets(string $text):string {
         return preg_replace('/"([^"]+)"/u', "«\u{202F}$1\u{202F}»", $text);
@@ -429,5 +443,39 @@ class Helper
         return array_slice($hashtag, 0, $limite);
     }
 
+    public static function  countArticleCharacters(string $content): int
+    {
+        // 1. Supprimer les balises HTML
+        $text = strip_tags($content);
+
+        // 2. Décoder les entités HTML (&nbsp;, &amp;, etc.)
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // 3. Nettoyer les espaces multiples
+        $text = preg_replace('/\s+/u', ' ', $text);
+
+        // 4. Trim
+        $text = trim($text);
+
+        // 5. Compter les caractères (UTF-8 safe)
+        return mb_strlen($text, 'UTF-8');
+    }
+
+    public static function getYoutubeApi(string $youtubeId)
+    {
+        $response = Http::get('https://www.googleapis.com/youtube/v3/videos', [
+            'id'   => $youtubeId,
+            'part' => 'snippet,contentDetails',
+            'key'  => config('analytics.youtube-api-key'),
+        ]);
+
+        if ($response->failed()) {
+            return null;
+        }
+
+        $item = $response->json('items.0');
+
+        return $item ?? null;
+        }
 
 }

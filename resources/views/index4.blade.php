@@ -1,23 +1,25 @@
 @php
-
+    $snippet= $videos[0]['youtubeApi']['snippet'] ?? [];
+    //dd($videos[0]);
     $dynamicDescription = 'Camer.be: Info claire et nette sur le Cameroun et la Diaspora. ';
-    $dynamicDescription .="À la une : {$heroArticle['titre']}";
+    $dynamicDescription .="À la une : {videos[0]['titre']}";
     $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';
 
-    $title="Actualités Cameroun, Info & Analyse – Politique, Sport, {$heroArticle['sousrubrique']['sousrubrique']} | Camer.be";
+    $title="Actualités Cameroun, Info & Analyse – Politique, Sport, Vidéo {videos[0]['typevideo'] | Camer.be";
     $description=$dynamicDescription;
-    $image=$heroArticle["image_url"];
-    $author=$heroArticle["auteur"];
+    $image=$videos[0]["cover_image"];
+    $author=$videos[0]["typevideo"];
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
-    $section=$heroArticle["rubrique"]["rubrique"]." / ".$heroArticle["sousrubrique"]["sousrubrique"];
+    $section="Vidéo";
     $canonical=url()->current();
-    $source=$heroArticle["source"];
+    $source=$videos[0]["typevideo"];
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
-    $published_time=\Carbon\Carbon::parse($heroArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
-    $georegion =$heroArticle['fkpays'];
-    $geoplacename=$heroArticle["countries"]["pays"];
-    $isJson4listItem=true;
-    $isJson4article=false;
+    $published_time=\Carbon\Carbon::parse($snippet['publishedAt'])->format('Y-m-d\TH:i:s+00:00');
+    $georegion =$videos[0]["typevideo"]=="Camer"? "BE" : "FR";
+    $geoplacename=$videos[0]["typevideo"]=="Camer"? "Belgique" : "France";
+    //listItemVideos=$listItemVideos
+    //dd($listItemVideos);
+    $isVideo=true;
 @endphp
 
 <x-layouts.app
@@ -33,16 +35,13 @@
     :published_time="$published_time"
     :georegion="$georegion"
     :geoplacename="$geoplacename"
-    :isJson4article="$isJson4article"
-    :isJson4listItem="$isJson4listItem"
-    :listElements="$listItemArticles"
+    :listItemVideos="$listItemVideos"
+    :isVideo="$isVideo"
 >
     <div>
-        <livewire:rubrique-article
-            :listItemArticles="$listItemArticles"
-            :rubriqueArticles="$rubriqueArticles"
-            :heroArticle="$heroArticle"
-            :mostReaded="$mostReaded"
+        <livewire:video-list
+            :listItemVideos="$listItemVideos"
+            :videos="$videos"
             :droit="$droit"
             :debat="$debat"
             :sopie="$sopie"

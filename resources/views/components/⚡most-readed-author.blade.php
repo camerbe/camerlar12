@@ -8,16 +8,20 @@ new class extends Component
     //
     /*public $fkpays;
     public $fksousrubrique;*/
-    public $plusluParPays=[];
+    public $plusluParAuteur=[];
     public $firstArticle;
     public $flag;
     public $sousrubrique;
+    public $mostReaded=[];
+    protected $auteur;
 
     public function mount(){
+
         /*$rawPlusLuParPays=$articleService->getMostReadRubriqueByCountry($this->fksousrubrique,$this->fkpays);
         $collection = collect($rawPlusLuParPays);
         $this->plusluParPays = $collection->values()->toArray();*/
-        $this->firstArticle=$this->plusluParPays[0];
+        $this->firstArticle=$this->mostReaded[0];
+        $this->auteur=$this->firstArticle["auteur"];
         if($this->firstArticle["fkpays"]==='F' || $this->firstArticle["fkpays"]==='ZZ')
         {
             $this->flag= "https://flagcdn.com/16x12/un.webp";
@@ -36,12 +40,12 @@ new class extends Component
 <div class="bg-white dark:bg-dark-surface p-6 rounded-xl border border-gray-100 dark:border-dark-border shadow-sm">
     <h3 class="text-lg font-bold font-heading mb-4 border-l-4 border-highlight-500 pl-3">
         <span class="inline-flex items-center gap-1 bg-brand-500 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded shadow">
-            <img src="{{ $this->flag }}" class="w-3 h-3 rounded-sm" alt="{{$this->firstArticle['titre']}}" />
-            {{ $this->sousrubrique }} : Les + lus
+
+            🔥Les + lus de {{$this->auteur}}
         </span>
     </h3>
     <div class="space-y-4">
-        @foreach($this->plusluParPays as $article)
+        @foreach($this->mostReaded as $article)
             @php
                 $hit=Helper::views_format($article['hit'],false);
                 $sousrubrique=$article['sousrubrique']['sousrubrique'];

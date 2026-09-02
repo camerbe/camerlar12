@@ -236,21 +236,22 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticleBySlug($slug)
     {
-
-        $article= Article::with(['countries', 'rubrique', 'sousrubrique'])
-            ->where('slug', $slug)->firstOrFail();
-        if($article){
+        $cacheKey=md5("article:{$slug}");
+        $article = Cache::remember($cacheKey, now()->addMinutes(5), function () use ($slug) {
+            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->where('slug', $slug)->firstOrFail();
+        });
+        //if($article){
             /*Article::withoutEvents(function () use ($article){
                 $article->incrementHits();
             });*/
-            dispatch(function () use ($article) {
-                Article::withoutEvents(function () use ($article) {
+        dispatch(function () use ($article) {
+
+            Article::withoutEvents(function () use ($article) {
                     $article->incrementHits();
                 });
-            })->afterResponse();
-        }
-
-
+        })->afterResponse();
+        //}
 
         return $article;
     }
@@ -332,8 +333,21 @@ class ArticleRepository extends Repository implements IArticleRepository
     function getMostReaded()
     {
         $cacheKey = "most_read";
-        $articles= Cache::remember($cacheKey, now()->addDay(), function ()  {
+        $articles= Cache::remember($cacheKey, now()->addDay(1), function ()  {
             $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->orderByDesc('hit')
+                ->limit(5)
+                ->get();
+            return ArticleResource::collection($data)->resolve();
+        });
+        return $articles;
+    }
+    function getMostReadedByRubrique(int $fksousrubrique)
+    {
+        $cacheKey =md5("most_read".(string)$fksousrubrique) ;
+        $articles= Cache::remember($cacheKey, now()->addDay(1), function () use($fksousrubrique)  {
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->where('fksousrubrique',$fksousrubrique)
                 ->orderByDesc('hit')
                 ->limit(5)
                 ->get();
@@ -360,6 +374,26 @@ class ArticleRepository extends Repository implements IArticleRepository
             $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
+                ->select('*')
+                ->get();
+            return ArticleResource::collection($data)->resolve();
+        });
+        return $articles;
+    }
+    function getMostReadedNewsByAuthor($author)
+    {
+        $cacheKey = "most_Reade_news_by_author_".$author;
+        $articles= Cache::remember($cacheKey, now()->addDay(), function () use($author) {
+            $ids=Article::select('idarticle')
+                ->where('auteur',$author)
+                ->where('dateparution', '<=', now())
+                ->orderByDesc('hit')
+                ->limit(5)
+                ->pluck('idarticle');
+
+            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
+                ->whereIn('idarticle', $ids)
+                ->orderByDesc('hit')
                 ->select('*')
                 ->get();
             return ArticleResource::collection($data)->resolve();
@@ -495,6 +529,7 @@ class ArticleRepository extends Repository implements IArticleRepository
         //Cache::forget($cache);
         $article=Cache::remember($cache,now()->addDay(),function(){
             return Article::Published()
+                ->where('dateparution', '<=', now())
                 ->with(['countries', 'rubrique', 'sousrubrique'])
                 ->latest('dateparution')
                 ->first();

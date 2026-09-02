@@ -6,7 +6,12 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
+            refresh: [
+                'resources/views/**',
+                'app/Livewire/**',
+                'app/View/Components/**',
+                'routes/**',
+            ],
         }),
         tailwindcss(),
     ],

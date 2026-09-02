@@ -20,6 +20,15 @@
     $georegion =$oneArticle['fkpays'];
     $arrKeyword=explode(',',$oneArticle['keyword']);
     $hashtags=App\Helpers\Helper::nettoyerHashtags($arrKeyword);
+    $ampcanonical = url('amp' . parse_url($canonical, PHP_URL_PATH));
+    $isJson4article=true;
+    $rub=$oneArticle["rubrique"]["rubrique"];
+    $sousrub=$oneArticle["sousrubrique"]["sousrubrique"];
+    $breadcumbUrl=\Illuminate\Support\Str::slug($rub)."/".strtolower($sousrub);
+    $wordCount=App\Helpers\Helper::countArticleCharacters($oneArticle["info"]);
+    $hit=$oneArticle["hit"];
+    $info=$oneArticle["info"];
+
 
 @endphp
 
@@ -32,7 +41,7 @@
     :image_type="$mimeType"
     :author="$author"
     :keyword="$keyword"
-    :section="$section"
+    :section="$sousrub"
     :canonical="$canonical"
     :source="$source"
     :modified_time="$modified_time"
@@ -40,15 +49,29 @@
     :georegion="$georegion"
     :geoplacename="$geoplacename"
     :hashtags="$hashtags"
+    :ampcanonical="$ampcanonical"
+    :isJson4article="$isJson4article"
+    :rub="$rub"
+    :sousrub="$sousrub"
+    :breadcumbUrl="$breadcumbUrl"
+    :wordCount="$wordCount"
+    :hit="$hit"
+    :info="$info"
+    :jld="$ldjson"
 
 >
     <div>
         <livewire:article
-
+                :jld="$ldjson"
                 :oneArticle="$oneArticle"
                 :plusLus="$plusLus"
                 :sameRubrique="$sameRubrique"
                 :debat="$debat"
+                :droit="$droit"
+                :camer="$camer"
+                :sopie="$sopie"
+                :skypper="$skypper"
+
         />
     </div>
 

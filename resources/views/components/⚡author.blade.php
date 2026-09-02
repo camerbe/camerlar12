@@ -1,171 +1,68 @@
 <?php
 
 use Livewire\Component;
-use App\Services\ArticleService;
 use App\Helpers\Helper;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Cache;
 
 new class extends Component
 {
-    /*public ?array $heroArticle = null;
+    public  $heroArticle ;
+    public  array $articles=[] ;
+    //public array $feedArticles = [];
+    public  array $news=[] ;
+    public  array $mostReaded=[] ;
     public $debat;
     public $droit;
     public $camer;
     public $sopie;
     public $skypper;
-    public ?array $heroArticle = null;*/
-    public mixed $debat=null;
-    public mixed $droit=null;
-    public mixed $camer=null;
-    public mixed $sopie=null;
-    public mixed $skypper=null;
-
-
-    /*public array $trendingArticles = [];
-    public array $sidebarArticles = [];
-    public array $feedArticles = [];
-    //public array $allFeedArticles = [];
-    public int $perPage=10;
+    public $perPage=10;
     public $hasMore=true;
-    public $mostReaded =[];*/
-    public int $perPage=10;
-    public function mount(
-        ArticleService $articleService,
-        $debat = null,
-        $droit = null,
-        $sopie = null,
-        $camer = null,
-        $skypper = null,
-    ){
-        $this->debat = $debat;
-        $this->droit = $droit;
-        $this->sopie = $sopie;
-        $this->camer = $camer;
-        $this->skypper = $skypper;
-
-        /*$rawArticles=$articleService->getArticles();
-        $rawMostReaded=$articleService->getMostReaded();
-        $collection = collect($rawArticles);
-        $this->heroArticle=$collection->first();
-        $this->trendingArticles = $collection->slice(1, 3)->values()->toArray();
-        $this->sidebarArticles = $collection->slice(4, 5)->values()->toArray();*/
-
-        // - Objet 4 : Tout le reste pour le fil d'actualités principal
-        //$this->feedArticles = $collection->slice(6,$this->perPage)->values()->toArray();
-        /*$this->allFeedArticles = $collection
-            ->slice(6)
-            ->values()
-            ->toArray();*/
-        /*$this->updateFeed($collection);
-
-        $col= collect($rawMostReaded);
-        $this->mostReaded=$col->values()->toArray();*/
+    public string $cacheKey;
 
 
-    }
-    public function loadMore(): void
-    {
-        $this->perPage += 6;
-    }
-    #[Computed]
-    public function articles()
-    {
-        return collect(
-            app(ArticleService::class)->getArticles()
-        );
-    }
 
-    #[Computed]
-    public function heroArticle()
-    {
-        //dd($this->articles->first());
-        return $this->articles->first();
-
-    }
-
-    #[Computed]
-    public function trendingArticles()
-    {
-        return $this->articles
-            ->slice(1, 3)
-            ->values();
-    }
-
-    #[Computed]
-    public function sidebarArticles()
-    {
-        return $this->articles
-            ->slice(4, 5)
-            ->values();
-    }
-
-    #[Computed]
-    public function feedArticles()
-    {
-        return $this->articles
-            ->slice(1)
-            ->take($this->perPage)
-            ->values();
-    }
-
-    #[Computed]
-    public function hasMore(): bool
-    {
-        return $this->perPage < $this->articles->slice(6)->count();
-    }
-
-    #[Computed]
-    public function mostReaded()
-    {
-        return collect(
-            app(ArticleService::class)->getMostReaded()
-        )->values()->toArray();
-    }
-
-    /*public function loadMore(): void
-    {
-        $this->perPage += 6;
+    //
+    public function mount($articles){
+        $this->cacheKey = "auteur_articles_{$articles[0]['auteur']}_" . md5(serialize(array_column($articles, 'id')));
+        Cache::put($this->cacheKey, $articles, now()->addMinutes(10));
+        $this->updateFeed($articles);
     }
     public function loadMore(){
 
         $this->perPage += 6;
-        $articleService = app(ArticleService::class);
-        $collection = collect($articleService->getArticles());
-        $this->updateFeed($collection);
-    }*/
+        $full = Cache::get($this->cacheKey, []);
+        $this->updateFeed($full);
+    }
     private function updateFeed($collection)
     {
-        $feedSource = $collection->slice(6); // skip hero+trending+sidebar
-        $this->feedArticles = $feedSource->slice(0, $this->perPage)->values()->toArray();
-        $this->hasMore = $this->perPage < $feedSource->count();
+        $feedSource = array_slice($collection, 6);
+        $this->articles = array_slice($feedSource, 0, $this->perPage);
+        $this->hasMore = $this->perPage < count($feedSource);
     }
-    //
-    /*public function render(){
-        return view('livewire.news');
-    }*/
 };
 ?>
 
-
 <div class="space-y-8">
+    <!-- Simplicity is the consequence of refined emotions. - Jean D'Alembert -->
 
-    @if($this->heroArticle)
-        <livewire:featured-article :article="$this->heroArticle" />
+    @if($heroArticle)
+        <livewire:featured-article :article="$heroArticle" />
     @endif
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-8 space-y-8">
             <section>
                 <div class="flex items-center justify-between border-b-2 border-brand-500 pb-2">
                     <h2 class="text-xl font-extrabold font-heading uppercase tracking-wide">
-                        Dernières Actualités
+                        les articles de {{$heroArticle["auteur"]}}
                     </h2>
                     <span class="text-xs font-semibold text-brand-500">Flux en direct</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    @foreach($this->feedArticles as $item)
+                    @foreach($articles as $item)
                         @php
                             $sousrubrique=Str::title($item["sousrubrique"]["sousrubrique"]);
                             $auteur=$item["auteur"];
@@ -187,7 +84,7 @@ new class extends Component
                         @endphp
                         {{-- Utilisation de composants Flux UI --}}
 
-                        <article wire:key="feed-item-{{ $item['id'] ?? $loop->index }}" class="group flex flex-col bg-white dark:bg-dark-surface rounded-xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-md transition-all">
+                        <article class="group flex flex-col bg-white dark:bg-dark-surface rounded-xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-md transition-all">
                             <a href="/{{$url}}" class="relative aspect-video overflow-hidden bg-gray-100">
                                 <img src="{{$img}}" alt="{{$titre}}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-brand-500 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded shadow">
@@ -206,7 +103,7 @@ new class extends Component
                                 <div class="mt-auto pt-4 flex items-center justify-between text-xs text-gray-500">
                                     <span class="font-medium text-gray-700 dark:text-gray-300">{{$auteur}}</span>
                                     <a href="/{{$url}}">
-                                    <span class="text-brand-500 font-semibold group-hover:translate-x-1 transition-transform">Lire &rarr;</span>
+                                        <span class="text-brand-500 font-semibold group-hover:translate-x-1 transition-transform">Lire &rarr;</span>
                                     </a>
                                 </div>
                             </div>
@@ -226,7 +123,7 @@ new class extends Component
 
                 </div>
                 <!-- Bouton Charger Plus -->
-                @if($this->hasMore)
+                @if($hasMore)
                     <div class="text-center mt-10">
                         <flux:button
                             wire:click="loadMore"
@@ -254,17 +151,15 @@ new class extends Component
         {{-- Sidebar --}}
         <aside class="lg:col-span-4 space-y-6">
             {{-- 4. Sous-composant Livewire pour la Sidebar--}}
-            <livewire:sidebar-news :articles="$this->mostReaded" />
+            <livewire:most-readed-author :mostReaded="$mostReaded" />
             <livewire:video :camer="null" :sopie="$sopie" />
             @include('partials.pub-aside')
             <livewire:debat :debat="$debat"/>
             <livewire:droit :droit="$droit"/>
             @include('partials.pub-aside')
             <livewire:video :camer="$camer" :sopie="null" />
-            <livewire:skypper :skypper="$skypper" />
-
+            <livewire:skypper :skypper="$skypper"  />
 
         </aside>
     </div>
 </div>
-

@@ -1,24 +1,34 @@
-
 @props([
-'title' => config('app.name'),
-'description' => '',
-'image' => '',
-'image_width' => '',
-'image_height' => '',
-'image_type' => '',
-'keyword'=>'',
-'modified_time'=>'',
-'published_time'=>'',
-'section'=>'',
-'author'=>'',
-'source'=>'',
-'publisher'=>'',
-'canonical' => '',
-'ampcanonical' => '',
-'georegion' => '',
-'geoplacename' => '',
-'hashtags' => [],
-
+    'title' => config('app.name'),
+    'description' => '',
+    'image' => '',
+    'image_width' => '',
+    'image_height' => '',
+    'image_type' => '',
+    'keyword' => '',
+    'modified_time' => '',
+    'published_time' => '',
+    'section' => '',
+    'author' => '',
+    'source' => '',
+    'publisher' => '',
+    'canonical' => '',
+    'ampcanonical' => '',
+    'georegion' => '',
+    'geoplacename' => '',
+    'hashtags' => [],
+    'isJson4article' => '',
+    'isJson4listItem' => '',
+    'isVideo' => '',
+    'rub' => '',
+    'sousrub' => '',
+    'breadcumbUrl' => '',
+    'wordCount' => 0,
+    'hit' => 0,
+    'info',
+    'listElements'=>[],
+    'listItemVideos'=>[],
+    'jld'=>'[]',
 ])
 
 <!-- Primary Meta Tags -->
@@ -46,13 +56,11 @@
 <meta property="og:image:type" content="{{ $image_type }}">
 <meta property="og:image:secure_url" content="{{ $image }}">
 
-@if(count($hashtags)>0)
+@if(count($hashtags) > 0)
     @foreach($hashtags as $hashtag)
         <meta property="og:tag" content="{{ $hashtag }}">
     @endforeach
-
 @endif
-
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
@@ -62,19 +70,66 @@
 <meta name="twitter:image:alt" content="{{ $title }}">
 <meta name="twitter:site" content="@camer.be">
 <meta name="twitter:creator" content="@camer.be">
-<meta name="twitter:url" content="{{$canonical}}">
+<meta name="twitter:url" content="{{ $canonical }}">
 
-{{-- GEO  --}}
-<meta name="geo.region" content="{{$georegion}}">
-<meta name="geo.placename" content="{{$geoplacename}}">
+{{-- GEO --}}
+<meta name="geo.region" content="{{ $georegion }}">
+<meta name="geo.placename" content="{{ $geoplacename }}">
 <meta name="language" content="fr">
 
-<meta name="author" content="{{$author}}">
+<meta name="author" content="{{ $author }}">
 <link rel="publisher" href="https://www.camer.be">
 
 <!-- Canonical -->
 <link rel="canonical" href="{{ $canonical }}">
+@if($ampcanonical)
 <link rel="amphtml" href="{{ $ampcanonical }}">
-<link rel="preload"  as="image" href="{{$image}}" fetchpriority="high">
+@endif
+<link rel="preload" as="image" href="{{ $image }}" fetchpriority="high">
 
+{{-- JSON-LD --}}
+@if($isJson4article)
+
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@@type": "ListItem",
+                "position": 1,
+                "name": "Accueil",
+                "item": "https://www.camer.be/"
+            },
+            {
+                "@@type": "ListItem",
+                "position": 2,
+                "name": "{{$rub}}"
+             },
+             {  "@@type": "ListItem",
+                "position": 3,
+                "name": "{{$sousrub}}",
+                "item": "{{config('app.url')}}/{{$breadcumbUrl}}"
+              }
+        ]
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {!! json_encode($jld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+
+@endif
+@if($isJson4listItem)
+    <script type="application/ld+json">
+        {!! json_encode($listElements, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+
+@endif
+@if($isVideo)
+    <script type="application/ld+json">
+        {!! json_encode($listItemVideos, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+
+@endif
 

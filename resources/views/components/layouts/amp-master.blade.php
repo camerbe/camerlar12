@@ -1,7 +1,6 @@
 <!doctype html>
 <html amp lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-
 <head>
     <meta charset="utf-8">
     <x-meta
@@ -10,6 +9,7 @@
         :image="$image ?? ''"
         :image_width="$image_width?? '300'"
         :image_height="$image_height?? '300'"
+        :image_type="$mimeType ?? 'image/jpeg'"
         :keyword="$keyword?? ''"
         :modified_time="$modified_time?? ''"
         :published_time="$published_time?? ''"
@@ -18,6 +18,9 @@
         :source="$source?? ''"
         :publisher="$publisher?? ''"
         :canonical="$canonical?? ''"
+        :georegion="$georegion ?? 'BE'"
+        :geoplacename="$geoplacename ?? 'Belgique'"
+        :hashtags="$hashtags ?? []"
     />
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -33,11 +36,25 @@
     <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-
+    <script async custom-element="amp-consent" src="https://cdn.ampproject.org/v0/amp-consent-0.1.js"></script>
+    <script async custom-element="amp-geo" src="https://cdn.ampproject.org/v0/amp-geo-0.1.js"></script>
     <!--AdsenseAMP page-->
     <script async custom-element="amp-auto-ads"
             src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
     </script>
+
+    <amp-consent id="inmobi-consent">
+        <script type="application/json">
+  {
+    "consents": {
+      "inmobi": {
+        "promptUI": "consent-ui",
+        "iframeSrc": "https://cmp.inmobi.com/amp/choice/6Fv0cGNfc_bw8/www.themoneytizer.com"
+      }
+    }
+  }
+  </script>
+    </amp-consent>
 
     <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
     <!--non-AMP page
@@ -1549,22 +1566,15 @@
             white-space: nowrap;
         }
     </style>
-    <!--<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-
-    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
-      <noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>-->
-
-
-
 
 </head>
 
 
 <body>
-<amp-auto-ads type="adsense"
-              data-ad-client="ca-pub-8638642715460968">
-</amp-auto-ads>
-<header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
+    <amp-auto-ads type="adsense"
+                  data-ad-client="ca-pub-8638642715460968">
+    </amp-auto-ads>
+    <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
     <button on="tap:sidebar.toggle" class="ampstart-btn caps m2 header-icon-1"><i class="fa fa-navicon"></i></button>
     <a href="{{env('APP_URL')}}/amp/accueil" class="header-logo">
         <div class="mx-auto ">

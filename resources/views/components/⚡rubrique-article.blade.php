@@ -3,22 +3,43 @@
 use Livewire\Component;
 use App\Helpers\Helper;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+
 new class extends Component
 {
     //
     public $heroArticle = null;
-    public array $rubriqueArticles=[];
+    //public array $rubriqueArticles=[];
     public array $feedArticles = [];
     public $perPage=10;
     public $hasMore=true;
+    public $mostReaded;
+    public $sopie;
+    public $camer;
+    public $debat;
+    public $droit;
+    public $skypper;
+    public string $cacheKey;
 
-    public function mount(){
-        //$rawArticles=$this->rubriqueArticles;
-        //$collection = collect($rawArticles);
-        //$this->heroArticle=$collection->first();
-        //$this->trendingArticles = $collection->slice(1, 3)->values()->toArray();
+    public function mount($rubriqueArticles){
+        $this->cacheKey = "rubrique_articles_{$rubriqueArticles[0]['sousrubrique']['sousrubrique']}_" . md5(serialize(array_column($rubriqueArticles, 'id')));
+        //$this->rubriqueArticles=$rubriqueArticles;
+        Cache::put($this->cacheKey, $rubriqueArticles, now()->addMinutes(10));
+        $this->updateFeed($rubriqueArticles);
+        //$this->feedArticles=array_slice($this->rubriqueArticles, 1,$this->perPage);
+    }
+    public function loadMore(){
 
-        $this->feedArticles=array_slice($this->rubriqueArticles, 1,$this->perPage);
+        $this->perPage += 6;
+        $full = Cache::get($this->cacheKey, []);
+        $this->updateFeed($full);
+    }
+    private function updateFeed($collection)
+    {
+        $feedSource = array_slice($collection, 6);
+        $this->feedArticles = array_slice($feedSource, 0, $this->perPage);
+        $this->hasMore = $this->perPage < count($feedSource);
     }
 };
 ?>
@@ -50,9 +71,13 @@ new class extends Component
                                 $img=$item['image_url'] ?? 'https://picsum.photos/600/400?random=2';
                                 $alt=$item["titre"];
                                 $chapo=$item["chapeau"];
-                                $dateparution=Helper::formatShort($item["dateparution"]);
+                                //$dateparution=Helper::formatShort($item["dateparution"]);
                                 $flag="https://flagcdn.com/16x12/".strtolower($item["fkpays"]).".webp";
                                 $titre=$item["titre"];
+                                $dateparution=Carbon::parse($item["dateparution"])->locale('fr');
+                                $dateparution=ucfirst(
+                                    $dateparution->isoFormat('dddd D MMMM YYYY HH:mm')
+                                );
 
                             @endphp
                             {{-- Utilisation de composants Flux UI --}}
@@ -75,7 +100,7 @@ new class extends Component
                                     </p>
                                     <div class="mt-auto pt-4 flex items-center justify-between text-xs text-gray-500">
                                         <span class="font-medium text-gray-700 dark:text-gray-300">{{$auteur}}</span>
-                                        <a href={{$url}}>
+                                        <a href=/{{$url}}>
                                             <span class="text-brand-500 font-semibold group-hover:translate-x-1 transition-transform">Lire &rarr;</span>
                                         </a>
                                     </div>
@@ -113,9 +138,15 @@ new class extends Component
 
             {{-- Sidebar --}}
             <aside class="lg:col-span-4 space-y-6">
-                {{-- 4. Sous-composant Livewire pour la Sidebar
-                <livewire:sidebar-news :articles="$mostReaded" />--}}
-
+                {{-- 4. Sous-composant Livewire pour la Sidebar--}}
+                <livewire:most-readed-rubrique :mostReaded="$mostReaded" />
+                <livewire:video :camer="null" :sopie="$sopie" />
+                @include('partials.pub-aside')
+                <livewire:debat :debat="$debat"/>
+                <livewire:droit :droit="$droit"/>
+                @include('partials.pub-aside')
+                <livewire:video :camer="$camer" :sopie="null" />
+                <livewire:skypper :skypper="$skypper"  />
             </aside>
         </div>
 </div>

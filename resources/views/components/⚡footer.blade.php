@@ -9,6 +9,23 @@ new class extends Component
 ?>
 
 <footer class="bg-gray-900 text-gray-300 border-t border-gray-800 pt-12 pb-8">
+    <div
+        x-data="{ show: false }"
+        x-on:scroll.window="show = window.scrollY > 600"
+    >
+        <button
+            type="button"
+            x-show="show"
+            x-transition
+            x-on:click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+            class="fixed bottom-10 right-6 z-[9999] flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition hover:bg-red-700"
+            aria-label="Retour en haut"
+        >
+            <flux:icon name="arrow-up" class="h-5 w-5" />
+        </button>
+    </div>
+    <livewire:archives :archives="$archives" />
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <!-- Brand Info -->
@@ -39,7 +56,7 @@ new class extends Component
                 <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4 border-l-2 border-accent-500 pl-2">Informations</h4>
                 <ul class="space-y-2 text-xs">
                     <li><a href="#" class="hover:text-white transition">Mentions Légales</a></li>
-                    <li><a href="#" class="hover:text-white transition">Politique de Confidentialité</a></li>
+                    <li><a href="/qui-sommes-nous" class="hover:text-white transition">Politique de Confidentialité</a></li>
                     <li><a href="#" class="hover:text-white transition">Charte Éditoriale</a></li>
                     <li><a href="#" class="hover:text-white transition">Annoncer sur le site</a></li>
                 </ul>

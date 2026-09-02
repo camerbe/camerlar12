@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\Helper;
 use App\Http\Resources\VideoResource;
 use App\IRepository\IVideoRepository;
 use App\Models\Video;
@@ -32,6 +33,7 @@ class VideoRepository extends Repository implements IVideoRepository{
     function create(array $input)
     {
         $input['titre']=Str::title($input['titre']);
+        $input['video']=Helper::getYouTubeId($input['video']);
         $input['typevideo']=Str::ucfirst($input['typevideo']);
         return VideoResource::collection(parent::create($input)); ;
     }
@@ -66,7 +68,8 @@ class VideoRepository extends Repository implements IVideoRepository{
         $currentVideo=parent::findById($id);
         $input['titre']=isset($input['titre'])? Str::title($input['titre']):$currentVideo->titre;
         $input['typevideo']=isset($input['typevideo'])? Str::ucfirst($input['typevideo']):$currentVideo->typevideo;
-        $input['video']= $input['video'] ?? $currentVideo->video;
+        //$input['video']= $input['video'] ?? $currentVideo->video;
+        $input['video']= Helper::getYouTubeId($input['video']) ?? $currentVideo->video;
         return  VideoResource::collection(parent::update($input, $id));
     }
 
@@ -113,10 +116,12 @@ class VideoRepository extends Repository implements IVideoRepository{
      */
     function findAll($camer = 'Camer')
     {
+
         if (!in_array($camer, ['Camer', 'Sopie'])) {
             return null;
         }
         $cacheKey = $camer === 'Camer' ? 'VideoCamer' : 'VideoSopie';
+        //Cache::forget('VideoSopie');
         $videos = Cache::remember($cacheKey, now()->addDay(1), function () use ($camer) {
             return Video::Where('typevideo',$camer)->orderByDesc('idvideo')->take(100)->get();
         });

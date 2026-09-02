@@ -173,7 +173,7 @@ class VideoController extends Controller
             "message"=>"Vidéos camer inexistante"
         ],Response::HTTP_NOT_FOUND);
     }
-    public function findAll($camer='Camer')
+    public function findAll($camer='Sopie')
     {
         //
         $videos=$this->videoService->findAll($camer);

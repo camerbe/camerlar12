@@ -28,12 +28,14 @@ Route::prefix('contact')->controller(ContactController::class)->group(function (
 Route::prefix('articles')->controller(ArticleController::class)->group(function () {
     Route::get('slug/{slug}', 'getArticleBySlug');
     Route::get('laUne', 'laUne');
+    Route::get('most/plus/rubrique/{sousrubrique}', 'getMostReadedByRubrique');
     Route::get('news', 'getArticles');
     Route::get('period/{period}', 'getTopNews');
     Route::get('same/{same}', 'getSameRubrique');
     Route::get('most/{rubrique}/{pays}', 'getMostReadRubriqueByCountry');
     Route::get('most/plus', 'getMostReaded');
     Route::get('auteur/{auteur}', 'getNewsByAuthor');
+    Route::get('auteur/artile/{auteur}', 'getMostReadedNewsByAuthor');
     Route::get('pays/countries', 'allCountries');
     Route::get('rubriques/categorie', 'allRubrique');
     Route::get('sport', 'getSportArticle');

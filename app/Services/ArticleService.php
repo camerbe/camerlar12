@@ -62,6 +62,9 @@ class ArticleService
     function getNewsByAuthor($author){
         return $this->articleRepository->getNewsByAuthor($author);
     }
+    function getMostReadedNewsByAuthor($author){
+        return $this->articleRepository->getMostReadedNewsByAuthor($author);
+    }
     function getNewsForRss(){
         return $this->articleRepository->getNewsForRss();
     }
@@ -89,5 +92,8 @@ class ArticleService
     }
     function laUne(){
         return $this->articleRepository->laUne();
+    }
+    function getMostReadedByRubrique(int $fksousrubrique){
+        return $this->articleRepository->getMostReadedByRubrique($fksousrubrique);
     }
 }

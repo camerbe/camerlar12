@@ -9,6 +9,7 @@ new class extends Component
     public array $sameRubrique=[];
     public array $articles=[];
 
+
     public function mount(){
         $this->articles=$this->sameRubrique;
 

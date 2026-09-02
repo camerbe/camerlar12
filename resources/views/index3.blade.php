@@ -16,8 +16,6 @@
     $published_time=\Carbon\Carbon::parse($heroArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
     $georegion =$heroArticle['fkpays'];
     $geoplacename=$heroArticle["countries"]["pays"];
-    $isJson4listItem=true;
-    $isJson4article=false;
 @endphp
 
 <x-layouts.app
@@ -33,14 +31,10 @@
     :published_time="$published_time"
     :georegion="$georegion"
     :geoplacename="$geoplacename"
-    :isJson4article="$isJson4article"
-    :isJson4listItem="$isJson4listItem"
-    :listElements="$listItemArticles"
 >
     <div>
-        <livewire:rubrique-article
-            :listItemArticles="$listItemArticles"
-            :rubriqueArticles="$rubriqueArticles"
+        <livewire:author
+            :articles="$articles"
             :heroArticle="$heroArticle"
             :mostReaded="$mostReaded"
             :droit="$droit"

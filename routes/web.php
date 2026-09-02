@@ -8,6 +8,7 @@ use App\Http\Controllers\SitemapArticleController;
 use App\Http\Controllers\SitemapController;
 use App\Services\ArticleService;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 /*
 Route::get('/', function (ArticleService $articleService) {
     $heroArticle = collect($articleService->getArticles())->first();
@@ -16,31 +17,36 @@ Route::get('/', function (ArticleService $articleService) {
 */
 
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | AMP (cache agressif) — DOIT être déclaré avant les routes FRONT génériques
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('amp')->controller(AmpController::class)->group(function () {
+        Route::get('accueil', 'index')->name('amp.index')->middleware('cache.response');
+        Route::get('{rubrique}/{sousrubrique}/{slug}', 'index1')->name('amp.index1')->middleware('cache.response');
+        Route::get('{rubrique}/{sousrubrique}', 'index2')->name('amp.index2')->middleware('cache.response');
+    });
     /*
    |--------------------------------------------------------------------------
    | FRONT
    |--------------------------------------------------------------------------
    */
     Route::prefix('/')->controller(FrontEndController::class)->group(function () {
-
+        //Route::get('/amp/{slug}', FrontEndController::class);
         Route::get('', 'laUne')->name('home');
+        Route::get('auteur/{auteur}', 'index3')->name('index3');
+        Route::get('video/{video}', 'index4')->name('index4');
         Route::get('{rubrique}/{sousrubrique}', 'getArticlesByRubrique')->name('articlerubrique');
         Route::get('{rub}/{sousrub}/{slug}', 'display')->name('display');
+        Route::get('qui-sommes-nous', 'index5')->name('index5');
 
 
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | AMP (cache agressif)
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('amp')->controller(AmpController::class)->group(function () {
-        Route::get('accueil', 'index')->name('amp.index')->middleware('cache.response');
-        Route::get('{rubrique}/{sousrubrique}/{slug}',  'index1')->name('amp.index1')->middleware('cache.response');
-        Route::get('{rubrique}/{sousrubrique}', 'index2')->name('amp.index2')->middleware('cache.response');
 
     });
+
+
 
     /*
     |--------------------------------------------------------------------------
