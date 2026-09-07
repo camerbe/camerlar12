@@ -8,6 +8,8 @@
     //$title=\App\Helpers\Helper::getTitle($firstArticle["countries"]["pays"],$firstArticle["titre"],$firstArticle["countries"]["country"]);
     $title='Actualités Cameroun, Info & Analyse – Politique, Sport, Diaspora | Camer.be';
     $description=$dynamicDescription;
+    $rub=$firstArticle["rubrique"]["rubrique"];
+    $sousrub=$firstArticle["sousrubrique"]["sousrubrique"];
     $image=url('assets/img/camer-logo.png');
     $image_width=190;
     $image_height=52;
@@ -15,9 +17,12 @@
     $section=$firstArticle["rubrique"]["rubrique"]." / ".$firstArticle["sousrubrique"]["sousrubrique"];
     $author=$firstArticle["auteur"];
     $source=$firstArticle["source"];
+    $breadcumbUrl =null;
+    $wordCount=0;
     $canonical= \App\Helpers\Helper::remove_amp_from_url(url()->current());
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
     $published_time=\Carbon\Carbon::parse($firstArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
+    $isJson4listItem=true;
 @endphp
 
 @extends('layouts.amp-master')

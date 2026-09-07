@@ -21,6 +21,18 @@
         :georegion="$georegion ?? 'BE'"
         :geoplacename="$geoplacename ?? 'Belgique'"
         :hashtags="$hashtags ?? []"
+        :isJson4article="$isJson4article ?? false"
+        :isJson4listItem="$isJson4listItem ?? false"
+        :isVideo="$isVideo ?? false"
+        :rub="$rub?? ''"
+        :sousrub="$sousrub?? ''"
+        :breadcumbUrl="$breadcumbUrl ?? null"
+        :wordCount="$wordCount ?? 0"
+        :hit="$hit ?? 0"
+        :info="$info ?? ''"
+        :jld="$jld?? null"
+        :listElements="$listItemArticles ?? null"
+        :listItemVideos="$listItemVideos ?? null"
     />
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">

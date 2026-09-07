@@ -1,34 +1,30 @@
 
 <div class="material-box  full-top">
-@foreach($articles as $article)
-    @php
-        $articleUrl=\App\Helpers\Helper::makeUrl(
-            $article['rubrique']['rubrique'],
-            $article['sousrubrique']['sousrubrique'],
-            $article['slug']
-        );
-    @endphp
+@foreach($videos as $video)
+
 
 
 
 
 
             <div class="amp-image-container">
-            <amp-img
-                itemprop="image"
-                alt="{{$article['titre']}}"
-                title="{{$title}}"
-                src="{{$article['image_url']}}"
-                width="{{$article['image_width'] ?? 300}}"
-                height="{{$article['image_height'] ?? 300}}"
-                layout="responsive">
                 <amp-img
-                    placeholder
-                    src="https://picsum.photos/300"
-                    width="{{ $article['image_width'] ?? 300 }}"
-                    height="{{ $article['image_height'] ?? 300 }}">
+                    itemprop="image"
+                    alt="{{$article['titre']}}"
+                    title="{{$title}}"
+                    src="{{$article['image_url']}}"
+                    width="{{$article['image_width'] ?? 300}}"
+                    height="{{$article['image_height'] ?? 300}}"
+                    layout="responsive">
+                    <amp-img
+                        placeholder
+                        src="https://picsum.photos/300"
+                        width="{{ $article['image_width'] ?? 300 }}"
+                        height="{{ $article['image_height'] ?? 300 }}">
+                    </amp-img>
                 </amp-img>
-            </amp-img>
+
+
 
 
 
@@ -40,8 +36,16 @@
                 <div class="material-box">
                     <a href="{{$articleUrl}}" class="button bg-teal-light button-full button-round">Lire</a>
                 </div>
-
-
+                <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <meta itemprop="name" content="{{ $article['auteur'] }}">
+                    <meta itemprop="url" content="{{url()->current()}}" />
+                </span>
+                <span itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+                <meta itemprop="name" content="Camer.be">
+                <span itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+                    <meta itemprop="url" content="{{ url('assets/img/camer-logo.png') }}">
+                </span>
+            </span>
             </div>
 
 
@@ -87,4 +91,20 @@
         </ul>
     </nav>
 </div>
-
+@php
+    $jsonLdGlobal = [
+    "@context" => "https://schema.org",
+    "@type" => "CollectionPage",
+    "name" => $title,          // équivalent this.titleService.getTitle()
+    "description" => $description, // meta description
+    "url" => url()->current(),
+    "mainContentOfPage" => [
+        "@type" => "ItemList",
+        "itemListElement" => $listElements
+    ]
+];
+@endphp
+{{-- Injection JSON-LD dans la page --}}
+<script type="application/ld+json">
+    {!! json_encode($jsonLdGlobal, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+</script>

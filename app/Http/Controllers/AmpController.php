@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\api\V1\EvenementController;
 use App\Http\Controllers\api\V1\PubController;
 use App\Http\Controllers\api\V1\VideoController;
+use App\Services\SchemaOrg\CollectionPageSchema;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\api\V1\ArticleController;
+use Nette\Utils\Random;
 use Symfony\Component\HttpFoundation\Response;
 
 class AmpController extends Controller
@@ -31,18 +33,20 @@ class AmpController extends Controller
     private $archives;
     private $camerVideos;
     private $sopieVideos;
+    private $collectionPageSchema;
 
     public function __construct(
         ArticleController $api,
         EvenementController $event,
         VideoController $video,
         PubController $pub,
-
+        CollectionPageSchema $collectionPageSchema
     ){
         $this->api=$api;
         $this->event=$event;
         $this->video=$video;
         $this->pub=$pub;
+        $this->collectionPageSchema=$collectionPageSchema;
 
 
         //------------------ event
@@ -136,6 +140,8 @@ class AmpController extends Controller
             $array = json_decode($data->getContent(), true);
             return $array['data']; // Store as collection
         });
+        $firstTenArticles=array_slice($articles,0,$perPage);
+        $ldJson=$this->collectionPageSchema->articles($firstTenArticles);
         $currentItems = array_slice($articles, ($currentPage - 1) * $perPage, $perPage);
         /*$currentItems = $articles
             ->slice(($currentPage - 1) * $perPage, $perPage)
@@ -151,12 +157,12 @@ class AmpController extends Controller
 
         $cacheKey="cache_amp_index_".$currentPage;
         //Cache::forget($cacheKey);
-        //dd($archives);
+        //dd($ldJson);
         return Cache::remember($cacheKey, now()->addHours(12), function ()
-            use ($paginated) {
+            use ($paginated,$ldJson) {
             return view('index-amp', [
                 'articles' => $paginated,
-
+                'listItemArticles'=>$ldJson,
             ])->render();
         });
     }
@@ -165,18 +171,19 @@ class AmpController extends Controller
         $data=$this->api->getArticleBySlug($slug);
         $array = json_decode($data->getContent(), true);
         $article = collect($array['data']);
-
+        $jld = $this->collectionPageSchema->newsArticle($array['data']);
         $dataSamerubrique=$this->api->getSameRubrique($article['fksousrubrique']);
         $arraySamerubrique =json_decode($dataSamerubrique->getContent(), true);
         $samerubrique= collect($arraySamerubrique['data']);
         return view('index1-amp', [
             'article' =>  $article,
             'samerubriques' =>  $samerubrique,
+            'ldjson'=>$jld,
 
         ]);
     }
     public function index2(Request $request){
-        $isVideo=true;
+        //$isVideo=true;
         $perPage = 10;
         $currentPage = (int) $request->get('page', 1);
 
@@ -190,18 +197,8 @@ class AmpController extends Controller
             $array = json_decode($data->getContent(), true);
             $articles = collect($array['data']);
         }
-        elseif ($request->sousrubrique!='Camer'){
-            $articles=$this->sopieVideos;
-
-        }
-        else{
-            $articles=$this->camerVideos;
-
-        }
-
-
-
-        //dd($articles);
+        $firstTenArticles=array_slice($array['data'],0,$perPage);
+        $ldJson=$this->collectionPageSchema->articles($firstTenArticles);
         $currentItems = $articles
             ->slice(($currentPage - 1) * $perPage, $perPage)
             ->values();
@@ -215,14 +212,33 @@ class AmpController extends Controller
         );
         return view('index2-amp', [
             'articles' => $paginated,
-            'debat'=> $this->debat,
-            'droit'=> $this->droit,
-            'event'=> $this->evt,
-            'camer'=> $this->camer,
-            'sopie'=> $this->sopie,
-            'pub'=> $this->publicite,
-            'archives'=> $this->archives,
-            'isVideo'=> $isVideo,
+            'listItemArticles'=>$ldJson,
+        ])->render();
+    }
+    public function video(Request $request){
+
+        $perPage=10;
+        $currentPage = (int) $request->get('page', 1);
+        $data=$this->video->findAll($request->sousrubrique);
+        $array = json_decode($data->getContent(), true);
+        $videos=$array["data"];
+        $firstTenVideos=array_slice($videos,0,$perPage);
+        $ldJson=$this->collectionPageSchema->videos($firstTenVideos);
+        $currentItems = collect($videos)
+            ->slice(($currentPage - 1) * $perPage, $perPage)
+            ->values();
+
+        $paginated = new LengthAwarePaginator(
+            $currentItems,
+            count($videos),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+        return view('video-amp', [
+            'videos' => $paginated,
+            'listItemArticles'=>$ldJson,
+
         ])->render();
     }
 }

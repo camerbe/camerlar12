@@ -91,6 +91,11 @@
         <link rel="preconnect" href="https://flagcdn.com" crossorigin>
         <link rel="preconnect" href="https://www.youtube.com">
         <link rel="preconnect" href="https://i.ytimg.com">
+        <link rel="preconnect" href="//images.taboola.com" crossorigin="">
+        <link rel="preconnect" href="//cdn.taboola.com" crossorigin="">
+        <link rel="preconnect" href="//trc.taboola.com" crossorigin="">
+        <link rel="preconnect" href="https://camer-be.disqus.com">
+
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 
         <!-- =====================================================
@@ -311,6 +316,24 @@
             crossorigin="anonymous">
         </script>
         <script id="dsq-count-scr" src="https://camer-be.disqus.com/count.js" async="async"></script>
+        {{-- TABOOLA--}}
+        <script type="text/javascript">
+            window._taboola = window._taboola || [];
+            _taboola.push({article:'auto'});
+            !function (e, f, u, i) {
+                if (!document.getElementById(i)){
+                    e.async = 1;
+                    e.src = u;
+                    e.id = i;
+                    f.parentNode.insertBefore(e, f);
+                }
+            }(document.createElement('script'),
+                document.getElementsByTagName('script')[0],
+                '//cdn.taboola.com/libtrc/camerbelgique/loader.js',
+                'tb_loader_script');
+            if(window.performance && typeof window.performance.mark == 'function')
+            {window.performance.mark('tbl_ic');}
+        </script>
     </head>
     <body class="bg-gray-50 text-gray-900 dark:bg-dark-bg dark:text-gray-100 font-sans antialiased transition-colors duration-200">
 

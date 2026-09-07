@@ -85,6 +85,8 @@ new class extends Component
         //dd($this->debat);
         $formatted = Carbon::parse($this->article['dateparution'])->toIso8601String();
         $nowFormatted = Carbon::parse(now())->toIso8601String();
+
+
     }
     //
 };
@@ -293,16 +295,63 @@ new class extends Component
                 </div>
 
                 <!-- Barre de partage -->
+                @php
+                    $shareUrl = url()->current();
+                    $title=\App\Helpers\Helper::getTitle($this->article["countries"]["pays"],$this->article['titre'],"")." | Camer.be";
+                    $arrKeyword=explode(',',$this->article['keyword']);
+                    $hashtags=App\Helpers\Helper::nettoyerHashtags($arrKeyword);
+                    $fruits_hashtags = array_map(fn( $hashtag) => '#' .  $hashtag,  $hashtags);
+                    $shareText = trim($title . ' ' . implode(', ', $fruits_hashtags) );
+                    $encodedUrl = urlencode($shareUrl);
+                    $encodedTitle = urlencode($title);
+                    $encodedText = urlencode($shareText);
+                @endphp
                 <div class="flex items-center space-x-2">
                     <span class="text-xs text-gray-400 hidden sm:inline mr-1">Partager</span>
-                    <a href="#" aria-label="Partager sur Facebook" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand-500 hover:text-white transition text-gray-600 dark:text-gray-300">
+                    <a
+                        href="https://www.facebook.com/sharer/sharer.php?u={{$encodedUrl}}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Partager sur Facebook"
+                        title="Partager sur Facebook"
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand-500 hover:text-white transition text-gray-600 dark:text-gray-300">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
                     </a>
-                    <a href="#" aria-label="Partager sur X" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand-500 hover:text-white transition text-gray-600 dark:text-gray-300">
+                    <a
+                        href="https://twitter.com/intent/tweet?text={{ $encodedText }}&url={{ $encodedUrl }}"
+                        aria-label="Partager sur X"
+                        title="Partager sur X"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand-500 hover:text-white transition text-gray-600 dark:text-gray-300">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.24 2H21l-6.5 7.4L22 22h-6.4l-5-6.5L4.7 22H2l7-8-7.7-12h6.6l4.5 6z"/></svg>
                     </a>
-                    <a href="#" aria-label="Partager sur WhatsApp" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-accent-500 hover:text-white transition text-gray-600 dark:text-gray-300">
+                    <a
+                        href="https://wa.me/?text={{ urlencode($shareText . "\n\n" . $shareUrl) }}"
+                        aria-label="Partager sur WhatsApp"
+                        title="Partager sur WhatsApp"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-accent-500 hover:text-white transition text-gray-600 dark:text-gray-300">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.5A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .9.9-2.9-.2-.3A8 8 0 1112 20z"/></svg>
+                    </a>
+                    {{-- Telegram --}}
+                    <a
+                        href="https://t.me/share/url?url={{ $encodedUrl }}&text={{ $encodedText }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Partager sur Telegram"
+                        title="Partager sur Telegram"
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-[#229ED9] hover:text-white transition-all duration-200 hover:scale-110" > <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path d="M21.5 3.5L18.2 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L5.6 13.7.7 12.2c-1.1-.3-1.1-1.1.2-1.6L20 3.1c.9-.3 1.7.2 1.5.4z"/> </svg>
+                    </a>
+                    {{-- LinkedIn --}}
+                    <a
+                        href="https://www.linkedin.com/sharing/share-offsite/?url={{ $encodedUrl }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Partager sur LinkedIn"
+                        title="Partager sur LinkedIn"
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-[#0A66C2] hover:text-white transition-all duration-200 hover:scale-110" > <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V8.98h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.48v6.28zM5.32 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zM3.54 8.98h3.57v11.47H3.54V8.98z"/> </svg>
                     </a>
                     <button aria-label="Copier le lien" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-900 hover:text-white transition text-gray-600 dark:text-gray-300">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 010 5.656l-3 3a4 4 0 01-5.656-5.656l1.5-1.5M10.172 13.828a4 4 0 010-5.656l3-3a4 4 0 015.656 5.656l-1.5 1.5"/></svg>
@@ -515,11 +564,14 @@ new class extends Component
 
             </div>
         </div>
+
         <!-- Publicité native intégrée au contenu -->
         <div class="flex flex-col items-center justify-center my-8">
+
             <span class="text-[10px] uppercase text-gray-400 font-semibold tracking-wider mb-1">Publicité</span>
             <div class="h-[90px] w-full max-w-[728px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 rounded overflow-hidden">
                 <span>Espace Publicitaire (AdSense Banner 728x90)</span>
+
             </div>
         </div>
 
@@ -538,6 +590,22 @@ new class extends Component
                 </h2>
             </div>
             <livewire:same-rubrique   :sameRubrique="$sameRubrique" />
+            <div  class="mt-5 h-[900px] overflow-auto" >
+                <div id="taboola-below-article-thumbnails"></div>
+                <script>
+                    window._taboola = window._taboola || [];
+
+                    _taboola.push({
+                        mode: 'thumbnails-a',
+                        container: 'taboola-below-article-thumbnails',
+                        placement: 'Below Article Thumbnails',
+                        target_type: 'mix'
+                    });
+
+                    _taboola.push({flush: true});
+                </script>
+            </div>
+
 
         </section>
 

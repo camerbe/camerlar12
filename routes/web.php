@@ -26,7 +26,9 @@ Route::get('/', function (ArticleService $articleService) {
     Route::prefix('amp')->controller(AmpController::class)->group(function () {
         Route::get('accueil', 'index')->name('amp.index')->middleware('cache.response');
         Route::get('{rubrique}/{sousrubrique}/{slug}', 'index1')->name('amp.index1')->middleware('cache.response');
+        Route::get('video/{sousrubrique}', 'video')->name('amp.video')->middleware('cache.response');
         Route::get('{rubrique}/{sousrubrique}', 'index2')->name('amp.index2')->middleware('cache.response');
+
     });
     /*
    |--------------------------------------------------------------------------

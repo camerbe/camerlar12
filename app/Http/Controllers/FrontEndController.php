@@ -10,6 +10,7 @@ use App\Http\Controllers\api\V1\VideoController;
 use App\Http\Resources\ArticleResource;
 use App\Services\ArticleService;
 use App\Services\RubriqueRegistry;
+use App\Services\SchemaOrg\CollectionPageSchema;
 use Carbon\Carbon;
 use Html2Text\Html2Text;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ use Illuminate\Support\Str;
     private $archives;
     private $latestArticle;
     private $listItemArticle;
+    private $collectionPageSchema;
     /**
      * @param $articleService
      */
@@ -37,11 +39,13 @@ use Illuminate\Support\Str;
         ArticleController $api ,
         VideoController $video,
         PubController $pub,
+        CollectionPageSchema $collectionPageSchema,
     )
     {
         $this->api = $api;
         $this->video = $video;
         $this->pub = $pub;
+        $this->collectionPageSchema = $collectionPageSchema;
 
         /*-------------------- Accueil --------------------------------------------*/
         $this->latestArticle=$this->api->laUne();
@@ -319,11 +323,10 @@ use Illuminate\Support\Str;
         $array = json_decode($heroArticle->getContent(), true);*/
 
         $heroArticle=$this->latestArticle();
-
-
+        $this->listItemArticle=$this->collectionPageSchema->articles($this->listItemArticle);
 
         return view('home', [
-            'listItemArticles'=>$this->getListItems($this->listItemArticle),
+            'listItemArticles'=>$this->listItemArticle,
             'heroArticle'=> $heroArticle,
         ]);
 
@@ -382,75 +385,7 @@ use Illuminate\Support\Str;
         $authorUrl=config('app.url')."/auteur/".$author;
         $geoplacename=Str::title($oneArticle["countries"]["pays"]);
         $hit=$oneArticle["hit"];
-        $jld = [
-            '@context' => 'https://schema.org',
-            '@type' => 'NewsArticle',
-            'mainEntityOfPage' => [
-                '@type' => 'WebPage',
-                '@id' => $url
-            ],
-            'headline' => $title,
-            'description' => $description,
-            'articleSection' => $sousrub,
-            'inLanguage' => 'fr-FR',
-            'keywords' => $keywords,
-            'url' => $url,
-            'datePublished' => $published_time,
-            'dateModified' => $modified_time,
-            'isAccessibleForFree' => true,
-            'copyrightYear' => Carbon::parse($published_time)->year,
-            'editor' => [
-                '@type' => 'Person',
-                'name' => $source
-            ],
-            'image' => [
-                [
-                    '@type' => 'ImageObject',
-                    'url' => $image,
-                    'height' => (int) $image_height,
-                    'width' => (int) $image_width,
-                    'caption' => $title
-                ]
-            ],
-            'contentLocation' => [
-                '@type' => 'Place',
-                'name' => $geoplacename
-            ],
-            // Nettoyage du HTML pour ne garder que le texte brut
-            'articleBody' => $html->getText(),
-            'wordCount' => (int) $wordCount,
-            'interactionStatistic' => [
-                [
-                    '@type' => 'InteractionCounter',
-                    'interactionType' => [
-                        '@type' => 'ReadAction'
-                    ],
-                    'userInteractionCount' => (int) $hit
-                ]
-            ],
-            'author' => [
-                '@type' => 'Person',
-                'name' => $author,
-                'url' => $authorUrl
-            ],
-            'publisher' => [
-                '@type' => 'Organization',
-                'name' => 'Camer.be',
-                'url' => 'https://www.camer.be/',
-                'logo' => [
-                    '@type' => 'ImageObject',
-                    'url' => 'https://www.camer.be/assets/img/logo.png',
-                    'width' => 600,
-                    'height' => 60
-                ],
-                'sameAs' => [
-                    'https://www.facebook.com/camergroup',
-                    'https://news.google.com/publications/CAAqBwgKMI_zjAsw0OSdAw',
-                    'https://www.youtube.com/channel/UCiNCSlRhs5uWfmBPKQDggEA',
-                    'https://x.com/camerbe'
-                ]
-            ]
-        ];
+        $jld = $this->collectionPageSchema->newsArticle($oneArticle);
 
         return  view('article',
             [
@@ -510,6 +445,7 @@ use Illuminate\Support\Str;
         });
 
         $heroArticle=$articles[0]?? null;
+        //$this->listItemArticle=array_slice($articles,0,10);
         /*$debat=$this->debat;
         $droit=$this->droit;
         $sopie=$this->sopie;
@@ -519,6 +455,7 @@ use Illuminate\Support\Str;
             'articles'=>$articles,
             'heroArticle'=>$heroArticle,
             'mostReaded'=>$mostReaded,
+            'listItemArticles'=>$this->collectionPageSchema->articles(array_slice($articles,0,10)),
 
         ]);
     }
@@ -542,7 +479,7 @@ use Illuminate\Support\Str;
 
         return view('index4',[
             'videos'=>$videos,
-            'listItemVideos'=>$this->getVideoItems($firstTenVideos),
+            'listItemVideos'=>$this->collectionPageSchema->videos($firstTenVideos),
 
         ]);
     }

@@ -58,7 +58,7 @@
 
 @if(count($hashtags) > 0)
     @foreach($hashtags as $hashtag)
-        <meta property="og:tag" content="{{ $hashtag }}">
+<meta property="og:tag" content="{{ $hashtag }}">
     @endforeach
 @endif
 
@@ -120,6 +120,7 @@
     </script>
 
 @endif
+
 @if($isJson4listItem)
     <script type="application/ld+json">
         {!! json_encode($listElements, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}

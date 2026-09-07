@@ -16,10 +16,12 @@
     $keyword = "actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
     $canonical = \App\Helpers\Helper::remove_amp_from_url(url()->current());
 
-    $section = ucfirst($firstArticle['sousrubrique']['sousrubrique']);
-    $author = $firstArticle['auteur'];
-    $source = $firstArticle['source'];
-    $isJson4listItem=true;
+    // Seulement si ce n'est PAS une vidéo
+    if (!$isVideo) {
+        $section = $firstArticle['rubrique']['rubrique'] . " / " . $firstArticle['sousrubrique']['sousrubrique'];
+        $author = $firstArticle['auteur'];
+        $source = $firstArticle['source'];
+    }
 @endphp
 
 @extends('layouts.amp-master')

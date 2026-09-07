@@ -21,11 +21,16 @@
     $modified_time=$today;
     $published_time=$articleDate;
     $section=$article["sousrubrique"]["sousrubrique"];
+    $rub=$article["rubrique"]["rubrique"];
     $author=$article["auteur"];
     $source=$article["source"];
     $canonical= \App\Helpers\Helper::remove_amp_from_url(url()->current());
     $georegion =$article['fkpays'];
     $geoplacename=$article["countries"]["pays"];
+    $isJson4article=true;
+    $breadcumbUrl='amp/'.\Illuminate\Support\Str::slug($rub)."/".strtolower($section);
+    $wordCount=App\Helpers\Helper::countArticleCharacters($article["info"]);
+    $jld=$ldjson;
 
 @endphp
 @extends('layouts.amp-master')
