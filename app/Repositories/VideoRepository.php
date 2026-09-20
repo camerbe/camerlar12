@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 
 class VideoRepository extends Repository implements IVideoRepository{
-
+    private int $perPage=10;
     public function __construct(Video $video)
     {
         parent::__construct($video);
@@ -23,7 +23,17 @@ class VideoRepository extends Repository implements IVideoRepository{
     function index()
     {
         $videos= Video::orderBy('idvideo','desc')->take(150)->get();
+        //$videos= Video::orderBy('idvideo','desc')->paginate(10);
         return VideoResource::collection($videos);
+    }
+    function indexPaginated()
+    {
+
+        $ids = Video::orderByDesc('idvideo')->take(100)->pluck('idvideo');
+        return Video::whereIn('idvideo', $ids)
+            ->orderByDesc('idvideo')
+            ->paginate($this->perPage);
+        //return VideoResource::collection($videos);
     }
 
     /**
@@ -35,7 +45,9 @@ class VideoRepository extends Repository implements IVideoRepository{
         $input['titre']=Str::title($input['titre']);
         $input['video']=Helper::getYouTubeId($input['video']);
         $input['typevideo']=Str::ucfirst($input['typevideo']);
-        return VideoResource::collection(parent::create($input)); ;
+        //$video = parent::create($input);
+        return new VideoResource(parent::create($input));
+        //return VideoResource::collection();
     }
 
     /**
@@ -53,7 +65,7 @@ class VideoRepository extends Repository implements IVideoRepository{
      */
     function findById($id)
     {
-        return VideoResource::collection(parent::findById($id)); ;
+        return  new VideoResource(parent::findById($id));
     }
 
     /**
@@ -70,7 +82,7 @@ class VideoRepository extends Repository implements IVideoRepository{
         $input['typevideo']=isset($input['typevideo'])? Str::ucfirst($input['typevideo']):$currentVideo->typevideo;
         //$input['video']= $input['video'] ?? $currentVideo->video;
         $input['video']= Helper::getYouTubeId($input['video']) ?? $currentVideo->video;
-        return  VideoResource::collection(parent::update($input, $id));
+        return  new VideoResource(parent::update($input, $id));
     }
 
     /**

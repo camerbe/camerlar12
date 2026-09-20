@@ -44,6 +44,7 @@
             :heroArticle="$heroArticle"
             :mostReaded="$mostReaded"
             :droit="$droit"
+            :event="$event"
             :debat="$debat"
             :sopie="$sopie"
             :camer="$camer"

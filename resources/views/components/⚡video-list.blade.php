@@ -146,7 +146,6 @@ new class extends Component
                                 <div class="space-y-4">
                                     <div>
                                         <flux:heading size="lg">{{$selectedVideo['titre']}}</flux:heading>
-
                                     </div>
 
                                     <!-- Conteneur responsive (Ratio 16:9) -->

@@ -36,6 +36,7 @@
         <livewire:qui-sommes-nous
             :heroArticle="$heroArticle"
             :droit="$droit"
+            :event="$event"
             :debat="$debat"
             :sopie="$sopie"
             :camer="$camer"

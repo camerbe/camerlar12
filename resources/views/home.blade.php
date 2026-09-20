@@ -42,6 +42,7 @@
         <livewire:news
 
             :debat="$debat"
+            :event="$event"
             :droit="$droit"
             :sopie="$sopie"
             :camer="$camer"

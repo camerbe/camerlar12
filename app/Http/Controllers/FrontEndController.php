@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use AllowDynamicProperties;
 use App\Helpers\Helper;
 use App\Http\Controllers\api\V1\ArticleController;
+use App\Http\Controllers\api\V1\AuthController;
+use App\Http\Controllers\api\V1\EvenementController;
 use App\Http\Controllers\api\V1\PubController;
 use App\Http\Controllers\api\V1\VideoController;
 use App\Http\Resources\ArticleResource;
@@ -22,8 +24,10 @@ use Illuminate\Support\Str;
 {
     //
     protected $api;
+    protected $apiAuth;
     protected $video;
     protected $pub;
+    protected $event;
     private $debat;
     private $droit;
     private $pub728;
@@ -32,6 +36,8 @@ use Illuminate\Support\Str;
     private $latestArticle;
     private $listItemArticle;
     private $collectionPageSchema;
+    private $evenement;
+
     /**
      * @param $articleService
      */
@@ -39,13 +45,17 @@ use Illuminate\Support\Str;
         ArticleController $api ,
         VideoController $video,
         PubController $pub,
+        AuthController $apiAuth,
         CollectionPageSchema $collectionPageSchema,
+        EvenementController $event,
     )
     {
         $this->api = $api;
         $this->video = $video;
         $this->pub = $pub;
         $this->collectionPageSchema = $collectionPageSchema;
+        $this->apiAuth=$apiAuth;
+        $this->event=$event;
 
         /*-------------------- Accueil --------------------------------------------*/
         $this->latestArticle=$this->api->laUne();
@@ -102,6 +112,10 @@ use Illuminate\Support\Str;
         $data300=$this->pub->getCachedPub('300');
         $array300 = json_decode($data300->getContent(), true);
         $this->pub300 = $array300['data'] ?? [];
+        /**************** Event *********************/
+        $dataEvent=$this->event->getCachedEvenements();
+        $arrayEvent= json_decode($dataEvent->getContent(), true);
+        $this->evenement = $arrayEvent['data'] ?? [];
 
         /****************** View share  ************************************/
         view()->share([
@@ -112,211 +126,12 @@ use Illuminate\Support\Str;
             'sopie'=>$this->sopie,
             'droit'=>$this->droit,
             'debat'=>$this->debat,
+            'event'=>$this->evenement,
         ]);
     }
-    private function getListItems(array $articles){
-        $arrListItems=[];
-        foreach ($articles as $index => $article){
-            $url=Helper::makeUrl(
-                $article["rubrique"]["rubrique"],
-                $article["sousrubrique"]["sousrubrique"],
-                $article["slug"]
-            );
-            $description =Str::limit($article["chapeau"],155);
-            $url=config('app.url')."/{$url}";
-            $keywords=Helper::getRealKeywords($article["keyword"]);
-            $title=Helper::getTitle(
-                $article["countries"]["pays"],
-                $article["titre"],
-                $article["countries"]["country"]
-            );
-            $html=new Html2Text($article['info']);
-            $wordCount=Helper::countArticleCharacters($html->getText());
-            $arrListItems[]=[
-                '@type' => 'ListItem',
-                'position' => $index+1,
-                'item' => [
 
-                    '@type' => 'NewsArticle',
-                    'mainEntityOfPage' => [
-                        '@type' => 'WebPage',
-                        '@id' => $url,
-                    ],
-                    'headline' => $title,
-                    'description' =>$description,
-                    'articleSection' => Str::title($article['sousrubrique']['sousrubrique']),
-                    'keywords' => $keywords,
-                    'inLanguage' => 'fr-FR',
-                    'url' => $url,
-                    'datePublished' => Carbon::parse($article['dateparution'])->toIso8601String(),
-                    'dateModified' => Carbon::now()->toIso8601String(),
-                    'isAccessibleForFree' => true,
-                    'copyrightYear' => Carbon::parse($article['dateparution'])->year,
-                    'author' => [
-                        '@type' => 'Person',
-                        'name' => $article['auteur'],
-                        'url' => config('app.url')."/auteur/{$article['auteur']}",
-                    ],
-                    'editor' => [
-                        '@type' => 'Person',
-                        'name' => $article['source'],
-                    ],
-                    'publisher' => [
-                        '@type' => 'Organization',
-                        'name' => 'Camer.be',
-                        'url' => 'https://www.camer.be',
-                        'logo' => [
-                            '@type' => 'ImageObject',
-                            'url' => '',
-                            'width' => 190,
-                            'height' => 52,
-                        ],
-                    ],
-                    'image' => [
-                        '@type' => 'ImageObject',
-                        'url' => $article['image_url'] ?? 'https://picsum.photos/600/400?random=2',
-                        'width' => $article['image_width'],
-                        'height' => $article['image_height'],
-                        'caption' => $title,
-                    ],
-                    'contentLocation' => [
-                        '@type' => 'Place',
-                        'name' => Str::title($article['countries']['pays']),
-                    ],
-                    'articleBody' => $html->getText(),
-                    'interactionStatistic' => [[
-                        '@type' => 'InteractionCounter',
-                        'interactionType' => [
-                            '@type' => 'http://schema.org/ReadAction',
-                        ],
-                        'userInteractionCount' => (int)$article['hit'],
-                    ]],
-                    'sameAs' => [
-                        'https://www.facebook.com/camergroup',
-                        'https://x.com/camerbe',
-                    ],
-                ],
-            ];
 
-        }
-        $dynamicDescription = 'Camer.be: Info claire et nette sur le Cameroun et la Diaspora. ';
-        $dynamicDescription .="À la une : {$articles[0]['titre']}";
-        $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';;
-        return $schema = [
-            '@context' => 'https://schema.org',
-            '@type' => 'CollectionPage',
 
-            'name' => "Actualités Cameroun, Info & Analyse –  Sport, {$articles[0]['sousrubrique']['sousrubrique']} | Camer.be",
-
-            'description' => $dynamicDescription,
-
-            'url' => url()->current(),
-
-            'mainContentOfPage' => [
-                '@type' => 'ItemList',
-                'itemListElement' => $arrListItems,
-            ],
-        ];
-    }
-
-    private function getVideoItems(array $videos)
-    {
-        $arrListItems = [];
-        //dd($videos);
-        foreach ($videos as $index => $video) {
-
-            $snippet        = $video['youtubeApi']['snippet'] ?? [];
-            $contentDetails = $video['youtubeApi']['contentDetails'] ?? [];
-            //dd($video);
-
-            $slug = Str::slug($video['titre']);
-            $url  = config('app.url') . "/videos/{$video['id']}/{$slug}"; // adapte le pattern de route si besoin
-
-            $title       = $video['titre'];
-            $description = Str::limit($snippet['description'] ?? '', 155);
-            $keywords    = isset($snippet['tags']) ? implode(', ', $snippet['tags']) : '';
-
-            $thumbnails   = $snippet['thumbnails'] ?? [];
-            $bestThumb    = $thumbnails['maxres']
-                ?? $thumbnails['standard']
-                ?? $thumbnails['high']
-                ?? $thumbnails['medium']
-                ?? $thumbnails['default']
-                ?? null;
-
-            $thumbnailUrls = array_values(array_filter(array_map(
-                fn($t) => $t['url'] ?? null,
-                $thumbnails
-            )));
-
-            $youtubeWatchUrl = "https://www.youtube.com/watch?v={$video['video']}";
-
-            $arrListItems[] = [
-                '@type'    => 'ListItem',
-                'position' => $index + 1,
-                'item'     => [
-                    '@type'            => 'VideoObject',
-                    'mainEntityOfPage' => [
-                        '@type' => 'WebPage',
-                        '@id'   => $video["video"],
-                    ],
-                    'name'         => $title,
-                    'description'  => $description ?: $title,
-                    'thumbnailUrl' => $thumbnailUrls,
-                    'uploadDate'   => Carbon::parse($snippet['publishedAt'])->toIso8601String(),
-                    'duration'     => $contentDetails['duration'] ?? null, // déjà au format ISO8601, ex: PT11M50S
-                    'contentUrl'   => $youtubeWatchUrl,
-                    'embedUrl'     => $video['video_url'],
-                    'inLanguage'   => $snippet['defaultLanguage'] ?? 'fr',
-                    'url'          => url()->current(),
-                    'keywords'     => $keywords,
-                    'isAccessibleForFree' => true,
-                    'copyrightYear' => Carbon::parse($snippet['publishedAt'])->year,
-
-                    'publisher' => [
-                        '@type' => 'Organization',
-                        'name'  => 'Camer.be',
-                        'url'   => 'https://www.camer.be',
-                        'logo'  => [
-                            '@type'  => 'ImageObject',
-                            'url'    => '',
-                            'width'  => 190,
-                            'height' => 52,
-                        ],
-                    ],
-
-                    'thumbnail' => $bestThumb ? [
-                        '@type'   => 'ImageObject',
-                        'url'     => $bestThumb['url'],
-                        'width'   => $bestThumb['width'],
-                        'height'  => $bestThumb['height'],
-                        'caption' => $title,
-                    ] : null,
-
-                    'sameAs' => [
-                        'https://www.facebook.com/camergroup',
-                        'https://x.com/camerbe',
-                    ],
-                ],
-            ];
-        }
-
-        $dynamicDescription = 'Camer.be: Vidéos et actualités sur le Cameroun et la Diaspora. ';
-        $dynamicDescription .= "À la une : {$videos[0]['titre']}";
-        $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';
-
-        return [
-            '@context' => 'https://schema.org',
-            '@type'    => 'CollectionPage',
-            'name'     => "Vidéos Cameroun, Info & Analyse | Camer.be",
-            'description' => $dynamicDescription,
-            'url'      => url()->current(),
-            'mainContentOfPage' => [
-                '@type' => 'ItemList',
-                'itemListElement' => $arrListItems,
-            ],
-        ];
-    }
     public function laUne(){
         /*$data = $this->api->getArticles();   // API call
         $heroArticle=$this->latestArticle;
@@ -425,7 +240,7 @@ use Illuminate\Support\Str;
             'rubriqueArticles'=>$rubriqueArticles,
             'heroArticle'=>$heroArticle,
             'mostReaded'=>$mostReaded,
-            'listItemArticles'=>$this->getListItems($this->listItemArticle),
+            'listItemArticles'=>$this->collectionPageSchema->articles($this->listItemArticle),
 
         ]);
     }
@@ -495,4 +310,9 @@ use Illuminate\Support\Str;
         $array = json_decode($article->getContent(), true);
         return $array['data'] ?? [];
     }
+    public function login(Request $request){
+        $response=$this->apiAuth->login($request);
+        dd($response);
+    }
+
 }

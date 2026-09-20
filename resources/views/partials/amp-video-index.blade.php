@@ -1,52 +1,53 @@
 
 <div class="material-box  full-top">
+    @php
+        $firstVideo=$videos->first();
+        $videoType=$firstVideo['typevideo'];
+    @endphp
+    <div class="news-category">
+        <p class="bg-green-dark uppercase">Dernières Vidéos de {{$videoType}}</p>
+        <div class="bg-green-dark full-bottom"></div>
+    </div>
 @foreach($videos as $video)
 
+    @php
+        //dd($video);
+        $title=$video['titre'];
+        if(is_null($video['youtubeApi'])){
+            $cover_image=$video['cover_image'];
+            $cover_image_width=640;
+            $cover_image_height=480;
+        }
+        else{
+            $snippet=$video['youtubeApi']['snippet'] ?? [];
+            $thumbnails=$snippet['thumbnails']['standard'];
+            $cover_image=$thumbnails['url'];
+            $cover_image_width=$thumbnails['width'];
+            $cover_image_height=$thumbnails['height'];
+
+        }
+        $videoType=$video['typevideo'];
+        $videoId=$video['video'];
+    @endphp
 
 
 
 
+        <div class="material-box">
 
-            <div class="amp-image-container">
-                <amp-img
-                    itemprop="image"
-                    alt="{{$article['titre']}}"
-                    title="{{$title}}"
-                    src="{{$article['image_url']}}"
-                    width="{{$article['image_width'] ?? 300}}"
-                    height="{{$article['image_height'] ?? 300}}"
-                    layout="responsive">
-                    <amp-img
-                        placeholder
-                        src="https://picsum.photos/300"
-                        width="{{ $article['image_width'] ?? 300 }}"
-                        height="{{ $article['image_height'] ?? 300 }}">
-                    </amp-img>
-                </amp-img>
+            <div class="full-bottom">
+                <div class="news-full">
+                    <h5>{{$title}}</h5>
+                    <amp-youtube
+                        data-videoid="{{$videoId}}"
+                        layout="responsive"
+                        width="480"
+                        height="270">
+                    </amp-youtube>
 
-
-
-
-
-            <div class="material-box material-news">
-                <h5 itemprop="headline" class=" uppercase news-full">{{$article['titre']}}</h5>
-                <p itemprop="description" class="dropcaps-3" style="text-align: justify;">
-                    {{$article['chapeau']}}
-                </p>
-                <div class="material-box">
-                    <a href="{{$articleUrl}}" class="button bg-teal-light button-full button-round">Lire</a>
                 </div>
-                <span itemprop="author" itemscope itemtype="https://schema.org/Person">
-                    <meta itemprop="name" content="{{ $article['auteur'] }}">
-                    <meta itemprop="url" content="{{url()->current()}}" />
-                </span>
-                <span itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-                <meta itemprop="name" content="Camer.be">
-                <span itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-                    <meta itemprop="url" content="{{ url('assets/img/camer-logo.png') }}">
-                </span>
-            </span>
             </div>
+        </div>
 
 
 
@@ -56,19 +57,19 @@
 <div class="news-item">
     <nav>
         <ul class="pagination">
-            @if ($articles->onFirstPage())
+            @if ($videos->onFirstPage())
                 <li class="page-item disabled">
                     <span class="page-link" style="opacity:0.5;" ><</span>
                 </li>
             @else
                 <li class="page-item">
-                    <a href="{{ $articles->previousPageUrl() }}" class="page-link"><</a>
+                    <a href="{{ $videos->previousPageUrl() }}" class="page-link"><</a>
                 </li>
             @endif
 
-            @foreach ($articles->links()->elements[0] ?? [] as $page => $url)
+            @foreach ($videos->links()->elements[0] ?? [] as $page => $url)
 
-                @if ($page == $articles->currentPage())
+                @if ($page == $videos->currentPage())
                         <li class="page-item active">
                             <span class="page-link">{{$page}}</span>
                         </li>
@@ -78,9 +79,9 @@
                         </li>
                 @endif
             @endforeach
-                @if ($articles->hasMorePages())
+                @if ($videos->hasMorePages())
                     <li class="page-item">
-                        <a href="{{ $articles->nextPageUrl() }}" class="page page-link">></a>
+                        <a href="{{ $videos->nextPageUrl() }}" class="page page-link">></a>
                     </li>
                 @else
                     <li class="page-item disabled">
@@ -91,20 +92,3 @@
         </ul>
     </nav>
 </div>
-@php
-    $jsonLdGlobal = [
-    "@context" => "https://schema.org",
-    "@type" => "CollectionPage",
-    "name" => $title,          // équivalent this.titleService.getTitle()
-    "description" => $description, // meta description
-    "url" => url()->current(),
-    "mainContentOfPage" => [
-        "@type" => "ItemList",
-        "itemListElement" => $listElements
-    ]
-];
-@endphp
-{{-- Injection JSON-LD dans la page --}}
-<script type="application/ld+json">
-    {!! json_encode($jsonLdGlobal, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
-</script>

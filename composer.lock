@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a4e36b7439e0a5c46a3ce4ca3cdc045",
+    "content-hash": "8112584d224b56a16c29cde9ee99dae5",
     "packages": [
         {
             "name": "brick/math",
@@ -7614,27 +7614,28 @@
         },
         {
             "name": "unisharp/laravel-filemanager",
-            "version": "v2.12.1",
+            "version": "v2.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UniSharp/laravel-filemanager.git",
-                "reference": "dff25f1d85789ae56a62b53b979330346bf4a8b9"
+                "reference": "28b491da4e11356f0747dba977d0ec66603421d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UniSharp/laravel-filemanager/zipball/dff25f1d85789ae56a62b53b979330346bf4a8b9",
-                "reference": "dff25f1d85789ae56a62b53b979330346bf4a8b9",
+                "url": "https://api.github.com/repos/UniSharp/laravel-filemanager/zipball/28b491da4e11356f0747dba977d0ec66603421d2",
+                "reference": "28b491da4e11356f0747dba977d0ec66603421d2",
                 "shasum": ""
             },
             "require": {
+                "composer/semver": "^3.4",
                 "ext-exif": "*",
                 "ext-fileinfo": "*",
-                "illuminate/config": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "illuminate/container": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "illuminate/filesystem": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "illuminate/http": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "illuminate/support": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "intervention/image": ">=3.11.3",
+                "illuminate/config": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "illuminate/container": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "illuminate/filesystem": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "illuminate/http": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "illuminate/support": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "intervention/image": ">=3.11.3 <5.0.0",
                 "league/flysystem": ">=2.0.0",
                 "php": ">=8.1"
             },
@@ -7688,9 +7689,9 @@
             ],
             "support": {
                 "issues": "https://github.com/UniSharp/laravel-filemanager/issues",
-                "source": "https://github.com/UniSharp/laravel-filemanager/tree/v2.12.1"
+                "source": "https://github.com/UniSharp/laravel-filemanager/tree/v2.15.1"
             },
-            "time": "2025-10-26T07:34:41+00:00"
+            "time": "2026-08-09T12:59:06+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

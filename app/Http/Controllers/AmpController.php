@@ -183,6 +183,7 @@ class AmpController extends Controller
         ]);
     }
     public function index2(Request $request){
+
         //$isVideo=true;
         $perPage = 10;
         $currentPage = (int) $request->get('page', 1);
@@ -237,7 +238,7 @@ class AmpController extends Controller
         );
         return view('video-amp', [
             'videos' => $paginated,
-            'listItemArticles'=>$ldJson,
+            'listItemVideos'=>$ldJson,
 
         ])->render();
     }

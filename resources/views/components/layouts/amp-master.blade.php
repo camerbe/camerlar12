@@ -1610,8 +1610,11 @@
             <div>
                 <a href="{{config('APP_URL').'/amp'}}/camerounais-du-monde/diaspora" class="uppercase"><i class="fa fa-angle-right"></i>Diaspora</a>
                 <a href="{{config('APP_URL').'/amp'}}/actualites/economie" class="uppercase"><i class="fa fa-angle-right"></i>économie</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/politique" class="uppercase"><i class="fa fa-angle-right"></i>politique</a>
                 <a href="{{config('APP_URL').'/amp'}}/actualites/religion" class="uppercase"><i class="fa fa-angle-right"></i>réligion</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/serail" class="uppercase"><i class="fa fa-angle-right"></i>sérail</a>
                 <a href="{{config('APP_URL').'/amp'}}/actualites/societe" class="uppercase"><i class="fa fa-angle-right"></i>société</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/sport" class="uppercase"><i class="fa fa-angle-right"></i>sport</a>
             </div>
         </section>
     </amp-accordion>
@@ -1622,6 +1625,7 @@
                 <a href="{{config('APP_URL').'/amp'}}/frananglais/francaiscamer" class="uppercase"><i class="fa fa-angle-right"></i>françaiscamer</a>
                 <a href="{{config('APP_URL').'/amp'}}/liens-postcoloniaux/francafrique" class="uppercase"><i class="fa fa-angle-right"></i>françafrique</a>
                 <a href="{{config('APP_URL').'/amp'}}/monde-pouvoir/geopolitique" class="uppercase"><i class="fa fa-angle-right"></i>géopolitique</a>
+                <a href="{{config('APP_URL').'/amp'}}/actualites/panafricanisme" class="uppercase"><i class="fa fa-angle-right"></i>panafricanisme</a>
             </div>
         </section>
     </amp-accordion>

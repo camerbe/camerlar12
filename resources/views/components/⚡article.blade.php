@@ -574,10 +574,16 @@ new class extends Component
 
             </div>
         </div>
-
-
-        <!-- Bloc auteur -->
-
+        <flux:separator class="my-5"/>
+        @script
+        <script src="https://utteranc.es/client.js"
+                repo="camerbe/camer-comment"
+                issue-term="pathname"
+                theme="github-light"
+                crossorigin="anonymous"
+                async>
+        </script>
+        @endscript
 
 
         </section>

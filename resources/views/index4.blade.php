@@ -20,6 +20,7 @@
     //listItemVideos=$listItemVideos
     //dd($listItemVideos);
     $isVideo=true;
+
 @endphp
 
 <x-layouts.app
@@ -43,6 +44,7 @@
             :listItemVideos="$listItemVideos"
             :videos="$videos"
             :droit="$droit"
+            :event="$event"
             :debat="$debat"
             :sopie="$sopie"
             :camer="$camer"

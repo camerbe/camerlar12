@@ -81,7 +81,9 @@ class PubRepository extends Repository implements IPubRepository
      */
     function index()
     {
+
         $cacheKey = "pub-list-cache";
+        //Cache::forget($cacheKey);
         return Cache::remember($cacheKey, now()->addDay(), function ()  {
             return  PubResource::collection(
                 Pub::with(['dimensions','typepubs'])

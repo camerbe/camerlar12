@@ -52,7 +52,7 @@ class PubDimensionController extends Controller
             return response()->json([
                 'success'=>true,
                 'data'=>$pubdimension,
-                'message'=>"Pubdimension ajouté"
+                'message'=>"Pubdimension ajoutée"
             ],Response::HTTP_OK);
         }
         return response()->json([

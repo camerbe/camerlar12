@@ -1,0 +1,93 @@
+<?php
+
+use Livewire\Component;
+use App\Services\SousrubriqueService;
+use Livewire\Attributes\Validate;
+use Flux\Flux;
+
+new class extends Component
+{
+    //
+    #[Validate('required|min:1', message: 'La sous rubrique est requise.')]
+    public $sousrubrique = '';
+
+    public $rubriques;
+    #[Validate('required|integer|min:1', message: 'La rubrique est requise.')]
+    public ?int $fkrubrique=null;
+
+    public $item;
+    public $id;
+    public $sousrubriqueId;
+
+
+    public function mount(SousrubriqueService $sousrubriqueService)
+    {
+        $this->rubriques=$sousrubriqueService->allRubrique();
+        $this->item= $sousrubriqueService->findById($this->id);
+
+        $this->sousrubriqueId = $this->item->idsousrubrique;
+        $this->sousrubrique = $this->item->sousrubrique;
+        $this->fkrubrique = $this->item->fkrubrique;
+    }
+    public function save(SousrubriqueService $sousrubriqueService){
+        $validated = $this->validate();
+        $sousrubrique=[
+            'sousrubrique'=>$this->sousrubrique,
+            'fkrubrique'=>$this->fkrubrique,
+        ];
+        //dd($sousrubrique);
+        $sousrubriqueService->update($sousrubrique,$this->id);
+
+        Flux::toast(
+            heading: 'Mise à jour',
+            text: 'Sous Rubrique mise à jour avec succès !',
+            variant: 'success',
+        );
+        return $this->redirectRoute('admin.sousrubrique.index',navigate: true );
+    }
+};
+?>
+
+<div>
+    <flux:card class="space-y-6 w-1/2  mx-auto">
+        <div class="flex items-center gap-3 border-b border-gray-300 pb-5 mb-5">
+            <flux:icon name="pencil" class="size-5" />
+            <flux:heading size="lg" class="font-bold border-b-2 uppercase">
+                Sous Rubriques
+            </flux:heading>
+            <a href="{{route('admin.sousrubrique.index')}}"
+               class="ml-auto bg-green-700 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition">
+                <i data-lucide="list" class="w-4 h-4"></i>
+                <span>Liste</span>
+            </a>
+        </div>
+        <form wire:submit.prevent="save">
+            @csrf
+            <div class="space-y-6">
+                <flux:input
+                    wire:model="sousrubrique"
+                    type="text"
+                    min="1"
+                    label="Sous Rubrique" size="xm" placeholder="Rubrique" />
+                <div>
+                    @error('sousrubrique') <span class="error">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <flux:select wire:model="fkrubrique" placeholder="Choix de la rubrique...">
+                        @foreach($this->rubriques as $rubrique)
+                            <flux:select.option value="{{$rubrique->idrubrique}}" >{{$rubrique->rubrique}}</flux:select.option>
+                        @endforeach
+
+
+                    </flux:select>
+                </div>
+                <div class="flex justify-center">
+                    <flux:button type="submit" class="mx-auto" icon="plus" variant="filled" color="blue">
+                        Enregistrer
+                    </flux:button>
+                </div>
+
+            </div>
+        </form>
+    </flux:card>
+</div>

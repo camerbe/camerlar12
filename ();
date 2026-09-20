@@ -1,0 +1,235 @@
+[90m= [39m[34;4mReflectionClass[39;24m {#6821
+    +[1mname[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+    [34mextends[39m: "[32mUniSharp\LaravelFilemanager\Controllers\Controller[39m",
+    [34mimplements[39m: [],
+    [34mconstants[39m: [],
+    [34mproperties[39m: [
+      "[34msuccess_response[39m" => [34;4mReflectionProperty[39;24m {#6823
+        +[1mname[22m: "[32msuccess_response[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+        [34mmodifiers[39m: "[32mprotected static[39m",
+      },
+      "[34mmiddleware[39m" => [34;4mReflectionProperty[39;24m {#6679
+        +[1mname[22m: "[32mmiddleware[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mmodifiers[39m: "[32mprotected[39m",
+        [34mextra[39m: {
+          [34mdocComment[39m: """
+            [32m/**[39m\n
+            [32m     * The middleware registered on the controller.[39m\n
+            [32m     *[39m\n
+            [32m     * @var array[39m\n
+            [32m     */[39m
+            """,
+        },
+      },
+    ],
+    [34mmethods[39m: [
+      "[34m__construct[39m" => [34;4mReflectionMethod[39;24m {#6825
+        +[1mname[22m: "[32m__construct[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34m__get[39m" => [34;4mReflectionMethod[39;24m {#6780
+        +[1mname[22m: "[32m__get[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+        [34mparameters[39m: {
+          [34m$var_name[39m: [34;4mReflectionParameter[39;24m {#6740
+            +[1mname[22m: "[32mvar_name[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mshow[39m" => [34;4mReflectionMethod[39;24m {#6807
+        +[1mname[22m: "[32mshow[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mgetErrors[39m" => [34;4mReflectionMethod[39;24m {#6808
+        +[1mname[22m: "[32mgetErrors[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mapplyIniOverrides[39m" => [34;4mReflectionMethod[39;24m {#6810
+        +[1mname[22m: "[32mapplyIniOverrides[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+        [34mmodifiers[39m: "[32mprivate[39m",
+      },
+      "[34merror[39m" => [34;4mReflectionMethod[39;24m {#6813
+        +[1mname[22m: "[32merror[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\LfmController[39m",
+        [34mparameters[39m: {
+          [34m$error_type[39m: [34;4mReflectionParameter[39;24m {#6758
+            +[1mname[22m: "[32merror_type[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$variables[39m: [34;4mReflectionParameter[39;24m {#6763
+            +[1mname[22m: "[32mvariables[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+      "[34mmiddleware[39m" => [34;4mReflectionMethod[39;24m {#6815
+        +[1mname[22m: "[32mmiddleware[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mparameters[39m: {
+          [34m$middleware[39m: [34;4mReflectionParameter[39;24m {#6732
+            +[1mname[22m: "[32mmiddleware[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$options[39m: [34;4mReflectionParameter[39;24m {#6738
+            +[1mname[22m: "[32moptions[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mgetMiddleware[39m" => [34;4mReflectionMethod[39;24m {#6818
+        +[1mname[22m: "[32mgetMiddleware[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mcallAction[39m" => [34;4mReflectionMethod[39;24m {#6819
+        +[1mname[22m: "[32mcallAction[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mparameters[39m: {
+          [34m$method[39m: [34;4mReflectionParameter[39;24m {#6750
+            +[1mname[22m: "[32mmethod[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$parameters[39m: [34;4mReflectionParameter[39;24m {#6776
+            +[1mname[22m: "[32mparameters[39m",
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34m__call[39m" => [34;4mReflectionMethod[39;24m {#6678
+        +[1mname[22m: "[32m__call[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mparameters[39m: {
+          [34m$method[39m: [34;4mReflectionParameter[39;24m {#6762
+            +[1mname[22m: "[32mmethod[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$parameters[39m: [34;4mReflectionParameter[39;24m {#6768
+            +[1mname[22m: "[32mparameters[39m",
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mdispatch[39m" => [34;4mReflectionMethod[39;24m {#6707
+        +[1mname[22m: "[32mdispatch[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$job[39m: [34;4mReflectionParameter[39;24m {#6734
+            +[1mname[22m: "[32mjob[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+      "[34mdispatchSync[39m" => [34;4mReflectionMethod[39;24m {#6708
+        +[1mname[22m: "[32mdispatchSync[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$job[39m: [34;4mReflectionParameter[39;24m {#6775
+            +[1mname[22m: "[32mjob[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mvalidateWith[39m" => [34;4mReflectionMethod[39;24m {#6710
+        +[1mname[22m: "[32mvalidateWith[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$validator[39m: [34;4mReflectionParameter[39;24m {#6760
+            +[1mname[22m: "[32mvalidator[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#6766
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+            [34mdefault[39m: [36mnull[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mvalidate[39m" => [34;4mReflectionMethod[39;24m {#6712
+        +[1mname[22m: "[32mvalidate[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#6779
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+          },
+          [34m$rules[39m: [34;4mReflectionParameter[39;24m {#6781
+            +[1mname[22m: "[32mrules[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+          },
+          [34m$messages[39m: [34;4mReflectionParameter[39;24m {#6782
+            +[1mname[22m: "[32mmessages[39m",
+            [34mposition[39m: [35m2[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+          [34m$attributes[39m: [34;4mReflectionParameter[39;24m {#6784
+            +[1mname[22m: "[32mattributes[39m",
+            [34mposition[39m: [35m3[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mvalidateWithBag[39m" => [34;4mReflectionMethod[39;24m {#6713
+        +[1mname[22m: "[32mvalidateWithBag[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$errorBag[39m: [34;4mReflectionParameter[39;24m {#6701
+            +[1mname[22m: "[32merrorBag[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#6765
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+          },
+          [34m$rules[39m: [34;4mReflectionParameter[39;24m {#6771
+            +[1mname[22m: "[32mrules[39m",
+            [34mposition[39m: [35m2[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+          },
+          [34m$messages[39m: [34;4mReflectionParameter[39;24m {#6770
+            +[1mname[22m: "[32mmessages[39m",
+            [34mposition[39m: [35m3[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+          [34m$attributes[39m: [34;4mReflectionParameter[39;24m {#6764
+            +[1mname[22m: "[32mattributes[39m",
+            [34mposition[39m: [35m4[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mgetValidationFactory[39m" => [34;4mReflectionMethod[39;24m {#6715
+        +[1mname[22m: "[32mgetValidationFactory[39m",
+        +[1mclass[22m: "[32mUniSharp\LaravelFilemanager\Controllers\Controller[39m",
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+    ],
+  }
+

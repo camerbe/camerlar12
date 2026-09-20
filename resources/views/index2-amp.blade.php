@@ -25,6 +25,7 @@
 @extends('layouts.amp-master')
 
 @section('content')
+    @include('partials.amp-adaptable')
     @include('partials.amp-index2')
     @include('partials.amp-video-viralize')
     @include('partials.amp-debat-droit')

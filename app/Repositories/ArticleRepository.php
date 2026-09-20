@@ -25,6 +25,7 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class ArticleRepository extends Repository implements IArticleRepository
 {
+    private $perPage=10;
     /**
      * @param $model
      */
@@ -90,8 +91,8 @@ class ArticleRepository extends Repository implements IArticleRepository
         $bled=Pays::find($input['fkpays']);
 
 
-        $input['keyword'] .= $input['hashtags'];
-
+        $input['keyword']=$input['keyword'] .','. $input['hashtags'];
+        //dd($input['keyword']);
         /*$input['keyword']=isset($input['hashtags']) ? $input['keyword'].','.$input['hashtags']
             : $current->keyword;*/
         if(isset($input['dateparution'])){
@@ -140,23 +141,30 @@ class ArticleRepository extends Repository implements IArticleRepository
      * @param $user
      * @return mixed
      */
-    function getArticleByUser($user)
+    function getArticleByUser($user,$perPage=10)
     {
 
         $cache="Article-By-User-".$user;
-        //Cache::forget($cache);
+        Cache::forget($cache);
         //dd($cache);
-        $articles= Cache::remember($cache, now()->add(1,'day'), function () use ($user){
+        $articles= Cache::remember($cache, now()->add(1,'day'), function () use ($user,$perPage){
+
+            $ids=Article::select('idarticle')
+                ->orderByDesc('dateparution')
+                ->take(100)
+                ->pluck('idarticle');
+
             $data= Article::with(['countries','rubrique','sousrubrique'])
                 ->where('fkuser',$user)
+                ->whereIn('idarticle',$ids)
                 ->orderByDesc('dateparution')
-                ->limit(50)
-                ->get();
-            return ArticleResource::collection($data)->resolve();
+                ->paginate($perPage);
+            return ArticleResource::collection($data);
         });
         //dd($articles);
         return $articles;
     }
+
 
     /**
      * @return mixed
@@ -181,10 +189,10 @@ class ArticleRepository extends Repository implements IArticleRepository
             ->with(['countries', 'rubrique', 'sousrubrique'])
             ->Search($search)
             ->orderByDesc('dateparution')
-            ->limit(500)
-            ->get();
+            ->paginate(10);
 
         return $articles ? ArticleResource::collection($articles) : null;
+        //return $articles ;
     }
 
     /**

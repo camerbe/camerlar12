@@ -14,6 +14,9 @@ class VideoService
     public function index(){
         return $this->videoRepository->index();
     }
+    public function indexPaginated(){
+        return $this->videoRepository->indexPaginated();
+    }
     public function getCamerVideo()
     {
         return $this->videoRepository->getCamerVideo();

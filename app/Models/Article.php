@@ -138,7 +138,7 @@ class Article extends Model implements HasMedia
                 ['mode' => 'boolean']   // mode boolean pour + de contrôle
             )
             ->orderByRaw(
-                'MATCH(titre, contenu) AGAINST(? IN BOOLEAN MODE) DESC',
+                'MATCH(titre) AGAINST(? IN BOOLEAN MODE) DESC',
                 [$search]              // trier par pertinence
             );
     }

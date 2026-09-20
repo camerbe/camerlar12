@@ -46,7 +46,7 @@ class Helper
         }
 
         // URL relative → reconstruction
-        $base = 'https://www.camer.be';
+        $base = config('APP_URL');
         $src  = ltrim($src, '/');
 
         return "{$base}/{$src}";

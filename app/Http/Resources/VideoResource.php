@@ -35,6 +35,6 @@ class VideoResource extends JsonResource
         return "https://www.youtube.com/embed/{$this->video}";
     }
     protected function getYoutubeApi(){
-        return Helper::getYoutubeApi($this->video);
+        return Helper::getYoutubeApi($this->video)?? null   ;
     }
 }
