@@ -18,15 +18,11 @@ new class extends Component
     #[Computed]
     public function videos()
     {
-        // On récupère le service via l'injection de dépendances ou app()
+
         $videoService = app(VideoService::class);
-        //dd($videoService->indexPaginated($this->perPage)) ;
         return $videoService->indexPaginated($this->perPage);
     }
-    /*public function render(VideoService $videoService)
-    {
-       //return view('admin.video.index');
-    }*/
+
 
     public function delete($id, VideoService $videoService)
     {

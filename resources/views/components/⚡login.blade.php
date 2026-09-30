@@ -39,7 +39,9 @@ new class extends Component
         $this->apiResponseArray=json_decode($response->getContent(), true);
         $this->isSuccess=$this->apiResponseArray['success'];
         $this->apiMessage=$this->apiResponseArray['message'];
+
         if ($this->isSuccess) {
+            if($this->apiMessage==='change_password') return $this->redirect(route('firstlogin'));
             $token = $this->apiResponseArray['token'] ?? null;
             if (!$token) {
                 $this->isSuccess = false;

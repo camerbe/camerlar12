@@ -21,6 +21,7 @@ new class extends Component
     public mixed $camer=null;
     public mixed $sopie=null;
     public mixed $skypper=null;
+    public mixed $event=null;
 
 
     /*public array $trendingArticles = [];
@@ -38,30 +39,16 @@ new class extends Component
         $sopie = null,
         $camer = null,
         $skypper = null,
+        $event = null,
     ){
         $this->debat = $debat;
         $this->droit = $droit;
         $this->sopie = $sopie;
         $this->camer = $camer;
         $this->skypper = $skypper;
+        $this->event = $event;
 
-        /*$rawArticles=$articleService->getArticles();
-        $rawMostReaded=$articleService->getMostReaded();
-        $collection = collect($rawArticles);
-        $this->heroArticle=$collection->first();
-        $this->trendingArticles = $collection->slice(1, 3)->values()->toArray();
-        $this->sidebarArticles = $collection->slice(4, 5)->values()->toArray();*/
 
-        // - Objet 4 : Tout le reste pour le fil d'actualités principal
-        //$this->feedArticles = $collection->slice(6,$this->perPage)->values()->toArray();
-        /*$this->allFeedArticles = $collection
-            ->slice(6)
-            ->values()
-            ->toArray();*/
-        /*$this->updateFeed($collection);
-
-        $col= collect($rawMostReaded);
-        $this->mostReaded=$col->values()->toArray();*/
 
 
     }
@@ -256,12 +243,13 @@ new class extends Component
             {{-- 4. Sous-composant Livewire pour la Sidebar--}}
             <livewire:sidebar-news :articles="$this->mostReaded" />
             <livewire:video :camer="null" :sopie="$sopie" />
-            @include('partials.pub-aside')
+
             <livewire:debat :debat="$debat"/>
             <livewire:droit :droit="$droit"/>
-            @include('partials.pub-aside')
+
             <livewire:video :camer="$camer" :sopie="null" />
             <livewire:skypper :skypper="$skypper" />
+            <livewire:events :event="$event" />
 
 
         </aside>

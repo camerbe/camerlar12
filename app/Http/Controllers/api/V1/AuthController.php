@@ -51,7 +51,7 @@ class AuthController extends Controller
         // Check password update
         if (is_null($user->password_changed_at)) {
             return response()->json([
-                'success' => false,
+                'success' => true,
                 'user'    => new UserResource($user),
                 'token'   => null,
                 'message' => 'change_password',

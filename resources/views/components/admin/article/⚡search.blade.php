@@ -1,7 +1,6 @@
 <?php
 
 use Livewire\Component;
-use App\Services\ArticleService;
 use Flux\Flux;
 
 new class extends Component
@@ -11,21 +10,18 @@ new class extends Component
     //public string $search = '';
 
     //
-    public function mount()
-    {
-        //$this->result = app(ArticleService::class)->search($this->q);
-        //dd($this->result);
-    }
+
     public function doSearch(){
         if (empty(trim($this->search))) {
             return;
         }
+
         Flux::toast(
             heading: 'Recherche',
-            text: 'Article(s) trouvé(s) !',
+            text: 'Recherche en cours...',
             variant: 'success',
         );
-        return $this->redirectRoute('admin.article.search', ['search' => $this->search],navigate: true);
+        return $this->redirectRoute('admin.article.search', ['search' => $this->search]);
     }
 };
 ?>
@@ -33,7 +29,7 @@ new class extends Component
 <div>
     <form  wire:submit.prevent="doSearch">
        <input
-           type="input"
+           type="search"
            wire:model.live.debounce.300ms="search"
            wire:keydown.enter="doSearch"
            placeholder="Rechercher un article, un auteur..."

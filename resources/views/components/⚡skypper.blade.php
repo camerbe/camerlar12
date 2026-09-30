@@ -15,6 +15,7 @@ new class extends Component
 ?>
 
 <div>
+    @include('partials.themoneytizer-pave-haut')
     <div class="flex flex-col items-center justify-center">
         <span class="text-[10px] uppercase text-gray-400 font-semibold tracking-wider mb-1">Publicité</span>
         <div class="h-full w-full bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 rounded">
@@ -27,4 +28,5 @@ new class extends Component
             </a>
         </div>
     </div>
+    @include('partials.themoneytizer-grand-angle')
 </div>

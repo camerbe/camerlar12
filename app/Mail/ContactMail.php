@@ -15,6 +15,7 @@ class ContactMail extends Mailable
 
     protected $contactData;
     protected $nom;
+    protected $prenom;
     protected $objet;
     protected $message;
     protected $email;
@@ -27,8 +28,9 @@ class ContactMail extends Mailable
         //
         $this->contactData=$contactData;
         $this->email=$this->contactData['email'];
-        $this->objet=$this->contactData['subject'];
+        $this->objet=$this->contactData['objet'];
         $this->nom=$this->contactData['nom'];
+        $this->nom=$this->contactData['prenom'];
         $this->message=$this->contactData['message'];
 
 
@@ -40,7 +42,14 @@ class ContactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->contactData['subject'],
+            to: [
+                // Mettez ici l'adresse email de l'administrateur ou récupérez-la depuis la config
+                config('mail.from.address'),
+            ],
+            replyTo: [
+                $this->email,
+            ],
+            subject: 'Contact : '.$this->objet,
         );
     }
 
@@ -50,9 +59,9 @@ class ContactMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.contact',
+            view: 'mail.contact',
             with:[
-                'fullName'=>$this->nom,
+                'fullName'=>$this->nom.' '.$this->prenom,
                 'email'=>$this->email,
                 'msg'=>$this->message,
 

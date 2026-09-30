@@ -39,14 +39,14 @@
     :listElements="$listItemArticles"
 >
     <div>
-        <livewire:news
 
+        <livewire:news
             :debat="$debat"
-            :event="$event"
             :droit="$droit"
             :sopie="$sopie"
             :camer="$camer"
             :skypper="$skypper"
+            :event="$event"
         />
     </div>
 </x-layouts.app>

@@ -14,6 +14,18 @@ new class extends Component
 ?>
 
 <div>
+    <!-- Title & Quick Stats -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold">Tableau de bord Rédaction</h1>
+            <p class="text-sm text-gray-500">Vue d'ensemble de l'activité sur Camer.be aujourd'hui.</p>
+        </div>
+        <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm">
+            <button class="px-3 py-1.5 rounded-md bg-gray-100 dark:bg-gray-700 font-medium">Aujourd'hui</button>
+            <button class="px-3 py-1.5 rounded-md text-gray-500 hover:text-gray-900 dark:hover:text-white">7 jours</button>
+            <button class="px-3 py-1.5 rounded-md text-gray-500 hover:text-gray-900 dark:hover:text-white">30 jours</button>
+        </div>
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between">
             <div>

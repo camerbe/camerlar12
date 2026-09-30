@@ -11,7 +11,7 @@ use Carbon\Carbon;
 new class extends Component
 {
     //
-    public $perPage=20;
+    public $perPage=10;
     use WithPagination;
 
     #[Computed]
@@ -71,7 +71,7 @@ new class extends Component
                 @foreach($this->articles as $article)
                     <flux:table.row :key="$article->idarticle">
                         <flux:table.cell variant="strong">{{ $loop->index+ 1}}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ Str::limit($article->titre,40)  }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ Str::limit($article->titre,70)  }}</flux:table.cell>
                         <flux:table.cell variant="strong">{{ $article->sousrubrique->sousrubrique}}</flux:table.cell>
                         <flux:table.cell variant="strong">{{ Carbon::parse($article->dateparution)->locale('fr')->translatedFormat('d M Y H:i')  }}</flux:table.cell>
                         <flux:table.cell variant="strong">

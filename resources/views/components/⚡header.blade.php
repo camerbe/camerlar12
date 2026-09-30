@@ -60,7 +60,9 @@ new class extends Component
 
                     {{-- SIMPLE --}}
                     @if(isset($item['simple']))
-                        <a href="{{ $item['href'] }}" class="font-bold text-brand-500 border-b-2 border-brand-500">
+                        <a href="{{ $item['href'] }}" class="{{ request()->routeIs('home')
+            ? 'font-bold text-brand-500 border-b-2 border-brand-500'
+            : 'text-gray-800' }}">
                             {{ $item['label'] }}
                         </a>
 
@@ -72,7 +74,17 @@ new class extends Component
                             @mouseleave="timeout = setTimeout(() => open = false, 200)"
                             class="relative"
                         >
-                            <button @click="open = !open" class="hover:text-brand-500">
+                            <button @click="open = !open" class="{{
+                            request()->is('actualite*')
+                            || request()->is('camerounais*')
+                            || request()->is('fait-curieux*')
+                            || request()->is('libre-parole*')
+                            || request()->is('frananglais*')
+                            || request()->is('liens-*')
+                            || request()->is('monde-pouvoir*')
+                            || request()->is('le-coin-*')
+                            ? 'font-bold text-brand-500 border-b-2 border-brand-500'
+                            : 'hover:text-brand-500' }}">
                                 {{ $item['label'] }}
                             </button>
 
@@ -101,13 +113,23 @@ new class extends Component
 
                         {{-- DROPDOWN --}}
                     @elseif(isset($item['links']))
+                        @php
+                            // On vérifie si l'URL actuelle correspond à l'un des liens du menu déroulant
+                            $isActive = collect($item['links'])->contains(function ($link) {
+                                // Retire le slash initial pour comparer proprement avec request()->is()
+                                $path = trim(parse_url($link, PHP_URL_PATH), '/');
+                                return request()->is($path . '*');
+                            });
+                        @endphp
                         <div
                             x-data="{ open: false, timeout: null }"
                             @mouseenter="clearTimeout(timeout); open = true"
                             @mouseleave="timeout = setTimeout(() => open = false, 200)"
                             class="relative"
                         >
-                            <button @click="open = !open" class="hover:text-brand-500">
+                            <button @click="open = !open" class="{{ $isActive
+                            ? 'font-bold text-brand-500 border-b-2 border-brand-500'
+                            : 'hover:text-brand-500' }}">
                                 {{ $item['label'] }}
                             </button>
 
@@ -126,13 +148,17 @@ new class extends Component
                     @endif
 
                 @endforeach
-
+                <a href="/contact" class="{{ request()->routeIs('contact')
+            ? 'font-bold text-brand-500 border-b-2 border-brand-500'
+            : 'text-gray-800' }}">
+                    Contact
+                </a>
             </nav>
 
             <!-- ACTIONS -->
             <div class="flex items-center space-x-3">
-                <button class="p-2">🔍</button>
-
+                <!--<button class="p-2">🔍</button>-->
+                <livewire:search-navbar/>
                 <!-- BURGER -->
                 <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2">
                     ☰
@@ -204,7 +230,7 @@ new class extends Component
 
             </nav>
 
-            <!-- Actions -->
+            <!-- Actions
             <div class="flex items-center space-x-4">
                 <button aria-label="Rechercher" class="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -212,7 +238,8 @@ new class extends Component
                 <a href="#" class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-gray-900 bg-highlight-500 hover:bg-highlight-600 rounded-md shadow transition">
                     Abonnez-vous
                 </a>
-            </div>
+            </div>-->
+
         </div>
     </div>
 
@@ -226,6 +253,7 @@ new class extends Component
             <div class="animate-marquee font-medium" style="animation-duration: {{ $duration }}s;">
                 <livewire:flash-info :articles="$trendingArticles"/>
             </div>
+
         </div>
     </div>
 </div>

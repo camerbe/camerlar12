@@ -49,8 +49,8 @@ class ArticleService
     function getTopNews(string $period){
         return $this->articleRepository->getTopNews($period);
     }
-    function getSameRubrique(int $fksousrubrique){
-        return $this->articleRepository->getSameRubrique($fksousrubrique);
+    function getSameRubrique(int $fksousrubrique,int $idarticle){
+        return $this->articleRepository->getSameRubrique($fksousrubrique,$idarticle);
     }
     function getMostReadRubriqueByCountry($fksousrubrique, $fkpays){
         return $this->articleRepository->getMostReadRubriqueByCountry($fksousrubrique, $fkpays);
@@ -88,7 +88,7 @@ class ArticleService
         return $this->articleRepository->getCategories();
     }
     function getArticlesByCategory($fksousrubrique){
-        return $this->articleRepository->getArticlesByCategory();
+        return $this->articleRepository->getArticlesByCategory($fksousrubrique);
     }
     function laUne(){
         return $this->articleRepository->laUne();

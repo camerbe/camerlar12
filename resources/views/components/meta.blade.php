@@ -58,7 +58,7 @@
 
 @if(count($hashtags) > 0)
     @foreach($hashtags as $hashtag)
-<meta property="og:tag" content="{{ $hashtag }}">
+        <meta property="og:tag" content="{{ $hashtag }}">
     @endforeach
 @endif
 

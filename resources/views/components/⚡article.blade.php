@@ -38,6 +38,7 @@ new class extends Component
     public $nowFormatted;
     public $camer;
     public $sopie;
+    public $event;
 
 
 
@@ -49,6 +50,7 @@ new class extends Component
         $droit,
         $camer,
         $sopie=null,
+
     ){
 
         $this->article=$oneArticle;
@@ -60,6 +62,7 @@ new class extends Component
         $this->hash=App\Helpers\Helper::nettoyerHashtags($arrKeyword);
         $this->camer=$camer;
         $this->sopie=$sopie;
+
         /************************************************************/
 
         $this->publidhedDate=$this->article['dateparution'];
@@ -369,14 +372,7 @@ new class extends Component
             <meta itemprop="width" content="{{$this->article["image_width"]}}" />
             <meta itemprop="height" content="{{$this->article["image_height"]}}" />
             <meta itemprop="articleSection" content="{{$this->sousrubrique}}" />
-            <figcaption class="text-xs text-gray-500 dark:text-gray-400 ">
-                <div class="flex flex-col items-center justify-center">
-                    <span class="text-[10px] uppercase text-gray-400 font-semibold tracking-wider mb-1">Publicité</span>
-                    <div class="h-[90px] w-full max-w-[728px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 rounded overflow-hidden">
-                        <span>Espace Publicitaire (AdSense Banner 728x90)</span>
-                    </div>
-                </div>
-            </figcaption>
+
         </figure>
 
         <!-- Corps de l'article -->
@@ -388,6 +384,7 @@ new class extends Component
 
         <div  itemprop="articleBody"
             class="article-body
+
             [&_table]:w-full
             [&_table]:my-6
             [&_table]:border-collapse
@@ -554,7 +551,7 @@ new class extends Component
                 <div class="text-sm font-bold text-gray-900 dark:text-white">{{$auteur}}</div>
                 <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">
                     <a
-                        href="/auteur/{{$auteur}}"
+                        href="{{config('app_url')}}/auteur/{{$auteur}}"
                         class="hover:text-brand-500 dark:hover:text-brand-400 hover:underline transition-colors duration-200"
                     >
                         Retrouvez ses articles
@@ -568,25 +565,22 @@ new class extends Component
         <!-- Publicité native intégrée au contenu -->
         <div class="flex flex-col items-center justify-center my-8">
 
-            <span class="text-[10px] uppercase text-gray-400 font-semibold tracking-wider mb-1">Publicité</span>
-            <div class="h-[90px] w-full max-w-[728px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 rounded overflow-hidden">
-                <span>Espace Publicitaire (AdSense Banner 728x90)</span>
-
+            <div class="h-full w-full max-w-[728px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 rounded overflow-hidden">
+                @include('partials.themoneytizer-banner')
             </div>
         </div>
-        <flux:separator class="my-5"/>
-        @script
+
+
         <script src="https://utteranc.es/client.js"
                 repo="camerbe/camer-comment"
-                issue-term="pathname"
-                theme="github-light"
+                label="Commentaire"
+                issue-term="title"
+                theme="preferred-color-scheme"
                 crossorigin="anonymous"
                 async>
         </script>
-        @endscript
 
 
-        </section>
 
         <!-- Articles liés -->
         <section>
@@ -598,6 +592,7 @@ new class extends Component
             <livewire:same-rubrique   :sameRubrique="$sameRubrique" />
             <div  class="mt-5 h-[900px] overflow-auto" >
                 <div id="taboola-below-article-thumbnails"></div>
+                @script
                 <script>
                     window._taboola = window._taboola || [];
 
@@ -610,6 +605,7 @@ new class extends Component
 
                     _taboola.push({flush: true});
                 </script>
+                @endscript
             </div>
 
 
@@ -623,12 +619,12 @@ new class extends Component
             :plusluParPays="$plusLus"
        />
         <livewire:video :camer="null" :sopie="$sopie" />
-        @include('partials.pub-aside')
         <livewire:debat :debat="$debat"/>
         <livewire:droit :droit="$droit"/>
-        @include('partials.pub-aside')
         <livewire:video :camer="$camer" :sopie="null" />
         <livewire:skypper :skypper="$skypper"  />
+        <livewire:events :event="$event"  />
+
     </aside>
 
 </div>

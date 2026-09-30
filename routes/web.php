@@ -4,6 +4,7 @@
 use App\Http\Controllers\AmpController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontEndController;
+use App\Http\Controllers\LegacyRedirectController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RssController;
 use App\Http\Controllers\SitemapArticleController;
@@ -20,7 +21,25 @@ Route::get('/', function (ArticleService $articleService) {
 */
 
 
-    Route::get('/login', [LoginController::class, 'show'])->name('login');
+    Route::controller(LoginController::class)->group(function () {
+        Route::get('/login', 'show')->name('login');
+        Route::get('/activation', 'firstlogin')->name('firstlogin');
+    });
+    /*
+    |--------------------------------------------------------------------------
+    | REDIRECTION
+    |--------------------------------------------------------------------------
+    */
+    // Anciennes pages de rubriques : /1/{sousrub}/{rub}/cameroun-cameroon.htm(l)
+    Route::get('/1/{sub}/{rub}/cameroun-cameroon.{ext}', [LegacyRedirectController::class, 'category'])
+        ->whereNumber(['sub', 'rub'])
+        ->where('ext', 'html?');
+
+    // Anciens articles : /{idarticle}/{idsousrub}:{idrub}/{slug}.html
+    Route::get('/{id}/{pair}/{slug}', [LegacyRedirectController::class, 'article'])
+        ->whereNumber('id')
+        ->where('pair', '\d+:\d+')
+        ->where('slug', '[^/]+\.html?');
     /*
     |--------------------------------------------------------------------------
     | FILE MANAGER
@@ -38,7 +57,28 @@ Route::get('/', function (ArticleService $articleService) {
         Route::livewire('/forgot-password', 'pages::auth.forgot-password')->name('password.request');
         Route::livewire('/reset-password/{token}', 'pages::auth.reset-password')->name('password.reset');
     });
+    /*
+    |--------------------------------------------------------------------------
+    | RSS
+    |--------------------------------------------------------------------------
+    */
+    //Route::get('categories', 'categoryRss')->name('rss.category');
 
+    Route::prefix('rss')->controller(RssController::class)->group(function () {
+        Route::get('', 'feed')->name('rss.main');
+        Route::get('diaspora',  'diaspora')->name('rss.diaspora');
+        Route::get('economie', 'societe')->name('rss.economie');
+        Route::get('pointdevue', 'pointdevue')->name('rss.pointdevue');
+        Route::get('politique', 'politique')->name('rss.politique');
+        Route::get('societe', 'societe')->name('rss.societe');
+        Route::get('religion', 'religion')->name('rss.religion');
+        Route::get('sante', 'sante')->name('rss.sante');
+        Route::get('geopolitique', 'geopolitique')->name('rss.geopolitique');
+        Route::get('serail', 'serail')->name('rss.serail');
+        Route::get('panafricanisme', 'panafricanisme')->name('rss.panafricanisme');
+        Route::get('people', 'people')->name('rss.people');
+        Route::get('sport', 'sport')->name('rss.sport');
+    });
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +126,12 @@ Route::prefix('admin')->controller(DashboardController::class)->group(function (
             Route::get('article/{userid}', 'articleindex')->name('admin.article.index')->middleware('auth:web');
             Route::get('article/edit/{id}', 'articleedit')->name('admin.article.edit')->middleware('auth:web');
             Route::get('article/search/{search}', 'articlesearch')->name('admin.article.search')->middleware('auth:web');
+            /***********************/
+            Route::get('user/create', 'usercreate')->name('admin.user.create')->middleware('auth:web');
+            Route::get('user', 'userindex')->name('admin.user.index')->middleware('auth:web');
+            Route::get('user/edit/{id}', 'useredit')->name('admin.user.edit')->middleware('auth:web');
+
+
         });
 
     });
@@ -114,6 +160,7 @@ Route::prefix('admin')->controller(DashboardController::class)->group(function (
         Route::get('{rubrique}/{sousrubrique}', 'getArticlesByRubrique')->name('articlerubrique');
         Route::get('{rub}/{sousrub}/{slug}', 'display')->name('display');
         Route::get('qui-sommes-nous', 'index5')->name('index5');
+        Route::get('contact', 'contact')->name('contact');
 
 
 
@@ -122,19 +169,7 @@ Route::prefix('admin')->controller(DashboardController::class)->group(function (
 
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | RSS
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('rss')->controller(RssController::class)->group(function () {
-        Route::get('', 'feed')->name('rss.main');
-        Route::get('diaspora',  'diaspora')->name('rss.diaspora');
-        Route::get('economie', 'societe')->name('rss.economie');
-        Route::get('pointdevue', 'pointdevue')->name('rss.pointdevue');
-        Route::get('politique', 'politique')->name('rss.politique');
-        Route::get('societe', 'societe')->name('rss.societe');
-    });
+
 
     /*
     |--------------------------------------------------------------------------
@@ -149,6 +184,19 @@ Route::prefix('admin')->controller(DashboardController::class)->group(function (
     Route::get('/sitemap-societe', [SitemapController::class, 'societe'])->name('sitemap.societe');
     Route::get('/sitemap-diaspora', [SitemapController::class, 'diaspora'])->name('sitemap.diaspora');
     Route::get('/sitemap-pointdevue', [SitemapController::class, 'pointdevue'])->name('sitemap.pointdevue');
+    Route::get('/sitemap-religion', [SitemapController::class, 'religion'])->name('sitemap.religion');
+    Route::get('/sitemap-sante', [SitemapController::class, 'sante'])->name('sitemap.sante');
+    Route::get('/sitemap-geopolitique', [SitemapController::class, 'geopolitique'])->name('sitemap.geopolitique');
+    Route::get('/sitemap-serail', [SitemapController::class, 'serail'])->name('sitemap.serail');
+    Route::get('/sitemap-panafricanisme', [SitemapController::class, 'panafricanisme'])->name('sitemap.panafricanisme');
+    Route::get('/sitemap-people', [SitemapController::class, 'people'])->name('sitemap.people');
+    Route::get('/sitemap-sport', [SitemapController::class, 'sport'])->name('sitemap.sport');
+    Route::get('/sitemap-musique', [SitemapController::class, 'musique'])->name('sitemap.musique');
+    Route::get('/sitemap-livres', [SitemapController::class, 'livres'])->name('sitemap.livres');
+    Route::get('/sitemap-cinema', [SitemapController::class, 'cinema'])->name('sitemap.cinema');
+    Route::get('/sitemap-art', [SitemapController::class, 'art'])->name('sitemap.art');
+    Route::get('/sitemap-media', [SitemapController::class, 'media'])->name('sitemap.media');
+    Route::get('/sitemap-successstory', [SitemapController::class, 'successstory'])->name('sitemap.successstory');
 
 
 

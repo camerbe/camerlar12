@@ -26,30 +26,48 @@ class Helper
         return $html;
     }*/
 
-    public static function extractImgSrc(string $html): ?string
+    public static function extractImgSrc(string $html, ?string $baseUrl = null): ?string
     {
-        if (strpos($html, '<img') === false) {
+        $fallback = 'https://picsum.photos/750/750';
 
-            return 'https://picsum.photos/750/750';
+        if (stripos($html, '<img') === false) {
+            return $fallback;
         }
 
-        preg_match('/<img[^>]+src=["\']([^"\']+)["\']/', $html, $matches);
-        $src = $matches[1] ?? null;
-
-        if (!$src) {
-            return 'https://picsum.photos/750/750';
+        if (!preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', $html, $matches)) {
+            return $fallback;
         }
 
-        // Déjà une URL complète
-        if (str_starts_with($src, 'http://') || str_starts_with($src, 'https://')) {
+        $src = trim($matches[1] ?? '');
+
+        if ($src === '') {
+            return $fallback;
+        }
+
+        // Déjà une URL absolue (http/https)
+        if (preg_match('#^https?://#i', $src)) {
             return $src;
         }
 
-        // URL relative → reconstruction
-        $base = config('APP_URL');
-        $src  = ltrim($src, '/');
+        // URL protocol-relative (//cdn.example.com/img.jpg)
+        if (str_starts_with($src, '//')) {
+            $scheme = config('app.url') && str_starts_with(config('app.url'), 'https') ? 'https:' : 'https:';
+            return $scheme . $src;
+        }
 
-        return "{$base}/{$src}";
+        $base = rtrim($baseUrl ?? config('app.url'), '/');
+
+        if (!$base) {
+            return $fallback;
+        }
+
+        // Chemin absolu depuis la racine (/images/x.jpg)
+        if (str_starts_with($src, '/')) {
+            return $base . $src;
+        }
+
+        // Chemin relatif simple (images/x.jpg)
+        return $base . '/' . $src;
     }
     public static function extractWidth($html){
         if(strpos($html, '<img') !== false){

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Services\ArticleService;
 use Carbon\Carbon;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Sitemap\Sitemap ;
 use Spatie\Sitemap\Tags\News;
 use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
@@ -18,6 +21,7 @@ class SitemapController extends Controller
 
     protected $articleService;
     //
+    private $categories;
 
     /**
      * @param $articleService
@@ -25,6 +29,7 @@ class SitemapController extends Controller
     public function __construct(ArticleService $articleService)
     {
         $this->articleService = $articleService;
+        $this->categories=$this->articleService->getCategories();
     }
 
 
@@ -36,6 +41,13 @@ class SitemapController extends Controller
             ->add(SitemapTag::create(route('rss.societe')))
             ->add(SitemapTag::create(route('rss.diaspora')))
             ->add(SitemapTag::create(route('rss.pointdevue')))
+            ->add(SitemapTag::create(route('rss.religion')))
+            ->add(SitemapTag::create(route('rss.sante')))
+            ->add(SitemapTag::create(route('rss.geopolitique')))
+            ->add(SitemapTag::create(route('rss.serail')))
+            ->add(SitemapTag::create(route('rss.panafricanisme')))
+            ->add(SitemapTag::create(route('rss.people')))
+            ->add(SitemapTag::create(route('rss.sport')))
             ->add(SitemapTag::create(route('rss.economie')));
 
         $sitemapIndex->add(SitemapTag::create(route('sitemap.articles')));
@@ -45,21 +57,34 @@ class SitemapController extends Controller
         $sitemapIndex->add(SitemapTag::create(route('sitemap.societe')));
         $sitemapIndex->add(SitemapTag::create(route('sitemap.diaspora')));
         $sitemapIndex->add(SitemapTag::create(route('sitemap.pointdevue')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.religion')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.sante')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.geopolitique')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.panafricanisme')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.people')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.serail')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.sport')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.musique')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.livres')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.cinema')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.art')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.media')));
+        $sitemapIndex->add(SitemapTag::create(route('sitemap.successstory')));
         return response($sitemapIndex->render(), 200, ['Content-Type' => 'application/xml']);
     }
     public function article(){
         $articles=$this->articleService->getNewsForRss();
+        $articles=collect($articles)->take(50);
+        //dd($articles);
         $articleSitemap = Sitemap::create('');
         foreach ($articles as $article){
-            $media=$article->getFirstMedia('article');
 
-            $url= new Url("/{$article->slug}");
-            $url->setLastModificationDate(Carbon::parse($article->dateparution))
+            $image=$article["image_url"];
+            $url= new Url("/{$article["slug"]}");
+            $url->setLastModificationDate(Carbon::parse($article["dateparution"]))
                 ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
                 ->setPriority(0.8);
-            if($media){
-                $image=Helper::extractImgSrc($article->image);
-                $image=Helper::parseImageUrl($image);
+            if($image){
                 $url->addImage($image);
             }
             $articleSitemap->add($url);
@@ -67,135 +92,149 @@ class SitemapController extends Controller
         return response($articleSitemap->render(), 200, ['Content-Type' => 'application/xml']);
     }
     public function googleNews(){
-        $articles=$this->articleService->getNewsForRss()->take(50);
+        $articles=$this->articleService->getNewsForRss();
+        $articles=collect($articles)->take(50);
         $sitemap = Sitemap::create('');
         foreach ($articles as $article){
-            $media=$article->getFirstMedia('article');
-            $titre=Helper::getTitle($article->countries->pays,$article->titre,$article->countries->country);
-            $url= new Url("/{$article->slug}");
+            $image=$article["image_url"];
+            $titre=Helper::getTitle($article["countries"]["pays"],$article["titre"],$article["countries"]["country"]);
+            $url= new Url("/{$article["slug"]}");
             $url->setChangeFrequency(Url::CHANGE_FREQUENCY_HOURLY)
                 ->setPriority(0.9);
             $url->addNews(
                 name: 'Camer.be',
                 language: 'fr',
                 title: $titre,
-                publicationDate:Carbon::parse($article->dateparution),
+                publicationDate:Carbon::parse($article["dateparution"]),
                 options: [
-                    'keywords'=>$article->keyword,
+                    'keywords'=>$article["keyword"],
 
                 ],
 
 
             );
-            if($media){
-                $image=Helper::extractImgSrc($article->image);
-                $image=Helper::parseImageUrl($image);
-                $url->addImage($image,$article->titre,$article->countries->pays,$titre);
+            if($image){
+                $url->addImage($image,$article["titre"],$article["countries"]["pays"],$titre);
             }
             $sitemap->add($url);
         }
         return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
     }
     public function politique(){
-        $articles=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','POLITIQUE')
-            ->take(20);
-        $sitemap = Sitemap::create('');
-        foreach ($articles as $article){
-            $media=$article->getFirstMedia('article');
-            $titre=Helper::getTitle($article->countries->pays,$article->titre,$article->countries->country);
-            $url= new Url("/{$article->slug}");
-            $url->setLastModificationDate(Carbon::parse($article->dateparution))
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-                ->setPriority(0.8);
-            if($media){
-                $image=Helper::extractImgSrc($article->image);
-                $image=Helper::parseImageUrl($image);
-                $url->addImage($image,$article->titre,$article->countries->pays,$titre);
-            }
-            $sitemap->add($url);
-        }
-        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
+        return $this->generateCategorySitemap('POLITIQUE');
+
     }
     public function economie(){
-        $articles=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','ECONOMIE')
-            ->take(20);
-        $sitemap = Sitemap::create('');
-        foreach ($articles as $article){
-            $media=$article->getFirstMedia('article');
-            $titre=Helper::getTitle($article->countries->pays,$article->titre,$article->countries->country);
-            $url= new Url("/{$article->slug}");
-            $url->setLastModificationDate(Carbon::parse($article->dateparution))
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-                ->setPriority(0.8);
-            if($media){
-                $image=Helper::extractImgSrc($article->image);
-                $image=Helper::parseImageUrl($image);
-                $url->addImage($image,$article->titre,$article->countries->pays,$titre);
-            }
-            $sitemap->add($url);
-        }
-        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
+        return $this->generateCategorySitemap('ECONOMIE');
+
     }
     public function societe(){
-        $articles=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','SOCIETE')
-            ->take(20);
-        $sitemap = Sitemap::create('');
-        foreach ($articles as $article){
-            $media=$article->getFirstMedia('article');
-            $titre=Helper::getTitle($article->countries->pays,$article->titre,$article->countries->country);
-            $url= new Url("/{$article->slug}");
-            $url->setLastModificationDate(Carbon::parse($article->dateparution))
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-                ->setPriority(0.8);
-            if($media){
-                $image=Helper::extractImgSrc($article->image);
-                $image=Helper::parseImageUrl($image);
-                $url->addImage($image,$article->titre,$article->countries->pays,$titre);
-            }
-            $sitemap->add($url);
-        }
-        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
+        return $this->generateCategorySitemap('SOCIETE');
+
     }
     public function diaspora(){
-        $articles=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','DIASPORA')
-            ->take(20);
-        $sitemap = Sitemap::create('');
-        foreach ($articles as $article){
-            $media=$article->getFirstMedia('article');
-            $titre=Helper::getTitle($article->countries->pays,$article->titre,$article->countries->country);
-            $url= new Url("/{$article->slug}");
-            $url->setLastModificationDate(Carbon::parse($article->dateparution))
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-                ->setPriority(0.8);
-            if($media){
-                $image=Helper::extractImgSrc($article->image);
-                $image=Helper::parseImageUrl($image);
-                $url->addImage($image,$article->titre,$article->countries->pays,$titre);
-            }
-            $sitemap->add($url);
-        }
-        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
+        return $this->generateCategorySitemap('DIASPORA');
+
     }
     public function pointdevue(){
-        $articles=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','POINT DE VUE')
-            ->take(20);
+        return $this->generateCategorySitemap('POINT DE VUE');
+
+    }
+    public function religion(){
+        return $this->generateCategorySitemap('RéLIGION');
+
+    }
+    public function sante(){
+        return $this->generateCategorySitemap('SANTE');
+
+    }
+    public function geopolitique(){
+        return $this->generateCategorySitemap('GéOPOLITIQUE');
+
+    }
+    public function serail(){
+        return $this->generateCategorySitemap('SéRAIL');
+
+    }
+    public function panafricanisme(){
+        return $this->generateCategorySitemap('PANAFRICANISME');
+
+    }
+    public function people(){
+        return $this->generateCategorySitemap('PEOPLE');
+
+    }
+    public function sport(){
+        return $this->generateCategorySitemap('SPORT');
+
+    }
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function musique(){
+        return $this->generateCategorySitemap('MUSIQUE');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function livres(){
+        return $this->generateCategorySitemap('LIVRES');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function cinema(){
+        return $this->generateCategorySitemap('CINEMA');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function art(){
+        return $this->generateCategorySitemap('ART');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function media(){
+        return $this->generateCategorySitemap('MéDIA');
+
+    }
+    public function successstory(){
+        return $this->generateCategorySitemap('Success Story');
+
+    }
+
+    private function generateCategorySitemap(string $sousrubrique){
+        $result = collect($this->categories)->first(function ($item) use($sousrubrique) {
+            return $item['sousrubrique'] === $sousrubrique;
+        });
+        $id=$result['id'] ?? null;
+        $cacheKey=$sousrubrique.md5($id);
+
+        $articles=Cache::remember($cacheKey,now()->addMinute(10),function()use($id){
+            return $this->articleService->getArticlesByCategory($id);
+        });
+
+        $articles = collect($articles)->take(20);
         $sitemap = Sitemap::create('');
         foreach ($articles as $article){
-            $media=$article->getFirstMedia('article');
-            $titre=Helper::getTitle($article->countries->pays,$article->titre,$article->countries->country);
-            $url= new Url("/{$article->slug}");
-            $url->setLastModificationDate(Carbon::parse($article->dateparution))
+            $image=$article["image_url"];
+            $titre=Helper::getTitle($article["countries"]["pays"],$article["titre"],$article["countries"]["country"]);
+            $url= new Url("/{$article["slug"]}");
+            $url->setLastModificationDate(Carbon::parse($article["dateparution"]))
                 ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
                 ->setPriority(0.8);
-            if($media){
-                $image=Helper::extractImgSrc($article->image);
-                $image=Helper::parseImageUrl($image);
-                $url->addImage($image,$article->titre,$article->countries->pays,$titre);
+            if($image){
+
+                $url->addImage($image,$article["titre"],$article["countries"]["pays"],$titre);
             }
             $sitemap->add($url);
         }

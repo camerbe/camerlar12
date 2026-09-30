@@ -25,7 +25,7 @@
 
         <script
             async
-            src="https://www.googletagmanager.com/gtag/js?id=G-K905N6XENX">
+            src="https://www.googletagmanager.com/gtag/js?id={{config('analytics.googletagmanager-id')}}">
         </script>
 
         {{-- =========================================================
@@ -63,6 +63,16 @@
                 <span x-show="sidebarOpen">Tableau de bord</span>
             </a>
 
+            <a @if($isAdmin) href="{{route('admin.user.create')}}" @endif
+            @unless($isAdmin) aria-disabled="true" tabindex="-1" @endunless class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                <div class="flex items-center gap-3 px-3 py-2.5 transition rounded-lg {{ request()->routeIs('admin.user.*')
+            ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                    <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen">Administrateurs</span>
+                </div>
+
+            </a>
             <a href="{{route('admin.article.create')}}" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                 <div class="flex items-center gap-3 px-3 py-2.5 transition rounded-lg {{ request()->routeIs('admin.article.*')
             ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
@@ -88,7 +98,8 @@
                 <i data-lucide="component" class="w-5 h-5 flex-shrink-0"></i>
                 <span x-show="sidebarOpen">Évènement</span>
             </a>
-            <a href="{{route('admin.pub.create')}}"
+            <a  @if($isAdmin) href="{{route('admin.pub.create')}}" @endif
+            @unless($isAdmin) aria-disabled="true" tabindex="-1" @endunless
                class="flex items-center gap-3 px-3 py-2.5 transition rounded-lg {{ request()->routeIs('admin.pub.*')
             ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
             : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
@@ -102,6 +113,7 @@
                 <i data-lucide="folder-tree" class="w-5 h-5 flex-shrink-0"></i>
                 <span x-show="sidebarOpen">Rubriques</span>
             </a>
+
             <a href="{{route('admin.sousrubrique.create')}}"
                class="flex items-center gap-3 px-3 py-2.5 transition rounded-lg {{ request()->routeIs('admin.sousrubrique.*')
             ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
@@ -109,7 +121,8 @@
                 <i data-lucide="folder" class="w-5 h-5 flex-shrink-0"></i>
                 <span x-show="sidebarOpen">Sous Rubriques</span>
             </a>
-            <a href="{{route('admin.pubtype.create')}}"
+            <a @if($isAdmin) href="{{route('admin.pubtype.create')}}" @endif
+            @unless($isAdmin) aria-disabled="true" tabindex="-1" @endunless
                class="flex items-center gap-3 px-3 py-2.5 transition rounded-lg {{ request()->routeIs('admin.pubtype.*')
             ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
             : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
@@ -127,7 +140,7 @@
             <div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
                 <span x-show="sidebarOpen" class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Administration</span>
 
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 mt-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                <!--<a href="#" class="flex items-center gap-3 px-3 py-2.5 mt-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                     <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
                     <span x-show="sidebarOpen">Journalistes & Staff</span>
                 </a>
@@ -135,12 +148,19 @@
                 <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                     <i data-lucide="bar-chart-3" class="w-5 h-5 flex-shrink-0"></i>
                     <span x-show="sidebarOpen">Audience & Analytics</span>
+                </a>-->
+                <a href="{{route('admin.index')}}"
+                   class="flex items-center gap-3 px-3 py-2.5 transition rounded-lg {{ request()->routeIs('admin.index')
+                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen">Statistiques</span>
                 </a>
 
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                <!--<a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                     <i data-lucide="settings" class="w-5 h-5 flex-shrink-0"></i>
                     <span x-show="sidebarOpen">Configuration</span>
-                </a>
+                </a>-->
             </div>
         </nav>
 
@@ -149,7 +169,7 @@
             <img src="https://ui-avatars.com/api/?name={{Auth::user()->nom}}&background=007A5E&color=fff" class="w-9 h-9 rounded-full flex-shrink-0" alt="Avatar">
             <div x-show="sidebarOpen" class="overflow-hidden">
                 <p class="text-sm font-semibold truncate">{{Auth::user()->nom}} {{Auth::user()->prenom}}</p>
-                <p class="text-xs text-gray-500 truncate">Administrateur</p>
+                <p class="text-xs text-gray-500 truncate">@if($isAdmin)Administrateur @else Rédacteur @endif</p>
             </div>
         </div>
     </aside>
@@ -188,21 +208,7 @@
         <!-- DASHBOARD BODY -->
         <main class="flex-1 overflow-y-auto p-6 space-y-6">
 
-            <!-- Title & Quick Stats -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold">Tableau de bord Rédaction</h1>
-                    <p class="text-sm text-gray-500">Vue d'ensemble de l'activité sur Camer.be aujourd'hui.</p>
-                </div>
-                <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm">
-                    <button class="px-3 py-1.5 rounded-md bg-gray-100 dark:bg-gray-700 font-medium">Aujourd'hui</button>
-                    <button class="px-3 py-1.5 rounded-md text-gray-500 hover:text-gray-900 dark:hover:text-white">7 jours</button>
-                    <button class="px-3 py-1.5 rounded-md text-gray-500 hover:text-gray-900 dark:hover:text-white">30 jours</button>
-                </div>
-            </div>
 
-            <!-- METRIC CARDS -->
-           <livewire:stat :stat="$stat"/>
 
             <!-- TABLE & SIDE SECTION -->
             <div class="lg:col-span-3">

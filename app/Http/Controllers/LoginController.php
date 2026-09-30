@@ -14,6 +14,10 @@ class LoginController extends Controller
         return view('auth.login');
 
     }
+    public function firstlogin(){
+        return view('auth.firstlogin');
+
+    }
 
 
 

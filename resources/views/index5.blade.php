@@ -42,5 +42,6 @@
             :camer="$camer"
             :skypper="$skypper"
         />
+
     </div>
 </x-layouts.app>

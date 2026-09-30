@@ -4,7 +4,9 @@ namespace App\Repositories;
 
 use App\Http\Resources\UserResource;
 use App\IRepository\IUserRepository;
+use App\Mail\WelcomeNewUserMail;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class UserRepository extends Repository implements IUserRepository
@@ -27,7 +29,11 @@ class UserRepository extends Repository implements IUserRepository
         $input['prenom']=Str::title($input['prenom']);
         $password=$input['password'] ?? '123456';
         $input['password']=bcrypt($password);
-        return new UserResource(parent::create($input)) ;
+        //return new UserResource(parent::create($input)) ;
+        $user = parent::create($input);
+        // Envoi du mail
+        Mail::to($user->email)->send(new WelcomeNewUserMail($user));
+        return new UserResource($user);
     }
 
     /**
@@ -82,7 +88,7 @@ class UserRepository extends Repository implements IUserRepository
      */
     function changePassword(array $input, $id)
     {
-        dd($input);
+        //dd($input);
         $current=$this->findById($id);
         $current->password_changed_at=now();
         $current->password=bcrypt($input['password']);
@@ -110,6 +116,7 @@ class UserRepository extends Repository implements IUserRepository
         $user->password=bcrypt($input['password']);
         $user->password_changed_at=now();
         $user->email_verified_at=now();
+        $user->active=true;
         $user->save();
         return new UserResource($user);
 

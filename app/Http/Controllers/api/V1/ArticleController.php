@@ -279,8 +279,8 @@ class ArticleController extends Controller
             "message"=>"Articles inexistants"
         ],Response::HTTP_NOT_FOUND);
     }
-    public function getSameRubrique($fksousrubrique){
-        $articles=$this->articleService->getSameRubrique($fksousrubrique);
+    public function getSameRubrique($fksousrubrique,$idarticle){
+        $articles=$this->articleService->getSameRubrique($fksousrubrique,$idarticle);
         if ($articles){
             return response()->json([
                 'success'=>true,

@@ -29,6 +29,7 @@
     'jld'=>[],
     'listElements'=>[],
     'listItemVideos'=>[],
+    'rssFeeds' => [],
 
 
 ])
@@ -36,7 +37,15 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" >
 {{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:livewire="http://www.w3.org/1999/html">--}}
     <head>
-
+        {{-- =========================================================
+        1. ADSENSE
+        SCRIPT ASYNCHRONE ET NON BLOQUANT
+        ========================================================= --}}
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('analytics.ca-pub') }}"
+            crossorigin="anonymous">
+        </script>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="robots" content="max-image-preview:large">
@@ -97,11 +106,17 @@
         <link rel="preconnect" href="https://camer-be.disqus.com">
 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-
+        <!-- ===================================================== -->
+        <!-- FLUX RSS (Discovery)                                  -->
+        <!-- ===================================================== -->
+        @foreach($rssFeeds as $feed)
+            <link rel="alternate" type="application/rss+xml" title="{{ $feed['title'] }}" href="{{ $feed['url'] }}">
+        @endforeach
         <!-- =====================================================
         6. CONSENT MODE + GA4
         ===================================================== -->
-
+        <!-- Lucide Icons -->
+        <script src="https://unpkg.com/lucide@latest"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
 
@@ -119,176 +134,13 @@
 
             gtag('js', new Date());
 
-            gtag('config', 'G-K905N6XENX', {
+            gtag('config', '{{config('analytics.googletagmanager-id')}}', {
                 send_page_view: true
             });
         </script>
 
-        <script async
-                src="https://www.googletagmanager.com/gtag/js?id=G-K905N6XENX">
-        </script>
-        <!-- InMobi Choice. Consent Manager Tag v3.0 (for TCF 2.3) -->
-        <script type="text/javascript" async=true>
-            (function() {
-                var host = "www.themoneytizer.com";
-                var element = document.createElement('script');
-                var firstScript = document.getElementsByTagName('script')[0];
-                var url = 'https://cmp.inmobi.com'
-                    .concat('/choice/', '6Fv0cGNfc_bw8', '/', host, '/choice.js?tag_version=V3');
-                var uspTries = 0;
-                var uspTriesLimit = 3;
-                element.async = true;
-                element.type = 'text/javascript';
-                element.src = url;
 
-                firstScript.parentNode.insertBefore(element, firstScript);
 
-                function makeStub() {
-                    var TCF_LOCATOR_NAME = '__tcfapiLocator';
-                    var queue = [];
-                    var win = window;
-                    var cmpFrame;
-
-                    function addFrame() {
-                        var doc = win.document;
-                        var otherCMP = !!(win.frames[TCF_LOCATOR_NAME]);
-
-                        if (!otherCMP) {
-                            if (doc.body) {
-                                var iframe = doc.createElement('iframe');
-
-                                iframe.style.cssText = 'display:none';
-                                iframe.name = TCF_LOCATOR_NAME;
-                                doc.body.appendChild(iframe);
-                            } else {
-                                setTimeout(addFrame, 5);
-                            }
-                        }
-                        return !otherCMP;
-                    }
-
-                    function tcfAPIHandler() {
-                        var gdprApplies;
-                        var args = arguments;
-
-                        if (!args.length) {
-                            return queue;
-                        } else if (args[0] === 'setGdprApplies') {
-                            if (
-                                args.length > 3 &&
-                                args[2] === 2 &&
-                                typeof args[3] === 'boolean'
-                            ) {
-                                gdprApplies = args[3];
-                                if (typeof args[2] === 'function') {
-                                    args[2]('set', true);
-                                }
-                            }
-                        } else if (args[0] === 'ping') {
-                            var retr = {
-                                gdprApplies: gdprApplies,
-                                cmpLoaded: false,
-                                cmpStatus: 'stub'
-                            };
-
-                            if (typeof args[2] === 'function') {
-                                args[2](retr);
-                            }
-                        } else {
-                            if(args[0] === 'init' && typeof args[3] === 'object') {
-                                args[3] = Object.assign(args[3], { tag_version: 'V3' });
-                            }
-                            queue.push(args);
-                        }
-                    }
-
-                    function postMessageEventHandler(event) {
-                        var msgIsString = typeof event.data === 'string';
-                        var json = {};
-
-                        try {
-                            if (msgIsString) {
-                                json = JSON.parse(event.data);
-                            } else {
-                                json = event.data;
-                            }
-                        } catch (ignore) {}
-
-                        var payload = json.__tcfapiCall;
-
-                        if (payload) {
-                            window.__tcfapi(
-                                payload.command,
-                                payload.version,
-                                function(retValue, success) {
-                                    var returnMsg = {
-                                        __tcfapiReturn: {
-                                            returnValue: retValue,
-                                            success: success,
-                                            callId: payload.callId
-                                        }
-                                    };
-                                    if (msgIsString) {
-                                        returnMsg = JSON.stringify(returnMsg);
-                                    }
-                                    if (event && event.source && event.source.postMessage) {
-                                        event.source.postMessage(returnMsg, '*');
-                                    }
-                                },
-                                payload.parameter
-                            );
-                        }
-                    }
-
-                    while (win) {
-                        try {
-                            if (win.frames[TCF_LOCATOR_NAME]) {
-                                cmpFrame = win;
-                                break;
-                            }
-                        } catch (ignore) {}
-
-                        if (win === window.top) {
-                            break;
-                        }
-                        win = win.parent;
-                    }
-                    if (!cmpFrame) {
-                        addFrame();
-                        win.__tcfapi = tcfAPIHandler;
-                        win.addEventListener('message', postMessageEventHandler, false);
-                    }
-                };
-
-                makeStub();
-
-                var uspStubFunction = function() {
-                    var arg = arguments;
-                    if (typeof window.__uspapi !== uspStubFunction) {
-                        setTimeout(function() {
-                            if (typeof window.__uspapi !== 'undefined') {
-                                window.__uspapi.apply(window.__uspapi, arg);
-                            }
-                        }, 500);
-                    }
-                };
-
-                var checkIfUspIsReady = function() {
-                    uspTries++;
-                    if (window.__uspapi === uspStubFunction && uspTries < uspTriesLimit) {
-                        console.warn('USP is not accessible');
-                    } else {
-                        clearInterval(uspInterval);
-                    }
-                };
-
-                if (typeof window.__uspapi === 'undefined') {
-                    window.__uspapi = uspStubFunction;
-                    var uspInterval = setInterval(checkIfUspIsReady, 6000);
-                }
-            })();
-        </script>
-        <!-- End InMobi Choice. Consent Manager Tag v3.0 (for TCF 2.3) -->
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -302,20 +154,11 @@
 
         <script
             async
-            src="https://www.googletagmanager.com/gtag/js?id=G-K905N6XENX">
+            src="https://www.googletagmanager.com/gtag/js?id={{config('analytics.googletagmanager-id')}}">
         </script>
 
-        {{-- =========================================================
-        15. ADSENSE
-        SCRIPT ASYNCHRONE ET NON BLOQUANT
-        ========================================================= --}}
 
-        <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('analytics.ca-pub') }}"
-            crossorigin="anonymous">
-        </script>
-        <script id="dsq-count-scr" src="https://camer-be.disqus.com/count.js" async="async"></script>
+
         {{-- TABOOLA--}}
         <script type="text/javascript">
             window._taboola = window._taboola || [];
@@ -343,8 +186,9 @@
         <!-- ========================================== -->
         <div class="w-full bg-gray-100 dark:bg-dark-surface py-4 border-b border-gray-200 dark:border-dark-border">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
-                <div class="w-full max-w-[970px] h-[90px] sm:h-[250px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg flex items-center justify-center overflow-hidden shadow-sm">
+                <div class="w-full max-w-[970px] h-full sm:h-[250px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg flex items-center justify-center overflow-hidden shadow-sm">
                     <livewire:banner :banner="$banner"/>
+                    @include('partials.adsense-display')
                 </div>
             </div>
         </div>
@@ -353,8 +197,24 @@
         </main>
 
         <livewire:footer :archives="$archives"/>
-
+        @include('partials.googletagmanager')
         @livewireScripts
         @fluxScripts
+        <script>
+            lucide.createIcons();
+
+            // Ré-exécuter Lucide après chaque mise à jour du DOM par Livewire
+            document.addEventListener('livewire:navigated', () => {
+                lucide.createIcons();
+            });
+
+            document.addEventListener('livewire:init', () => {
+                Livewire.hook('morph.updated', ({ el, component }) => {
+                    lucide.createIcons();
+                });
+            });
+        </script>
+        @stack('scripts')
+
     </body>
 </html>

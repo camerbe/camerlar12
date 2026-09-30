@@ -9,10 +9,10 @@ new class extends Component
 {
 
     #[Validate(
-        'required|string|regex:/^#[\p{L}\p{M}\p{N}_\-]{2,}(?:,\s*#[\p{L}\p{M}\p{N}_\-]{2,}){0,4}$/u',
+        'required|string|regex:/^#[\p{L}\p{N}_-]{2,}(?:\s*,\s*#[\p{L}\p{N}_-]{2,}){0,4}$/u',
         message: [
-            'hashtags.required' => 'Le champ hashtags est obligatoire.',
-            'hashtags.regex' => 'Le format est invalide : entrez 1 à 5 hashtags (3 caractères minimum chacun, ex: #dev, #Foumban), séparés par des virgules.',
+            'required' => 'Le champ hashtags est obligatoire.',
+            'regex' => 'Le format est invalide : entrez de 1 à 5 hashtags, séparés par des virgules. Exemple : #Cameroun, #DeportationProject',
         ]
     )]
     public string $hashtags = '';
@@ -111,7 +111,7 @@ new class extends Component
             return $this->redirectRoute('admin.article.index', ['userid' => auth()->id()],navigate: true);
         }
         catch (\Throwable $e){
-            dd($e);
+
             Flux::toast(
                 heading: 'Erreur',
                 text: "Erreur survenue lors de la création d'un article !",

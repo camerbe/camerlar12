@@ -158,6 +158,7 @@ use Illuminate\Support\Str;
             $cacheKey=(string)$oneArticle['fksousrubrique']. ' '.(string)($oneArticle['fkpays']);
             $cacheKey=md5($cacheKey);
             $fksousrubrique=$oneArticle['fksousrubrique'];
+            $idarticle=$oneArticle['id'];
             $fkpays=$oneArticle['fkpays'];
             $plusLus=Cache::remember($cacheKey,now()->addHours(12),function()use($fksousrubrique,$fkpays){
                 $data=$this->api->getMostReadRubriqueByCountry($fksousrubrique,$fkpays);
@@ -165,9 +166,9 @@ use Illuminate\Support\Str;
                 return $array['data'];
             });
 
-            $cacheKey=md5((string)$fksousrubrique);
-            $sameRubrique=Cache::remember($cacheKey,now()->addMinute(15),function()use($fksousrubrique){
-                $data=$this->api->getSameRubrique($fksousrubrique);
+            $cacheKey=md5((string)$fksousrubrique.'_'.(string)$idarticle);
+            $sameRubrique=Cache::remember($cacheKey,now()->addMinute(15),function()use($fksousrubrique,$idarticle){
+                $data=$this->api->getSameRubrique($fksousrubrique,$idarticle);
                 $array = json_decode($data->getContent(), true);
                 return  $array['data'];
             });
@@ -303,6 +304,12 @@ use Illuminate\Support\Str;
         return view('index5',[
             'heroArticle'=>$heroArticle,
        ]);
+    }
+    public function contact(){
+        $heroArticle=$this->latestArticle();
+        return view('mail.form-contact',[
+            'heroArticle'=>$heroArticle,
+        ]);
     }
 
     private  function latestArticle(){

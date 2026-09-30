@@ -13,6 +13,7 @@ use App\Models\Sousrubrique;
 use Carbon\Carbon;
 use Html2Text\Html2Text;
 use http\Exception\InvalidArgumentException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -125,13 +126,14 @@ class ArticleRepository extends Repository implements IArticleRepository
     function index()
     {
         $cache="index";
+        //Cache::forget($cache);
         $articles= Cache::remember($cache, now()->add(1,'day'), function () {
             $data= $articles= Article::Published()
             ->with(['countries','rubrique','sousrubrique'])
                 ->orderByDesc('dateparution')
                 ->limit(100)
                 ->get();
-            return ArticleResource::collection($data)->resolve();
+            return ArticleResource::collection($data);
         });
 
         return $articles;
@@ -183,15 +185,21 @@ class ArticleRepository extends Repository implements IArticleRepository
      * @param $search
      * @return mixed
      */
-    function search($search)
+    function search($search):LengthAwarePaginator
     {
-        $articles=Article::query()
-            ->with(['countries', 'rubrique', 'sousrubrique'])
+        $ids = Article::query()
             ->Search($search)
             ->orderByDesc('dateparution')
-            ->paginate(10);
+            ->limit(100)
+            ->pluck('idarticle');
 
-        return $articles ? ArticleResource::collection($articles) : null;
+        return Article::whereIn('idarticle', $ids)
+            ->with(['countries', 'rubrique', 'sousrubrique'])
+            ->orderByDesc('dateparution')
+            ->paginate(10)
+            ->withQueryString();
+
+        //return $articles ? ArticleResource::collection($articles) : null;
         //return $articles ;
     }
 
@@ -293,16 +301,20 @@ class ArticleRepository extends Repository implements IArticleRepository
      * @param int $fksousrubrique
      * @return mixed
      */
-    function getSameRubrique(int $fksousrubrique)
+    function getSameRubrique(int $fksousrubrique,int $idarticle)
     {
-        $strForCache=(string)$fksousrubrique;
-        $cacheKey = "same_rubrique_".md5($strForCache);
-        $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use ($fksousrubrique) {
+        //$strForCache=(string)$fksousrubrique;
+        $cacheKey = 'same_rubrique_' . $fksousrubrique . '_' . $idarticle;
+        $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use ($fksousrubrique,$idarticle) {
             $ids=Article::select('idarticle')
                         ->where('fksousrubrique',$fksousrubrique)
+                        ->where('idarticle','<>',$idarticle)
                         ->orderByDesc('dateparution')
                         ->limit(10)
                         ->pluck('idarticle');
+            if ($ids->isEmpty()) {
+                return [];
+            }
             $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->whereIn('idarticle', $ids)
                 ->orderByDesc('dateparution')
@@ -414,10 +426,13 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getNewsForRss()
     {
+
         $cacheKey = "news_for_rss";
+        //Cache::forget($cacheKey);
         $articles= Cache::remember($cacheKey, now()->addDay(), function ()  {
-            return ArticleResource::collection($this->index())->resolve();
+            return $this->index();
         });
+        //dd($articles);
         return $articles;
     }
 
@@ -513,8 +528,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     public function getArticlesByCategory($fksousrubrique){
         $cache=$fksousrubrique.'_'.MD5($fksousrubrique);
         $articles=Cache::remember($cache,now()->addMinute(10),function () use($fksousrubrique){
-            $data=Article::CategoryRss()
-                ->with(['countries', 'rubrique', 'sousrubrique'])
+            $data=Article::with(['countries', 'rubrique', 'sousrubrique'])
                 ->where('fksousrubrique',$fksousrubrique)
                 ->orderByDesc('dateparution')
                 ->get();
@@ -524,7 +538,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     }
     public function getCategories(){
         $cache="getCategories";
-        $sousrubriques=Cache::remember($cache,now()->addMinute(15),function(){
+        $sousrubriques=Cache::remember($cache,now()->addDay(),function(){
             $data =Sousrubrique::CategoryRss()->orderBy('sousrubrique')->get();
             return SousrubriqueResource::collection($data)->resolve();
         });

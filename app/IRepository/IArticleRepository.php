@@ -10,7 +10,7 @@ interface IArticleRepository
     function getArticles();
     function getArticleBySlug($slug);
     function getTopNews(string $period);
-    function getSameRubrique(int $fksousrubrique);
+    function getSameRubrique(int $fksousrubrique,int $idarticle);
     function getMostReadRubriqueByCountry($fksousrubrique,$fkpays);
     function getMostReaded();
     function getNewsByAuthor($author);

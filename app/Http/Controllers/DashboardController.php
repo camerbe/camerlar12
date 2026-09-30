@@ -11,6 +11,7 @@ use App\Services\PubService;
 use App\Services\PubTypeService;
 use App\Services\RubriqueService;
 use App\Services\SousrubriqueService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,7 @@ class DashboardController extends Controller
     protected $pubService;
     protected $evenementService;
     protected $articleService;
+    protected $userService;
     //
 
     /**
@@ -39,6 +41,7 @@ class DashboardController extends Controller
         PubService $pubService,
         EvenementService $evenementService,
         ArticleService $articleService,
+        UserService $userService,
     )
     {
         $this->stat = $stat;
@@ -49,6 +52,7 @@ class DashboardController extends Controller
         $this->pubService = $pubService;
         $this->evenementService = $evenementService;
         $this->articleService = $articleService;
+        $this->userService = $userService;
 
         $array = json_decode($this->stat->index()->getContent(), true);
         /****************** View share  ************************************/
@@ -237,9 +241,29 @@ class DashboardController extends Controller
     }
     public function articlesearch($request){
         $articles=$this->articleService->search($request);
-        //dd($articles);
         return view('admin.article.search',[
-            'articles'=>$articles
+            'articles'=>$articles,
+            'search'  => $request,
+        ]);
+    }
+    /***************************
+     ******** Event        *****
+     ***************************
+     */
+    public function usercreate(){
+        return view('admin.user.create');
+    }
+    public function userindex(){
+        $users=$this->userService->index();
+
+        return view('admin.user.index',[
+            'users'=>$users,
+        ]);
+    }
+    public function useredit($id){
+
+        return view('admin.user.edit',[
+            'id'=>$id
         ]);
     }
 }

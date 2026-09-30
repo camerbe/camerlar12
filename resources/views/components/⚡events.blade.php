@@ -5,12 +5,9 @@ use Livewire\Component;
 new class extends Component
 {
     public $event;
-
     //
     public function mount($event){
         $this->event=$event;
-        //dd($this->event);
-
     }
 };
 ?>

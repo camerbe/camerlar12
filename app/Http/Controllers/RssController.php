@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ArticleResource;
 use App\Services\ArticleService;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
 class RssController extends Controller
 {
     protected $articleService;
+    private $categories;
 
     /**
      * @param $articleService
@@ -18,6 +21,7 @@ class RssController extends Controller
     public function __construct(ArticleService $articleService)
     {
         $this->articleService = $articleService;
+        $this->categories=$this->articleService->getCategories();
     }
     public function feed(){
 
@@ -26,50 +30,119 @@ class RssController extends Controller
         return response($rss, 200)->header('Content-Type', 'application/xml');
     }
 
-    public function categoryRss(){
-        $categories=$this->articleService->getCategories();
-        foreach ($categories as $category){
-            $items=$this->articleService->getArticlesByCategory($category->id);
-            $rssname= 'rss.'.Str::trim(strtolower($category->sousrubrique));
-            foreach ($items as $item){
-                $rss = View::make( $rssname, compact('items'));
-                return response($rss, 200)->header('Content-Type', 'application/xml');
-            }
-        }
-    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
     public function politique(){
-        $items=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','POLITIQUE')
-            ->take(20);
-        $rss = View::make('rss.politique', compact('items'));
-        return response($rss, 200)->header('Content-Type', 'application/xml');
+
+        return $this->generateRssByCategory('POLITIQUE');
+
     }
+
+    /**
+     * @return ResponseFactory|Response
+     */
     public function societe(){
-        $items=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','SOCIETE')
-            ->take(20);
-        $rss = View::make('rss.societe', compact('items'));
-        return response($rss, 200)->header('Content-Type', 'application/xml');
+        return $this->generateRssByCategory('SOCIETE');
+
     }
+
+    /**
+     * @return ResponseFactory|Response
+     */
     public function economie(){
-        $items=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','ECONOMIE')
-            ->take(20);
-        $rss = View::make('rss.societe', compact('items'));
-        return response($rss, 200)->header('Content-Type', 'application/xml');
+        return $this->generateRssByCategory('ECONOMIE');
+
     }
+
+    /**
+     * @return ResponseFactory|Response
+     */
     public function diaspora(){
-        $items=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','DIASPORA')
-            ->take(20);
-        $rss = View::make('rss.societe', compact('items'));
-        return response($rss, 200)->header('Content-Type', 'application/xml');
+        return $this->generateRssByCategory('DIASPORA');
+
     }
+
+    /**
+     * @return ResponseFactory|Response
+     */
     public function pointdevue(){
-        $items=$this->articleService->getNewsForRss()
-            ->where('sousrubrique.sousrubrique','POINT DE VUE')
-            ->take(20);
-        $rss = View::make('rss.pointdevue', compact('items'));
+        return $this->generateRssByCategory('POINT DE VUE');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function religion(){
+        return $this->generateRssByCategory('RéLIGION');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function sante(){
+        return $this->generateRssByCategory('SANTE');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function geopolitique(){
+        return $this->generateRssByCategory('GéOPOLITIQUE');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function serail(){
+        return $this->generateRssByCategory('SéRAIL');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function panafricanisme(){
+        return $this->generateRssByCategory('PANAFRICANISME');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function people(){
+        return $this->generateRssByCategory('PEOPLE');
+
+    }
+
+    /**
+     * @return ResponseFactory|Response
+     */
+    public function sport(){
+        return $this->generateRssByCategory('SPORT');
+
+    }
+
+
+
+    /**
+     * @param string $sousrubrique
+     * @return ResponseFactory|Response
+     */
+    private function generateRssByCategory(string $sousrubrique){
+        $result = collect($this->categories)->first(function ($item) use ($sousrubrique) {
+            return $item['sousrubrique'] === $sousrubrique;
+        });
+        $id=$result['id'] ?? null;
+        $items=$this->articleService->getArticlesByCategory($id);
+        $items = collect($items)->take(20);
+
+        $rss = View::make('rss.sport', compact('items'));
         return response($rss, 200)->header('Content-Type', 'application/xml');
     }
 
