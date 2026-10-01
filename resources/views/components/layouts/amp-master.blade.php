@@ -44,29 +44,17 @@
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
     <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
     <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
-    <!--<script async custom-element="amp-addthis" src="https://cdn.ampproject.org/v0/amp-addthis-0.1.js"></script>-->
+
     <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-    <script async custom-element="amp-consent" src="https://cdn.ampproject.org/v0/amp-consent-0.1.js"></script>
     <script async custom-element="amp-geo" src="https://cdn.ampproject.org/v0/amp-geo-0.1.js"></script>
+    <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     <!--AdsenseAMP page-->
     <script async custom-element="amp-auto-ads"
             src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
     </script>
 
-    <amp-consent id="inmobi-consent">
-        <script type="application/json">
-  {
-    "consents": {
-      "inmobi": {
-        "promptUI": "consent-ui",
-        "iframeSrc": "https://cmp.inmobi.com/amp/choice/6Fv0cGNfc_bw8/www.themoneytizer.com"
-      }
-    }
-  }
-  </script>
-    </amp-consent>
 
     <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
     <!--non-AMP page
@@ -1577,6 +1565,8 @@
             font-weight: bold;
             white-space: nowrap;
         }
+        .taboola-scroll { max-height: 500px; overflow-y: auto; }
+
     </style>
 
 </head>
@@ -1692,7 +1682,7 @@
 
     <div class="sliders full-bottom">
         {{--@yield('slider')--}}
-        <amp-auto-ads type="adsense" data-ad-client="ca-pub-8638642715460968">
+        <amp-auto-ads type="adsense" data-ad-client="{{config('analytics.ca-pub')}}">
         </amp-auto-ads>
     </div>
     <div class="decoration decoration-margins"></div>

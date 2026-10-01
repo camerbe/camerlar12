@@ -30,6 +30,7 @@ class AmpController extends Controller
     private $camer;
     private $sopie;
     private $publicite;
+    private $pubIframe;
     private $archives;
     private $camerVideos;
     private $sopieVideos;
@@ -66,6 +67,11 @@ class AmpController extends Controller
         $array = json_decode($data->getContent(), true);
         $this->publicite = $array['data'] ?? [];
         //dd($pub);
+        $dataIframe=$this->pub->getIframePub();
+        $arrayIframe = json_decode($dataIframe->getContent(), true);
+        $this->pubIframe=$arrayIframe['data'] ?? [];
+
+
         $this->debat= Cache::remember('articles_debat_json', now()->addHours(12), function () {
             $data = $this->api->getOneRubriqueArticles(27,25);   // API call
             $array = json_decode($data->getContent(), true);
@@ -127,6 +133,7 @@ class AmpController extends Controller
             'sopie'=> $this->sopie,
             'pub'=> $this->publicite,
             'archives'=> $this->archives,
+            'iframe'=> $this->pubIframe,
         ]);
 
     }
@@ -158,13 +165,18 @@ class AmpController extends Controller
         $cacheKey="cache_amp_index_".$currentPage;
         //Cache::forget($cacheKey);
         //dd($ldJson);
+        return view('index-amp', [
+            'articles' => $paginated,
+            'listItemArticles'=>$ldJson,
+        ])->render();
+        /*Cache::forget($cacheKey);
         return Cache::remember($cacheKey, now()->addHours(12), function ()
             use ($paginated,$ldJson) {
             return view('index-amp', [
                 'articles' => $paginated,
                 'listItemArticles'=>$ldJson,
             ])->render();
-        });
+        });*/
     }
     public function index1($rubrique,$sousrubrique,$slug){
         //dd($slug);
@@ -172,7 +184,7 @@ class AmpController extends Controller
         $array = json_decode($data->getContent(), true);
         $article = collect($array['data']);
         $jld = $this->collectionPageSchema->newsArticle($array['data']);
-        $dataSamerubrique=$this->api->getSameRubrique($article['fksousrubrique']);
+        $dataSamerubrique=$this->api->getSameRubrique($article['fksousrubrique'], $article["id"]);
         $arraySamerubrique =json_decode($dataSamerubrique->getContent(), true);
         $samerubrique= collect($arraySamerubrique['data']);
         return view('index1-amp', [

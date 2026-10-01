@@ -53,6 +53,7 @@ Route::prefix('videos')->controller(VideoController::class)->group(function () {
 });
 Route::prefix('pubs')->controller(PubController::class)->group(function () {
    Route::get('pubcached/{pubcached}', 'getCachedPub');
+   Route::get('iframe', 'getIframePub');
 });
 Route::prefix('events')->controller(EvenementController::class)->group(function () {
    Route::get('list', 'getCachedEvenements');

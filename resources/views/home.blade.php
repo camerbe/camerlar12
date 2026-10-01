@@ -9,7 +9,7 @@
     $image=$heroArticle["image_url"];
     $author=$heroArticle["auteur"];
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
-    $section=$heroArticle["rubrique"]["rubrique"]." / ".$heroArticle["sousrubrique"]["sousrubrique"];
+    $section=\Illuminate\Support\Str::title($heroArticle["sousrubrique"]["sousrubrique"]);
     $canonical=url()->current();
     $source=$heroArticle["source"];
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
@@ -42,6 +42,7 @@
 
         <livewire:news
             :debat="$debat"
+            :iframe="$iframe"
             :droit="$droit"
             :sopie="$sopie"
             :camer="$camer"

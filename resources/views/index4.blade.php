@@ -1,13 +1,20 @@
 @php
     $snippet= $videos[0]['youtubeApi']['snippet'] ?? [];
-    //dd($videos[0]);
+
+    $titre=$videos[0]['titre'];
+    $typevideo=$videos[0]['typevideo'];
+
+
     $dynamicDescription = 'Camer.be: Info claire et nette sur le Cameroun et la Diaspora. ';
-    $dynamicDescription .="À la une : {videos[0]['titre']}";
+    $dynamicDescription .="À la une : {$titre}";
+
     $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';
 
-    $title="Actualités Cameroun, Info & Analyse – Politique, Sport, Vidéo {videos[0]['typevideo'] | Camer.be";
+    $title="Actualités Cameroun, Info & Analyse – Politique, Sport, Vidéo {$typevideo} | Camer.be";
+
     $description=$dynamicDescription;
     $image=$videos[0]["cover_image"];
+
     $author=$videos[0]["typevideo"];
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
     $section="Vidéo";
@@ -15,8 +22,8 @@
     $source=$videos[0]["typevideo"];
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
     $published_time=\Carbon\Carbon::parse($snippet['publishedAt'])->format('Y-m-d\TH:i:s+00:00');
-    $georegion =$videos[0]["typevideo"]=="Camer"? "BE" : "FR";
-    $geoplacename=$videos[0]["typevideo"]=="Camer"? "Belgique" : "France";
+    $georegion =$videos[0]["typevideo"]==="Camer"? "BE" : "FR";
+    $geoplacename=$videos[0]["typevideo"]==="Camer"? "Belgique" : "France";
     //listItemVideos=$listItemVideos
     //dd($listItemVideos);
     $isVideo=true;
@@ -44,11 +51,11 @@
             :listItemVideos="$listItemVideos"
             :videos="$videos"
             :droit="$droit"
-            :event="$event"
             :debat="$debat"
             :sopie="$sopie"
             :camer="$camer"
             :skypper="$skypper"
+            :event="$event"
         />
 
     </div>

@@ -233,6 +233,7 @@ new class extends Component
                 <livewire:video :camer="null" :sopie="$sopie" />
                 @include('partials.pub-aside')
                 <livewire:debat :debat="$debat"/>
+                <livewire:pub-iframe :iframe="$iframe"/>
                 <livewire:droit :droit="$droit"/>
                 @include('partials.pub-aside')
                 <livewire:video :camer="$camer" :sopie="null" />

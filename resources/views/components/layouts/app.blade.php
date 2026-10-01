@@ -30,12 +30,13 @@
     'listElements'=>[],
     'listItemVideos'=>[],
     'rssFeeds' => [],
+    'robots' => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
 
 
 ])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" >
-{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:livewire="http://www.w3.org/1999/html">--}}
+
     <head>
         {{-- =========================================================
         1. ADSENSE
@@ -48,7 +49,7 @@
         </script>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="robots" content="max-image-preview:large">
+        <meta name="robots" content="{{$robots}}">
         <x-meta
             :title="$title ?? config('app.name')"
             :description="$description ?? ''"
@@ -95,6 +96,12 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="preconnect" href="https://fonts.bunny.net">
         <!-- Polices Google -->
+        <link rel="dns-prefetch" href="//partner.googleadservices.com">
+        <link rel="dns-prefetch" href="//tpc.googlesyndication.com">
+        <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+        <link rel='dns-prefetch' href='//www.googletagmanager.com' />
+        <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="preconnect" href="https://flagcdn.com" crossorigin>
@@ -103,7 +110,7 @@
         <link rel="preconnect" href="//images.taboola.com" crossorigin="">
         <link rel="preconnect" href="//cdn.taboola.com" crossorigin="">
         <link rel="preconnect" href="//trc.taboola.com" crossorigin="">
-        <link rel="preconnect" href="https://camer-be.disqus.com">
+
 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
         <!-- ===================================================== -->

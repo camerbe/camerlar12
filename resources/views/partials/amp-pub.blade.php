@@ -1,3 +1,8 @@
+@php
+
+ @endphp
+
+
 @if(count($pub)>0)
     <div class="material-box">
         <div class="news-category">

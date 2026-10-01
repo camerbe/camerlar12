@@ -30,6 +30,9 @@ class PubService
     function getCachedPub($dimension){
         return $this->pubRepository->getCachedPub($dimension);
     }
+    function getIframePub(){
+        return $this->pubRepository->getIframePub();
+    }
     function allPubDimension(){
         return $this->pubRepository->allPubDimension();
     }

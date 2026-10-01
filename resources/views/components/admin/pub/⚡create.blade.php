@@ -52,16 +52,16 @@ new class extends Component
 
             Flux::toast(
                 heading: 'Création',
-                text: 'Sous Rubrique créée avec succès !',
+                text: 'Publicité créée avec succès !',
                 variant: 'success',
             );
             return $this->redirectRoute('admin.pub.index',navigate: true);
         }
         catch (\Throwable $e){
-
+            dd($e);
             Flux::toast(
                 heading: 'Erreur',
-                text: "Erreur survenue lors de la création d'une Rubrique !",
+                text: "Erreur survenue lors de la création d'une Publicité !",
                 variant: 'danger',
             );
         }

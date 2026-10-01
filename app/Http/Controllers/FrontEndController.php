@@ -32,6 +32,7 @@ use Illuminate\Support\Str;
     private $droit;
     private $pub728;
     private $pub300;
+    private $pub300Iframe;
     private $archives;
     private $latestArticle;
     private $listItemArticle;
@@ -105,6 +106,7 @@ use Illuminate\Support\Str;
             ] ;
         });
         /**************** pub *********************/
+
         $data728=$this->pub->getCachedPub('728');
         $array728 = json_decode($data728->getContent(), true);
         $this->pub728 = $array728['data'] ?? [];
@@ -112,6 +114,10 @@ use Illuminate\Support\Str;
         $data300=$this->pub->getCachedPub('300');
         $array300 = json_decode($data300->getContent(), true);
         $this->pub300 = $array300['data'] ?? [];
+
+        $dataIframe=$this->pub->getIframePub();
+        $arrayIframe = json_decode($dataIframe->getContent(), true);
+        $this->pubIframe=$arrayIframe['data'] ?? [];
         /**************** Event *********************/
         $dataEvent=$this->event->getCachedEvenements();
         $arrayEvent= json_decode($dataEvent->getContent(), true);
@@ -127,6 +133,7 @@ use Illuminate\Support\Str;
             'droit'=>$this->droit,
             'debat'=>$this->debat,
             'event'=>$this->evenement,
+            'iframe'=>$this->pubIframe,
         ]);
     }
 
@@ -214,8 +221,6 @@ use Illuminate\Support\Str;
     }
 
     public function getArticlesByRubrique(Request $request){
-
-
 
         $fksousrubrique = RubriqueRegistry::idFor($request->sousrubrique);
         $fkrubrique = RubriqueRegistry::idFor($request->rubrique);

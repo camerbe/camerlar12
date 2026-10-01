@@ -1,18 +1,5 @@
-<amp-analytics type="googleanalytics">
-    <script type="application/json">
-    {
-      "vars": {
-        "account": "UA-8197233-1"
-      },
-      "triggers": {
-        "default pageview": {
-          "on": "visible",
-          "request": "pageview",
-          "vars": {
-            "title": "Name of the Article"
-          }
-        }
-      }
-    }
-    </script>
+<amp-analytics config="https://www.googletagmanager.com/amp.json?
+id={{config('analytics.googletagmanager-id')}}
+&gtm.url={{url()->current()}}" data-credentials="include" data-block-on-consent>
 </amp-analytics>
+

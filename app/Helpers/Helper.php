@@ -284,7 +284,20 @@ class Helper
             (isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '');
     }
 
+    public static function extractFromParagraph(?string $html): ?string
+    {
+        if (blank($html)) {
+            return null;
+        }
 
+        if (preg_match('/<p[^>]*>(.*?)<\/p>/is', $html, $matches)) {
+            $value = trim(html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+            return $value !== '' ? $value : null;
+        }
+
+        return null;
+    }
     public static function views_format(int $number, bool $withLabel = true): array
     {
         // Format court (3,4 k)

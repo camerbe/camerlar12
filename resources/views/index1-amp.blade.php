@@ -37,7 +37,6 @@
 @section('content')
     @include('partials.amp-adaptable')
     @include('partials.amp-article')
-    @include('partials.amp-video-viralize')
     @include('partials.amp-debat-droit')
     @include('partials.amp-event-pub')
     @include('partials.amp-video')

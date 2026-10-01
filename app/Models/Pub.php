@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,16 +29,19 @@ class Pub extends Model implements HasMedia
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
             Cache::forget('pub-list-cache');
+            Cache::forget('pub-iframe');
         });
         Pub::updated((function ($model){
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
             Cache::forget('pub-list-cache');
+            Cache::forget('pub-iframe');
         }));
         Pub::deleted((function ($model){
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
             Cache::forget('pub-list-cache');
+            Cache::forget('pub-iframe');
         }));
     }
     public function dimensions():BelongsTo{
@@ -45,6 +49,22 @@ class Pub extends Model implements HasMedia
     }
     public function typepubs():BelongsTo {
         return $this->belongsTo(Pubtype::class,'fktype');
+    }
+    public function scopeIframe(Builder $query):Builder
+    {
+        return $query->whereHas('typepubs', function ($q) {
+            $q->where('pubtype', 'IFRAME');
+
+        });
+
+    }
+    public function scopeNoIframe(Builder $query):Builder
+    {
+        return $query->whereHas('typepubs', function ($q) {
+            $q->where('pubtype', '<>','IFRAME');
+
+        });
+
     }
     public function registerMediaCollections():void{
         $this->addMediaCollection('pub')

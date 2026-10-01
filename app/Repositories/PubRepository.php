@@ -30,10 +30,13 @@ class PubRepository extends Repository implements IPubRepository
      */
     function create(array $input)
     {
-        //dd($input);
+
+        $fktype=$input['fktype'];
         $input['endpubdate']=Carbon::parse($input['endpubdate'])->format('Y-m-d H:i:s');
-        $input['imageheight']=Helper::extractHeight($input['pub']);
-        $input['imagewidth']=Helper::extractWidth($input['pub']);
+        $input['imageheight']  = ($fktype!=3) ? Helper::extractHeight($input['pub']):0;
+        $input['imagewidth']  = ($fktype!=3) ? Helper::extractWidth($input['pub']):0;
+
+
         return parent::create($input);
     }
 
@@ -110,7 +113,8 @@ class PubRepository extends Repository implements IPubRepository
         //dd($fkdimension);
 
         $pub=Cache::remember($cache, now()->add(1,'day'), function ()  use($fkdimension) {
-            return Pub::with(['dimensions','typepubs'])
+            return Pub::NoIframe()
+                ->with(['dimensions','typepubs'])
                 ->where('endpubdate','>=', now())
                 ->where('fkdimension',$fkdimension)
                 ->select('*')
@@ -122,6 +126,22 @@ class PubRepository extends Repository implements IPubRepository
         //dd($pub);
         return new PubResource($pub->random());
         //return PubResource::collection(Cache::get($cache)->random());
+    }
+
+    /**
+     * @return mixed
+     */
+    function getIframePub()
+    {
+        //dd(Pub::Iframe()->get());
+        $cacheKey="pub-iframe";
+        //Cache::forget($cacheKey);
+        return Cache::remember($cacheKey, now()->addDay(), function () {
+            return Pub::Iframe()
+                ->where('endpubdate', '>=', now())
+                ->select('*')
+                ->get();
+        });
     }
 
     /**

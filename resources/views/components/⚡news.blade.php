@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use App\Services\ArticleService;
+
 use App\Helpers\Helper;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -22,6 +23,7 @@ new class extends Component
     public mixed $sopie=null;
     public mixed $skypper=null;
     public mixed $event=null;
+    public mixed $iframe=null;
 
 
     /*public array $trendingArticles = [];
@@ -40,6 +42,7 @@ new class extends Component
         $camer = null,
         $skypper = null,
         $event = null,
+        $iframe = null,
     ){
         $this->debat = $debat;
         $this->droit = $droit;
@@ -47,6 +50,7 @@ new class extends Component
         $this->camer = $camer;
         $this->skypper = $skypper;
         $this->event = $event;
+        $this->iframe = $iframe;
 
 
 
@@ -243,8 +247,8 @@ new class extends Component
             {{-- 4. Sous-composant Livewire pour la Sidebar--}}
             <livewire:sidebar-news :articles="$this->mostReaded" />
             <livewire:video :camer="null" :sopie="$sopie" />
-
             <livewire:debat :debat="$debat"/>
+            <livewire:pub-iframe :iframe="$iframe"/>
             <livewire:droit :droit="$droit"/>
 
             <livewire:video :camer="$camer" :sopie="null" />

@@ -620,6 +620,7 @@ new class extends Component
        />
         <livewire:video :camer="null" :sopie="$sopie" />
         <livewire:debat :debat="$debat"/>
+        <livewire:pub-iframe :iframe="$iframe"/>
         <livewire:droit :droit="$droit"/>
         <livewire:video :camer="$camer" :sopie="null" />
         <livewire:skypper :skypper="$skypper"  />

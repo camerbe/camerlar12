@@ -3,14 +3,18 @@
     $dynamicDescription = 'Camer.be: Info claire et nette sur le Cameroun et la Diaspora. ';
     $dynamicDescription .="À la une : {$heroArticle['titre']}";
     $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';
+    $image_width=$heroArticle['image_width'] ?? "300";
+    $image_height=$heroArticle['image_height'] ?? "300";
 
     $title="Actualités Cameroun, Info & Analyse – Politique, Sport, {$heroArticle['sousrubrique']['sousrubrique']} | Camer.be";
     $description=$dynamicDescription;
     $image=$heroArticle["image_url"];
+    $mimeType=\App\Helpers\Helper::getImageMimeType($image) ;
     $author=$heroArticle["auteur"];
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
-    $section=$heroArticle["rubrique"]["rubrique"]." / ".$heroArticle["sousrubrique"]["sousrubrique"];
+    $section=\Illuminate\Support\Str::title($heroArticle["sousrubrique"]["sousrubrique"]);
     $canonical=url()->current();
+    $ampcanonical = url('amp' . parse_url($canonical, PHP_URL_PATH));
     $source=$heroArticle["source"];
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
     $published_time=\Carbon\Carbon::parse($heroArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
@@ -24,10 +28,14 @@
     :title="$title"
     :description="$description"
     :image="$image"
+    :image_width="$image_width"
+    :image_height="$image_height"
+    :image_type="$mimeType"
     :author="$author"
     :keyword="$keyword"
     :section="$section"
     :canonical="$canonical"
+    :ampcanonical="$ampcanonical"
     :source="$source"
     :modified_time="$modified_time"
     :published_time="$published_time"
@@ -44,11 +52,13 @@
             :heroArticle="$heroArticle"
             :mostReaded="$mostReaded"
             :droit="$droit"
-            :event="$event"
+
             :debat="$debat"
             :sopie="$sopie"
             :camer="$camer"
             :skypper="$skypper"
+            :event="$event"
+
         />
 
     </div>

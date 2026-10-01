@@ -153,10 +153,8 @@ new class extends Component
             {{-- 4. Sous-composant Livewire pour la Sidebar--}}
             <livewire:most-readed-author :mostReaded="$mostReaded" />
             <livewire:video :camer="null" :sopie="$sopie" />
-            @include('partials.pub-aside')
             <livewire:debat :debat="$debat"/>
             <livewire:droit :droit="$droit"/>
-            @include('partials.pub-aside')
             <livewire:video :camer="$camer" :sopie="null" />
             <livewire:skypper :skypper="$skypper"  />
 
