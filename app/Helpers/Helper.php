@@ -495,28 +495,30 @@ class Helper
 
     public static function getYoutubeApi(string $youtubeId)
     {
-        return Cache::remember("yt_{$youtubeId}", now()->addHours(12), function () use ($youtubeId) {
-            try {
-                $response = Http::timeout(10)
-                    ->connectTimeout(5)
-                    ->retry(2, 300)
+        $key = "yt_{$youtubeId}";
+
+        try {
+            return Cache::remember($key, now()->addDays(7), function () use ($youtubeId) {
+                $response = Http::retry(0)
+                    ->timeout(5)
                     ->get('https://www.googleapis.com/youtube/v3/videos', [
                         'id'   => $youtubeId,
-                        'part' => 'snippet,contentDetails',
+                        'part' => 'snippet,contentDetails,statistics',
                         'key'  => config('analytics.youtube-api-key'),
-                    ]);
-            } catch (\Illuminate\Http\Client\ConnectionException $e) {
-                Log::warning("YouTube API injoignable pour {$youtubeId} : {$e->getMessage()}");
-                return null;
-            }
+                    ])
+                    ->throw();
 
-            if ($response->failed()) {
-                Log::warning("YouTube API : erreur {$response->status()} pour {$youtubeId}");
-                return null;
-            }
+                return $response->json();
+            });
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            report($e);
 
-            return $response->json('items.0');
-        });
+            // Pause pour ne pas marteler l'API
+            Cache::put("{$key}_failed", true, now()->addMinutes(30));
+
+            // Repli sur les données périmées ou une structure vide
+            return Cache::get("{$key}_stale", ['items' => []]);
+        }
 
     }
 }
