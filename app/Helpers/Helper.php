@@ -494,11 +494,20 @@ class Helper
 
     public static function getYoutubeApi(string $youtubeId)
     {
-        $response = Http::get('https://www.googleapis.com/youtube/v3/videos', [
+        $response = Cache::remember("yt_{$youtubeId}", now()->addHours(12), function () use ($youtubeId) {
+            return Http::timeout(5)->connectTimeout(3)->retry(2, 200)
+                ->get('https://www.googleapis.com/youtube/v3/videos', [
+                    'id' => $youtubeId,
+                    'part' => 'snippet,contentDetails',
+                    'key' => config('services.youtube.key'),
+                ])->json();
+        });
+
+       /* $response = Http::get('https://www.googleapis.com/youtube/v3/videos', [
             'id'   => $youtubeId,
             'part' => 'snippet,contentDetails',
             'key'  => config('analytics.youtube-api-key'),
-        ]);
+        ]);*/
 
         if ($response->failed()) {
             return null;
