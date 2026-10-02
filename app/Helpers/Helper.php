@@ -5,6 +5,8 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use DOMDocument;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -495,29 +497,54 @@ class Helper
 
     public static function getYoutubeApi(string $youtubeId)
     {
-        $key = "yt_{$youtubeId}";
+        $key   = "yt_{$youtubeId}";
+        $empty = ['items' => []];
 
+        // 1. Données en cache valides
+        if ($cached = Cache::get($key)) {
+            return $cached;
+        }
+
+        // 2. Pause active (quota épuisé ou échec récent) : on n'appelle pas l'API
+        if (Cache::has('yt_quota_blocked') || Cache::has("{$key}_failed")) {
+            return Cache::get("{$key}_stale", $empty);
+        }
+
+        // 3. Appel API
         try {
-            return Cache::remember($key, now()->addDays(7), function () use ($youtubeId) {
-                $response = Http::retry(0)
-                    ->timeout(5)
-                    ->get('https://www.googleapis.com/youtube/v3/videos', [
-                        'id'   => $youtubeId,
-                        'part' => 'snippet,contentDetails,statistics',
-                        'key'  => config('analytics.youtube-api-key'),
-                    ])
-                    ->throw();
+            $data = Http::timeout(5)
+                ->get('https://www.googleapis.com/youtube/v3/videos', [
+                    'id'   => $youtubeId,
+                    'part' => 'snippet,contentDetails,statistics',
+                    'key'  => config('analytics.youtube-api-key'),
+                ])
+                ->throw()
+                ->json();
 
-                return $response->json();
-            });
-        } catch (\Illuminate\Http\Client\RequestException $e) {
-            report($e);
+            Cache::put($key, $data, now()->addDays(7));
+            Cache::forever("{$key}_stale", $data); // copie de secours sans expiration
 
-            // Pause pour ne pas marteler l'API
-            Cache::put("{$key}_failed", true, now()->addMinutes(30));
+            return $data;
+        } catch (RequestException|ConnectionException $e) {
+            $status = $e instanceof RequestException ? $e->response->status() : null;
 
-            // Repli sur les données périmées ou une structure vide
-            return Cache::get("{$key}_stale", ['items' => []]);
+            if ($status === 403) {
+                // Quota réinitialisé à minuit heure du Pacifique
+                Cache::put(
+                    'yt_quota_blocked',
+                    true,
+                    now('America/Los_Angeles')->addDay()->startOfDay()
+                );
+            } else {
+                Cache::put("{$key}_failed", true, now()->addMinutes(30));
+            }
+
+            Log::warning('YouTube API indisponible', [
+                'video'  => $youtubeId,
+                'status' => $status,
+            ]);
+
+            return Cache::get("{$key}_stale", $empty);
         }
 
     }
