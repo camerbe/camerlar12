@@ -7,6 +7,7 @@ use \Livewire\WithPagination;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 new class extends Component
 {
@@ -14,13 +15,23 @@ new class extends Component
     public $perPage=10;
     use WithPagination;
 
+
     #[Computed]
     public function articles()
     {
         // On récupère le service via l'injection de dépendances ou app()
         $articleService = app(ArticleService::class);
         //dd($videoService->indexPaginated($this->perPage)) ;
-        return $articleService->getArticleByUser(auth()->id(),$this->perPage);
+        $result = $articleService->getArticleByUser(auth()->id(),$this->perPage);
+
+        // Si le service retourne un tableau avec 'data' et 'meta'
+        return new LengthAwarePaginator(
+            items: $result['data'],
+            total: $result['meta']['total'],
+            perPage: $result['meta']['per_page'],
+            currentPage: $result['meta']['current_page'],
+            options: ['path' => request()->url()]
+        );
     }
 
     public function delete($id, ArticleService $articleService)
@@ -39,6 +50,19 @@ new class extends Component
         );
         //return $this->redirect(route('admin.video.index'), navigate: true);
 
+    }
+    public function getArticlesProperty()
+    {
+        // Supposons que vos données proviennent d'une API ou d'un tableau existant
+        $result = $this->fetchArticlesFromApi();
+
+        return new LengthAwarePaginator(
+            items: $result['data'],                  // Les éléments de la page actuelle
+            total: $result['meta']['total'],         // Nombre total d'éléments
+            perPage: $result['meta']['per_page'],    // Nombre d'éléments par page
+            currentPage: $result['meta']['current_page'], // Page actuelle
+            options: ['path' => request()->url()]    // URL de base pour les liens
+        );
     }
 };
 ?>
@@ -59,6 +83,7 @@ new class extends Component
 
 
         </div>
+
         <flux:table bleed container:class="mt-6" >
             <flux:table.columns sticky >
                 <flux:table.column>#</flux:table.column>
@@ -69,14 +94,14 @@ new class extends Component
             </flux:table.columns>
             <flux:table.rows>
                 @foreach($this->articles as $article)
-                    <flux:table.row :key="$article->idarticle">
+                    <flux:table.row :key="$article['id']">
                         <flux:table.cell variant="strong">{{ $loop->index+ 1}}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ Str::limit($article->titre,70)  }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ $article->sousrubrique->sousrubrique}}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ Carbon::parse($article->dateparution)->locale('fr')->translatedFormat('d M Y H:i')  }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ Str::limit($article["titre"],70)  }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ $article["sousrubrique"]["sousrubrique"]}}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ Carbon::parse($article["dateparution"])->locale('fr')->translatedFormat('d M Y H:i')  }}</flux:table.cell>
                         <flux:table.cell variant="strong">
                             <div class="flex items-center gap-2">
-                                <flux:button variant="ghost" size="sm" icon="pencil-square" :href="route('admin.article.edit',$article->idarticle )">
+                                <flux:button variant="ghost" size="sm" icon="pencil-square" :href="route('admin.article.edit',$article['id'] )">
                                     Éditer
                                 </flux:button>
 
@@ -85,7 +110,7 @@ new class extends Component
                                     size="sm"
                                     icon="trash"
                                     class="text-red-600 hover:text-red-800"
-                                    wire:click="delete({{ $article->idarticle }})"
+                                    wire:click="delete({{ $article['id'] }})"
                                     wire:confirm="Êtes-vous sûr de vouloir supprimer cet article ?"
                                 >
 

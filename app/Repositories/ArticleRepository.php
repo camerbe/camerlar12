@@ -28,13 +28,45 @@ class ArticleRepository extends Repository implements IArticleRepository
 {
     private $perPage=10;
     /**
-     * @param $model
+     * @param $modelf
      */
+
+    private const TAG = 'articles';
+    private const VERSION_KEY = 'art:version';
+    private ?string $versionCache = null;
+    private const RELATIONS = ['countries', 'rubrique', 'sousrubrique'];
     public function __construct(Article $article)
     {
         parent::__construct($article);
     }
+    private function remember(string $key, $ttl, \Closure $callback)
+    {
+        return Cache::remember("art:v{$this->version()}:{$key}", $ttl, $callback);
+    }
 
+    private function flushCache(): void
+    {
+        Cache::forever(self::VERSION_KEY, now()->getTimestampMs());
+        $this->versionCache = null;
+    }
+
+    private function version(): string
+    {
+        return $this->versionCache ??= (string) Cache::rememberForever(
+            self::VERSION_KEY,
+            fn () => now()->getTimestampMs()
+        );
+    }
+
+    private function toArray($data): array
+    {
+        return ArticleResource::collection($data)->resolve();
+    }
+
+    private function base()
+    {
+        return Article::with(self::RELATIONS);
+    }
     /**
      * @param array $input
      * @return mixed
@@ -57,9 +89,13 @@ class ArticleRepository extends Repository implements IArticleRepository
         $input['source']=Str::title($input['source']);
         $input['titre']=Helper::guillemets($input['titre']);
 
-        $cache="Article-By-User-".$input['fkuser'];
+        /*$cache="Article-By-User-".$input['fkuser'];
         Cache::forget($cache);
-        return parent::create($input);
+        return parent::create($input);*/
+
+        $article = parent::create($input);
+        $this->flushCache();
+        return $article;
     }
 
     /**
@@ -68,7 +104,9 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function delete($id)
     {
-        return parent::delete($id);
+        $result= parent::delete($id);
+        $this->flushCache();
+        return $result;
     }
 
     /**
@@ -115,9 +153,13 @@ class ArticleRepository extends Repository implements IArticleRepository
             $input['slug']=Str::slug(Helper::getTitle($bled->pays,$input['titre'],$bled->country),'-') ;
         }
         $input['titre']=Helper::guillemets($input['titre']);
-        $cache="Article-By-User-".$current->fkuser;
+        /*$cache="Article-By-User-".$current->fkuser;
         Cache::forget($cache);
-        return parent::update($input, $id);
+        return parent::update($input, $id);*/
+
+        $result = parent::update($input, $id);
+        $this->flushCache();
+        return $result;
     }
 
     /**
@@ -125,18 +167,12 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function index()
     {
-        $cache="index";
-        //Cache::forget($cache);
-        $articles= Cache::remember($cache, now()->add(1,'day'), function () {
-            $data= $articles= Article::Published()
-            ->with(['countries','rubrique','sousrubrique'])
-                ->orderByDesc('dateparution')
-                ->limit(100)
-                ->get();
-            return ArticleResource::collection($data);
-        });
-
-        return $articles;
+       return $this->remember('index', now()->addMinutes(10), fn () =>
+        $this->toArray(
+            Article::Published()->with(self::RELATIONS)
+                ->orderByDesc('dateparution')->limit(100)->get()
+            )
+        );
     }
 
     /**
@@ -146,25 +182,26 @@ class ArticleRepository extends Repository implements IArticleRepository
     function getArticleByUser($user,$perPage=10)
     {
 
-        $cache="Article-By-User-".$user;
-        Cache::forget($cache);
-        //dd($cache);
-        $articles= Cache::remember($cache, now()->add(1,'day'), function () use ($user,$perPage){
+        $page = request()->integer('page', 1);
 
-            $ids=Article::select('idarticle')
-                ->orderByDesc('dateparution')
-                ->take(100)
-                ->pluck('idarticle');
-
-            $data= Article::with(['countries','rubrique','sousrubrique'])
-                ->where('fkuser',$user)
-                ->whereIn('idarticle',$ids)
+        return $this->remember("user_{$user}_p{$page}_{$perPage}", now()->addMinutes(10), function () use ($user, $perPage) {
+            $paginator = $this->base()
+                ->where('fkuser', $user)
                 ->orderByDesc('dateparution')
                 ->paginate($perPage);
-            return ArticleResource::collection($data);
+
+            return [
+                'data' => $this->toArray($paginator->getCollection()),
+                'meta' => [
+                    'total'        => $paginator->total(),
+                    'per_page'     => $paginator->perPage(),
+                    'current_page' => $paginator->currentPage(),
+                    'last_page'    => $paginator->lastPage(),
+                ],
+            ];
         });
-        //dd($articles);
-        return $articles;
+
+
     }
 
 
@@ -252,22 +289,15 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticleBySlug($slug)
     {
-        $cacheKey=md5("article:{$slug}");
-        $article = Cache::remember($cacheKey, now()->addMinutes(5), function () use ($slug) {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->where('slug', $slug)->firstOrFail();
+        $article = $this->remember('slug_' . md5($slug), now()->addMinutes(10), function () use ($slug) {
+            // 'none' = marqueur "introuvable" pour mettre le 404 en cache aussi
+            return $this->base()->where('slug', $slug)->first() ?? 'none';
         });
-        //if($article){
-            /*Article::withoutEvents(function () use ($article){
-                $article->incrementHits();
-            });*/
-        dispatch(function () use ($article) {
+        if ($article === 'none') {
+            throw (new \Illuminate\Database\Eloquent\ModelNotFoundException)->setModel(Article::class);
+        }
 
-            Article::withoutEvents(function () use ($article) {
-                    $article->incrementHits();
-                });
-        })->afterResponse();
-        //}
+        $this->trackHit($article->getKey());
 
         return $article;
     }
@@ -278,23 +308,22 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getTopNews(string $period)
     {
-        $cacheKey = "top_news_{$period}";
-        //Cache::forget($cacheKey);
-        $date = match ($period){
-            'week'=>now()->subWeek(),
-            'month'=>now()->subMonth(),
-            'year'=>now()->subYear(),
-            default => throw new InvalidArgumentException("Invalid period: {$period}"),
+        $date = match ($period) {
+            'week'  => now()->subWeek(),
+            'month' => now()->subMonth(),
+            'year'  => now()->subYear(),
+            default => throw new \InvalidArgumentException("Invalid period: {$period}"),
         };
-        $articles= Cache::remember($cacheKey, now()->addDay(), function () use ($date) {
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->whereDate('dateref', $date->toDateString())
-                ->orderByDesc('hit')
-                ->limit(5)
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+
+        return $this->remember("top_news_{$period}", now()->addHours(6), fn () =>
+        $this->toArray(
+            $this->base()
+                ->where('dateref', '>=', $date)      // pas whereDate => index utilisable
+                ->where('dateparution', '<=', now())
+                ->orderByDesc('hit')->limit(5)->get()
+            )
+        );
+
     }
 
     /**
@@ -303,26 +332,17 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getSameRubrique(int $fksousrubrique,int $idarticle)
     {
-        //$strForCache=(string)$fksousrubrique;
-        $cacheKey = 'same_rubrique_' . $fksousrubrique . '_' . $idarticle;
-        $articles= Cache::remember($cacheKey, now()->addMinute(15), function () use ($fksousrubrique,$idarticle) {
-            $ids=Article::select('idarticle')
-                        ->where('fksousrubrique',$fksousrubrique)
-                        ->where('idarticle','<>',$idarticle)
-                        ->orderByDesc('dateparution')
-                        ->limit(10)
-                        ->pluck('idarticle');
-            if ($ids->isEmpty()) {
-                return [];
-            }
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->whereIn('idarticle', $ids)
-                ->orderByDesc('dateparution')
-                ->select('*')
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+        return Cache::flexible(
+            "art:v{$this->version()}:same_rubrique_{$fksousrubrique}",
+            [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('fksousrubrique',$fksousrubrique)
+                    ->orderByDesc('dateparution')
+                    ->limit(10)
+                    ->get()
+            )
+        );
     }
 
     /**
@@ -332,18 +352,20 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getMostReadRubriqueByCountry($fksousrubrique, $fkpays)
     {
-        $strfksousrubrique=(string)$fksousrubrique.$fkpays;
-        $cacheKey = md5($strfksousrubrique);
-        $articles= Cache::remember($cacheKey, now()->addDay(), function () use ($fksousrubrique,$fkpays) {
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->where('fksousrubrique',$fksousrubrique)
-                ->where('fkpays',$fkpays)
-                ->orderByDesc('hit')
-                ->limit(5)
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+        return Cache::flexible(
+            "art:v{$this->version()}:most_read_{$fksousrubrique}_{$fkpays}",
+            [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('fksousrubrique', $fksousrubrique)
+                    ->where('fkpays', $fkpays)
+                    ->where('dateparution', '<=', now())
+                    ->orderByDesc('hit')
+                    ->orderByDesc('dateparution')   // départage les égalités
+                    ->limit(5)
+                    ->get()
+            )
+        );
 
     }
 
@@ -352,28 +374,32 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getMostReaded()
     {
-        $cacheKey = "most_read";
-        $articles= Cache::remember($cacheKey, now()->addDay(1), function ()  {
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->orderByDesc('hit')
-                ->limit(5)
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+       return Cache::flexible(
+            "art:v{$this->version()}:most_readed",
+            [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
+            fn () => $this->toArray(
+                $this->base()
+                    ->orderByDesc('hit')
+                    ->orderByDesc('dateparution')   // départage les égalités
+                    ->limit(5)
+                    ->get()
+            )
+        );
     }
     function getMostReadedByRubrique(int $fksousrubrique)
     {
-        $cacheKey =md5("most_read".(string)$fksousrubrique) ;
-        $articles= Cache::remember($cacheKey, now()->addDay(1), function () use($fksousrubrique)  {
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->where('fksousrubrique',$fksousrubrique)
-                ->orderByDesc('hit')
-                ->limit(5)
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+        return Cache::flexible(
+            "art:v{$this->version()}:most_readed_{$fksousrubrique}",
+            [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('fksousrubrique',$fksousrubrique)
+                    ->orderByDesc('hit')
+                    ->orderByDesc('dateparution')   // départage les égalités
+                    ->limit(5)
+                    ->get()
+            )
+        );
     }
 
     /**
@@ -382,43 +408,32 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getNewsByAuthor($author)
     {
-        $cacheKey = "news_by_author_".$author;
-        $articles= Cache::remember($cacheKey, now()->addDay(), function () use($author) {
-            $ids=Article::select('idarticle')
-                ->where('auteur',$author)
-                ->where('dateparution', '<=', now())
-                ->orderByDesc('dateparution')
-                ->limit(100)
-                ->pluck('idarticle');
-
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->whereIn('idarticle', $ids)
-                ->orderByDesc('dateparution')
-                ->select('*')
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+        return Cache::flexible(
+            "art:v{$this->version()}:news_by_author_{$author}",
+            [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('auteur',$author)
+                    ->where('dateparution', '<=', now())
+                    ->orderByDesc('dateparution')   // départage les égalités
+                    ->limit(100)
+                    ->get()
+            )
+        );
     }
     function getMostReadedNewsByAuthor($author)
     {
-        $cacheKey = "most_Reade_news_by_author_".$author;
-        $articles= Cache::remember($cacheKey, now()->addDay(), function () use($author) {
-            $ids=Article::select('idarticle')
-                ->where('auteur',$author)
-                ->where('dateparution', '<=', now())
-                ->orderByDesc('hit')
-                ->limit(5)
-                ->pluck('idarticle');
-
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->whereIn('idarticle', $ids)
-                ->orderByDesc('hit')
-                ->select('*')
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+        return Cache::flexible(
+            "art:v{$this->version()}:most_Readed_news_by_author_{$author}",
+            [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('auteur',$author)
+                    ->orderByDesc('hit')   // départage les égalités
+                    ->limit(5)
+                    ->get()
+            )
+        );
     }
 
     /**
@@ -481,27 +496,16 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getRubriqueArticles($fksousrubrique, $fkrubrique)
     {
-        $strForCache=(string)$fksousrubrique.(string)$fkrubrique;
-        $cacheKey = "cache_".md5($strForCache);
-        //dd($cacheKey);
-        //Cache::forget($cacheKey);
-        $articles= Cache::remember($cacheKey, now()->addMinute(30), function () use($fksousrubrique,$fkrubrique) {
-            $ids=Article::select('idarticle')
+        return $this->remember("rubrique_{$fkrubrique}_{$fksousrubrique}", now()->addMinutes(30), fn () =>
+        $this->toArray(
+            $this->base()
                 ->where('fkrubrique', $fkrubrique)
                 ->where('fksousrubrique', $fksousrubrique)
                 ->where('dateparution', '<=', now())
                 ->orderByDesc('dateparution')
-                ->limit(100)
-                ->pluck('idarticle');
-
-            $data= Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->whereIn('idarticle', $ids)
-                ->orderByDesc('dateparution')
-                ->select('*')
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+                ->limit(100)->get()
+        )
+        );
     }
 
     /**
@@ -526,15 +530,16 @@ class ArticleRepository extends Repository implements IArticleRepository
     }
 
     public function getArticlesByCategory($fksousrubrique){
-        $cache=$fksousrubrique.'_'.MD5($fksousrubrique);
-        $articles=Cache::remember($cache,now()->addMinute(10),function () use($fksousrubrique){
-            $data=Article::with(['countries', 'rubrique', 'sousrubrique'])
-                ->where('fksousrubrique',$fksousrubrique)
-                ->orderByDesc('dateparution')
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-        });
-        return $articles;
+       return Cache::flexible(
+            "art:v{$this->version()}:{$fksousrubrique}",
+            [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('fksousrubrique',$fksousrubrique)
+                    ->orderByDesc('dateparution')
+                    ->get()
+            )
+        );
     }
     public function getCategories(){
         $cache="getCategories";
@@ -558,6 +563,14 @@ class ArticleRepository extends Repository implements IArticleRepository
         });
         //dd(new ArticleResource($article));
         return new ArticleResource($article);
+
+    }
+
+    private function trackHit($getKey)
+    {
+        dispatch(fn () => Article::withoutEvents(
+            fn () => Article::whereKey($getKey)->increment('hit')
+        ))->afterResponse();
     }
 
 
