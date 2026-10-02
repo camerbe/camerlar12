@@ -503,7 +503,7 @@ class Helper
                     ->get('https://www.googleapis.com/youtube/v3/videos', [
                         'id'   => $youtubeId,
                         'part' => 'snippet,contentDetails',
-                        'key'  => config('services.youtube.key'),
+                        'key'  => config('analytics.youtube-api-key'),
                     ]);
             } catch (\Illuminate\Http\Client\ConnectionException $e) {
                 Log::warning("YouTube API injoignable pour {$youtubeId} : {$e->getMessage()}");
