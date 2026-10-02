@@ -5,6 +5,7 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use DOMDocument;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -494,28 +495,28 @@ class Helper
 
     public static function getYoutubeApi(string $youtubeId)
     {
-        $response = Cache::remember("yt_{$youtubeId}", now()->addHours(12), function () use ($youtubeId) {
-            return Http::timeout(5)->connectTimeout(3)->retry(2, 200)
-                ->get('https://www.googleapis.com/youtube/v3/videos', [
-                    'id' => $youtubeId,
-                    'part' => 'snippet,contentDetails',
-                    'key' => config('services.youtube.key'),
-                ])->json();
+        return Cache::remember("yt_{$youtubeId}", now()->addHours(12), function () use ($youtubeId) {
+            try {
+                $response = Http::timeout(10)
+                    ->connectTimeout(5)
+                    ->retry(2, 300)
+                    ->get('https://www.googleapis.com/youtube/v3/videos', [
+                        'id'   => $youtubeId,
+                        'part' => 'snippet,contentDetails',
+                        'key'  => config('services.youtube.key'),
+                    ]);
+            } catch (\Illuminate\Http\Client\ConnectionException $e) {
+                Log::warning("YouTube API injoignable pour {$youtubeId} : {$e->getMessage()}");
+                return null;
+            }
+
+            if ($response->failed()) {
+                Log::warning("YouTube API : erreur {$response->status()} pour {$youtubeId}");
+                return null;
+            }
+
+            return $response->json('items.0');
         });
 
-       /* $response = Http::get('https://www.googleapis.com/youtube/v3/videos', [
-            'id'   => $youtubeId,
-            'part' => 'snippet,contentDetails',
-            'key'  => config('analytics.youtube-api-key'),
-        ]);*/
-
-        if ($response->failed()) {
-            return null;
-        }
-
-        $item = $response->json('items.0');
-
-        return $item ?? null;
-        }
-
+    }
 }
