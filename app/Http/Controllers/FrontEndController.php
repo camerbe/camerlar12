@@ -39,6 +39,9 @@ use Illuminate\Support\Str;
     private $collectionPageSchema;
     private $evenement;
 
+    private ?array $sopieCache = null;
+    private ?array $camerCache = null;
+
     /**
      * @param $articleService
      */
@@ -75,13 +78,13 @@ use Illuminate\Support\Str;
             return $array['data'];
         });
         //------------------ Video Sopie
-        $data=$this->video->getOneVideo('Sopie');
+        /*$data=$this->video->getOneVideo('Sopie');
         $array = json_decode($data->getContent(), true);
         $this->sopie= $array['data'];
         //------------------ Video Camer
         $data=$this->video->getOneVideo('Camer');
         $array = json_decode($data->getContent(), true);
-        $this->camer = $array['data'];
+        $this->camer = $array['data'];*/
         /**************** Archives *********************/
         $cacheKey=md5('archive');
         //Cache::forget( $cacheKey);
@@ -128,21 +131,38 @@ use Illuminate\Support\Str;
             'archives'=>$this->archives,
             'banner'=>$this->pub728,
             'skypper'=>$this->pub300,
-            'camer'=>$this->camer,
-            'sopie'=>$this->sopie,
             'droit'=>$this->droit,
             'debat'=>$this->debat,
             'event'=>$this->evenement,
             'iframe'=>$this->pubIframe,
         ]);
+        $videos = null;
+        view()->composer('*', function ($view) use (&$videos) {
+            // Chargé une seule fois par requête, et seulement si une vue est rendue
+            $videos ??= [
+                'sopie' => $this->loadVideo('Sopie'),
+                'camer' => $this->loadVideo('Camer'),
+            ];
+
+            $view->with($videos);
+        });
     }
 
 
+    private function loadVideo(string $name): array
+    {
+        try {
+            $response = $this->video->getOneVideo($name);
 
+            return json_decode($response->getContent(), true)['data'] ?? [];
+        }
+        catch (\Throwable $e) {
+            report($e);
+
+            return [];
+        }
+    }
     public function laUne(){
-        /*$data = $this->api->getArticles();   // API call
-        $heroArticle=$this->latestArticle;
-        $array = json_decode($heroArticle->getContent(), true);*/
 
         $heroArticle=$this->latestArticle();
         $this->listItemArticle=$this->collectionPageSchema->articles($this->listItemArticle);

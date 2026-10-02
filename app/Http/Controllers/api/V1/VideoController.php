@@ -192,7 +192,7 @@ class VideoController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($videos)),
+
                     'X-Response-Time' => now(),
                 ]);
         }

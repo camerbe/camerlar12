@@ -21,7 +21,8 @@
     $canonical=url()->current();
     $source=$videos[0]["typevideo"];
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
-    $published_time=\Carbon\Carbon::parse($snippet['publishedAt'])->format('Y-m-d\TH:i:s+00:00');
+    $published_time=(count($snippet)>0) ? \Carbon\Carbon::parse($snippet['publishedAt'])->format('Y-m-d\TH:i:s+00:00')
+        : \Carbon\Carbon::parse(now())->format('Y-m-d\TH:i:s+00:00');
     $georegion =$videos[0]["typevideo"]==="Camer"? "BE" : "FR";
     $geoplacename=$videos[0]["typevideo"]==="Camer"? "Belgique" : "France";
     //listItemVideos=$listItemVideos

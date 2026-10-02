@@ -51,7 +51,7 @@ class Helper
         if (preg_match('#^https?://#i', $src)) {
             return $src;
         }
-
+        //dd(config('app.url'));
         // URL protocol-relative (//cdn.example.com/img.jpg)
         if (str_starts_with($src, '//')) {
             $scheme = config('app.url') && str_starts_with(config('app.url'), 'https') ? 'https:' : 'https:';
