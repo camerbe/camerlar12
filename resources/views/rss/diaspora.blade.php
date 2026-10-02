@@ -19,14 +19,17 @@
 
                     $auteur=str_replace("&", "et", $item["auteur"]);
                     $rub=Illuminate\Support\Str::slug($item["rubrique"]["rubrique"]);
-                    $sousrub=Illuminate\Support\Str::slug($item["rubrique"]["rubrique"]);
+                    $sousrub=Illuminate\Support\Str::slug($item["sousrubrique"]["sousrubrique"]);
                     $img=$item["image_url"];
                     $mimeType = $item["image_mimetype"];
+                    $tempUrl=App\Helpers\Helper::makeUrl($rub,$sousrub,$item["slug"]);
                     $titre=App\Helpers\Helper::getTitle($item["countries"]["pays"],$item["titre"],$item["countries"]["country"]);
+                    $url=url("/{$tempUrl}");
+
                 @endphp
             <item>
                 <title><![CDATA[{{ $titre }}]]></title>
-                <link>{{ url('/' . $rub.'/'.$sousrub.'/'.$item["slug"]) }}</link>
+                <link> {{$url}} </link>
                 <description>
                     <![CDATA[
                     <p>{!! $item["chapeau"] !!}</p>
@@ -35,7 +38,7 @@
                     @endif
                     ]]>
                 </description>
-                <guid isPermaLink="true">{{ url('/' . $rub.'/'.$sousrub.'/'.$item["slug"]) }}</guid>
+                <guid isPermaLink="true">{{$url}}</guid>
                 <content:encoded><![CDATA[{!! $item["info"] ?? $item["chapeau"] !!}]]></content:encoded>
                 <pubDate>{{ \Carbon\Carbon::parse($item["dateparution"])->toRssString()}}</pubDate>
                 @if($auteur)

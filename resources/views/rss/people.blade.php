@@ -19,7 +19,7 @@
 
                     $auteur=str_replace("&", "et", $item["auteur"]);
                     $rub=Illuminate\Support\Str::slug($item["rubrique"]["rubrique"]);
-                    $sousrub=Illuminate\Support\Str::slug($item["rubrique"]["rubrique"]);
+                    $sousrub=Illuminate\Support\Str::slug($item["sousrubrique"]["sousrubrique"]);
                     $img=$item["image_url"];
                     $mimeType = $item["image_mimetype"];
                     $titre=App\Helpers\Helper::getTitle($item["countries"]["pays"],$item["titre"],$item["countries"]["country"]);
