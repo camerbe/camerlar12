@@ -138,11 +138,13 @@ class RssController extends Controller
         $result = collect($this->categories)->first(function ($item) use ($sousrubrique) {
             return $item['sousrubrique'] === $sousrubrique;
         });
+        $sousrub=Str::slug($sousrubrique);
+        $view="rss.{$sousrub}";
         $id=$result['id'] ?? null;
         $items=$this->articleService->getArticlesByCategory($id);
         $items = collect($items)->take(20);
 
-        $rss = View::make('rss.sport', compact('items'));
+        $rss = View::make($view, compact('items'));
         return response($rss, 200)->header('Content-Type', 'application/xml');
     }
 

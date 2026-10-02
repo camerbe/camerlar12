@@ -78,9 +78,13 @@ class SitemapController extends Controller
         //dd($articles);
         $articleSitemap = Sitemap::create('');
         foreach ($articles as $article){
-
+            $rub=$article["rubrique"]["rubrique"];
+            $sousrub=$article["sousrubrique"]["sousrubrique"];
+            $sousrub=$article["sousrubrique"]["sousrubrique"];
+            $slug=$article["slug"];
+            $tmpUrl=Helper::makeUrl($rub,$sousrub,$slug);
             $image=$article["image_url"];
-            $url= new Url("/{$article["slug"]}");
+            $url= new Url("/{$tmpUrl}");
             $url->setLastModificationDate(Carbon::parse($article["dateparution"]))
                 ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
                 ->setPriority(0.8);
@@ -97,8 +101,13 @@ class SitemapController extends Controller
         $sitemap = Sitemap::create('');
         foreach ($articles as $article){
             $image=$article["image_url"];
+            $rub=$article["rubrique"]["rubrique"];
+            $sousrub=$article["sousrubrique"]["sousrubrique"];
+            $sousrub=$article["sousrubrique"]["sousrubrique"];
+            $slug=$article["slug"];
+            $tmpUrl=Helper::makeUrl($rub,$sousrub,$slug);
             $titre=Helper::getTitle($article["countries"]["pays"],$article["titre"],$article["countries"]["country"]);
-            $url= new Url("/{$article["slug"]}");
+            $url= new Url("/{$tmpUrl}");
             $url->setChangeFrequency(Url::CHANGE_FREQUENCY_HOURLY)
                 ->setPriority(0.9);
             $url->addNews(
@@ -228,7 +237,12 @@ class SitemapController extends Controller
         foreach ($articles as $article){
             $image=$article["image_url"];
             $titre=Helper::getTitle($article["countries"]["pays"],$article["titre"],$article["countries"]["country"]);
-            $url= new Url("/{$article["slug"]}");
+            $rub=$article["rubrique"]["rubrique"];
+            $sousrub=$article["sousrubrique"]["sousrubrique"];
+            $sousrub=$article["sousrubrique"]["sousrubrique"];
+            $slug=$article["slug"];
+            $tmpUrl=Helper::makeUrl($rub,$sousrub,$slug);
+            $url= new Url("/{$tmpUrl}");
             $url->setLastModificationDate(Carbon::parse($article["dateparution"]))
                 ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
                 ->setPriority(0.8);
