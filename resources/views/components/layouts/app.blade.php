@@ -151,8 +151,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        @livewireStyles
-        @fluxAppearance
+
 
         {{-- =========================================================
         14. GOOGLE ANALYTICS
@@ -184,6 +183,8 @@
             if(window.performance && typeof window.performance.mark == 'function')
             {window.performance.mark('tbl_ic');}
         </script>
+        @livewireStyles
+        @fluxAppearance
     </head>
     <body class="bg-gray-50 text-gray-900 dark:bg-dark-bg dark:text-gray-100 font-sans antialiased transition-colors duration-200">
 
@@ -205,8 +206,7 @@
 
         <livewire:footer :archives="$archives"/>
         @include('partials.googletagmanager')
-        @livewireScripts
-        @fluxScripts
+
         <script>
             lucide.createIcons();
 
@@ -222,6 +222,7 @@
             });
         </script>
         @stack('scripts')
-
+        @livewireScripts
+        @fluxScripts
     </body>
 </html>
