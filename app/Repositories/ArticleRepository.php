@@ -226,6 +226,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         $ids = Article::query()
             ->Search($search)
+            ->where('dateparution', '<=', now())
             ->orderByDesc('dateparution')
             ->limit(100)
             ->pluck('idarticle');
@@ -338,6 +339,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             fn () => $this->toArray(
                 $this->base()
                     ->where('fksousrubrique',$fksousrubrique)
+                    ->where('dateparution', '<=', now())
                     ->orderByDesc('dateparution')
                     ->limit(10)
                     ->get()
@@ -379,6 +381,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
                 $this->base()
+                    ->where('dateparution', '<=', now())
                     ->orderByDesc('hit')
                     ->orderByDesc('dateparution')   // départage les égalités
                     ->limit(5)
@@ -394,6 +397,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             fn () => $this->toArray(
                 $this->base()
                     ->where('fksousrubrique',$fksousrubrique)
+                    ->where('dateparution', '<=', now())
                     ->orderByDesc('hit')
                     ->orderByDesc('dateparution')   // départage les égalités
                     ->limit(5)
