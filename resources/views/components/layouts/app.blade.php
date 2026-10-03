@@ -184,6 +184,10 @@
         <livewire:footer :archives="$archives"/>
         @include('partials.googletagmanager')
 
+
+        @stack('scripts')
+        @livewireScripts
+        @fluxScripts
         <script>
             lucide.createIcons();
 
@@ -198,9 +202,7 @@
                 });
             });
         </script>
-        @stack('scripts')
-        @fluxScripts
-        @livewireScripts
+
 
     </body>
 </html>
