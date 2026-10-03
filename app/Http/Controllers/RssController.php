@@ -142,7 +142,7 @@ class RssController extends Controller
         $view="rss.{$sousrub}";
         $id=$result['id'] ?? null;
         $items=$this->articleService->getArticlesByCategory($id);
-        $items = collect($items)->take(20);
+        //$items = collect($items)->take(20);
 
         $rss = View::make($view, compact('items'));
         return response($rss, 200)->header('Content-Type', 'application/xml');

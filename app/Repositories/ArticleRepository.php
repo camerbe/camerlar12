@@ -536,7 +536,9 @@ class ArticleRepository extends Repository implements IArticleRepository
             fn () => $this->toArray(
                 $this->base()
                     ->where('fksousrubrique',$fksousrubrique)
+                    ->where('dateparution', '<=', now())
                     ->orderByDesc('dateparution')
+                    ->limit(20)
                     ->get()
             )
         );
