@@ -124,31 +124,9 @@
         ===================================================== -->
         <!-- Lucide Icons -->
         <script src="https://unpkg.com/lucide@latest"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
 
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-
-            gtag('consent', 'default', {
-                analytics_storage: 'denied',
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied',
-                wait_for_update: 500
-            });
-
-            gtag('js', new Date());
-
-            gtag('config', '{{config('analytics.googletagmanager-id')}}', {
-                send_page_view: true
-            });
-        </script>
-
-
-
-
+        @livewireStyles
+        @fluxAppearance
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 
@@ -183,8 +161,7 @@
             if(window.performance && typeof window.performance.mark == 'function')
             {window.performance.mark('tbl_ic');}
         </script>
-        @livewireStyles
-        @fluxAppearance
+
     </head>
     <body class="bg-gray-50 text-gray-900 dark:bg-dark-bg dark:text-gray-100 font-sans antialiased transition-colors duration-200">
 
@@ -222,7 +199,8 @@
             });
         </script>
         @stack('scripts')
-        @livewireScripts
         @fluxScripts
+        @livewireScripts
+
     </body>
 </html>
