@@ -7,6 +7,7 @@ use App\Services\ArticleService;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
@@ -25,9 +26,14 @@ class RssController extends Controller
     }
     public function feed(){
 
-        $items=ArticleResource::collection($this->articleService->getNewsForRss());
+        $items=Cache::flexible('rss',[300,900],function(){
+            return ArticleResource::collection($this->articleService->getNewsForRss());
+        });
+
         $rss = View::make('rss.feed', compact('items'));
-        return response($rss, 200)->header('Content-Type', 'application/xml');
+        return response($rss, 200)
+                ->header('Content-Type', 'application/xml')
+                ->header('Cache-Control', 'public, max-age=300');
     }
 
 
@@ -141,7 +147,11 @@ class RssController extends Controller
         $sousrub=Str::slug($sousrubrique);
         $view="rss.{$sousrub}";
         $id=$result['id'] ?? null;
-        $items=$this->articleService->getArticlesByCategory($id);
+
+        $items=Cache::flexible($sousrubrique,[300,900],function () use($id){
+            $this->articleService->getArticlesByCategory($id);
+        });
+
         //$items = collect($items)->take(20);
 
         $rss = View::make($view, compact('items'));

@@ -50,6 +50,7 @@ class Article extends Model implements HasMedia
         Cache::forget('articles_droit_json');
         Cache::forget('articles_debat_json');
         Cache::forget('index');
+        Cache::forget('rss');
         Cache::forget('laUne');
         for($i=0;$i<10;$i++){
             $idx=$i+1;
