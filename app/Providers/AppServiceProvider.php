@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->singleton(ServiceController::class);
     }
 
     /**
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
         //
         if (app()->environment('local')) {
             DB::listen(function ($query) {
@@ -54,5 +57,9 @@ class AppServiceProvider extends ServiceProvider
             ];
             $view->with('rssFeeds', $rssFeeds);
         });
+
+
     }
+
+
 }

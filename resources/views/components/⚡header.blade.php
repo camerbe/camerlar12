@@ -10,9 +10,7 @@ new class extends Component
 
 
     public function mount(ArticleService $articleService){
-        $rawArticles=$articleService->getArticles();
-        $collection = collect($rawArticles);
-        $this->trendingArticles = $collection->slice(1, 10)->values()->toArray();
+        $this->trendingArticles = $articleService->getFlashArticles(10);
 
     }
 };
@@ -92,6 +90,7 @@ new class extends Component
                                 <div
                                     x-show="open"
                                     x-transition
+                                    x-cloak
                                     class="absolute left-0 top-full mt-4 bg-white dark:bg-gray-900 shadow-xl rounded-xl p-6 w-[700px] z-50"
                                 >
                                     <div class="grid grid-cols-4 gap-4">
@@ -137,6 +136,7 @@ new class extends Component
                                 <div
                                     x-show="open"
                                     x-transition
+                                    x-cloak
                                     class="absolute mt-3 bg-white dark:bg-gray-900 shadow-lg rounded-lg w-56 z-50"
                                 >
                                     @foreach($item['links'] as $label => $link)
@@ -159,7 +159,8 @@ new class extends Component
                 <!-- ACTIONS -->
                 <div class="flex items-center space-x-3">
                     <!--<button class="p-2">🔍</button>-->
-                    <livewire:search-navbar/>
+
+                    @include('partials.search-navbar')
                     <!-- BURGER -->
                     <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2">
                         ☰
@@ -168,7 +169,7 @@ new class extends Component
             </div>
 
             <!-- MOBILE MENU -->
-            <div x-show="mobileOpen" x-transition class="lg:hidden pb-4">
+            <div x-show="mobileOpen" x-cloak x-transition class="lg:hidden pb-4">
                 <nav class="space-y-3">
 
                     @foreach($menu as $item)
@@ -190,7 +191,7 @@ new class extends Component
                                     </svg>
                                 </button>
 
-                                <div x-show="open" class="pl-4 mt-2 space-y-2">
+                                <div x-show="open" x-cloak class="pl-4 mt-2 space-y-2">
                                     @foreach($item['sections'] as $section)
                                         <div>
                                             <div class="text-xs text-gray-400">{{ $section['label'] }}</div>
@@ -217,7 +218,7 @@ new class extends Component
                                     </svg>
                                 </button>
 
-                                <div x-show="open" class="pl-4 mt-2 space-y-1">
+                                <div x-show="open" x-cloak class="pl-4 mt-2 space-y-1">
                                     @foreach($item['links'] as $label => $link)
                                         <a href="{{ $link }}" class="block text-sm">
                                             {{ $label }}
@@ -231,15 +232,7 @@ new class extends Component
 
                 </nav>
 
-                <!-- Actions
-                <div class="flex items-center space-x-4">
-                    <button aria-label="Rechercher" class="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    </button>
-                    <a href="#" class="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-gray-900 bg-highlight-500 hover:bg-highlight-600 rounded-md shadow transition">
-                        Abonnez-vous
-                    </a>
-                </div>-->
+
 
             </div>
         </div>
@@ -253,11 +246,12 @@ new class extends Component
             </span>
             <div class="overflow-hidden whitespace-nowrap relative w-full">
                 <div class="animate-marquee font-medium" style="animation-duration: {{ $duration }}s;">
-                    <livewire:flash-info :articles="$trendingArticles"/>
+                    @include('partials.flash-info',[
+                    'articles'=>$trendingArticles])
                 </div>
 
             </div>
         </div>
     </div>
-    
+
 </div>

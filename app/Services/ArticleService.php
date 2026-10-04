@@ -96,4 +96,7 @@ class ArticleService
     function getMostReadedByRubrique(int $fksousrubrique){
         return $this->articleRepository->getMostReadedByRubrique($fksousrubrique);
     }
+    function getFlashArticles(int $limit){
+        return $this->articleRepository->getFlashArticles($limit);
+    }
 }

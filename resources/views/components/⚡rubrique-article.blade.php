@@ -20,14 +20,14 @@ new class extends Component
     public $debat;
     public $droit;
     public $skypper;
+    public $iframe;
     public string $cacheKey;
 
     public function mount($rubriqueArticles){
         $this->cacheKey = "rubrique_articles_{$rubriqueArticles[0]['sousrubrique']['sousrubrique']}_" . md5(serialize(array_column($rubriqueArticles, 'id')));
-        //$this->rubriqueArticles=$rubriqueArticles;
         Cache::put($this->cacheKey, $rubriqueArticles, now()->addMinutes(10));
         $this->updateFeed($rubriqueArticles);
-        //$this->feedArticles=array_slice($this->rubriqueArticles, 1,$this->perPage);
+
     }
     public function loadMore(){
 

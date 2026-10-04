@@ -172,7 +172,7 @@
         <div class="w-full bg-gray-100 dark:bg-dark-surface py-4 border-b border-gray-200 dark:border-dark-border">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
                 <div class="w-full max-w-[970px] h-full sm:h-[250px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg flex items-center justify-center overflow-hidden shadow-sm">
-                    <livewire:banner :banner="$banner"/>
+                    <livewire:banner lazy :banner="$banner"/>
                     @include('partials.adsense-display')
                 </div>
             </div>

@@ -110,9 +110,8 @@ new class extends Component
     #[Computed]
     public function mostReaded()
     {
-        return collect(
-            app(ArticleService::class)->getMostReaded()
-        )->values()->toArray();
+
+        return app(ArticleService::class)->getMostReaded();
     }
 
     /*public function loadMore(): void

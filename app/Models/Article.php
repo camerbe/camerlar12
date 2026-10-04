@@ -73,7 +73,7 @@ class Article extends Model implements HasMedia
         return $this->belongsTo(User::class,'fkuser');
     }
 
-    protected $with = ['media'];
+    //protected $with = ['media'];
     public function registerMediaCollections():void{
         $this->addMediaCollection('article')
             ->registerMediaConversions(function(Media $media){

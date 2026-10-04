@@ -206,7 +206,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($article)),
+                    'ETag' =>  md5('getArticleBySlug'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -245,7 +245,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getArticles'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -270,7 +270,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getTopNews'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -295,7 +295,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getSameRubrique'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -320,7 +320,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getMostReadRubriqueByCountry'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -345,7 +345,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getMostReaded'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -370,7 +370,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getMostReadedByRubrique'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -395,7 +395,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getNewsByAuthor'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -420,7 +420,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getMostReadedNewsByAuthor'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -446,7 +446,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('search'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -472,7 +472,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getNewsForRss'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -498,7 +498,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($countries)),
+                    'ETag' =>  md5('allCountries'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -524,7 +524,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($rubriques)),
+                    'ETag' =>  md5('allRubrique'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -547,7 +547,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($sport)),
+                    'ETag' =>  md5('getSportArticle'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -574,7 +574,7 @@ class ArticleController extends Controller
                     'X-Content-Type-Options' => 'nosniff',
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
-                    'ETag' =>  md5(json_encode($articles)),
+                    'ETag' =>  md5('getRubriqueArticles'),
                     'X-Response-Time' => now(),
                 ]);
         }
@@ -602,6 +602,33 @@ class ArticleController extends Controller
                     'X-Frame-Options' => 'DENY',
                     'X-XSS-Protection' => '1; mode=block',
                     'ETag' =>  md5(json_encode($article)),
+                    'X-Response-Time' => now(),
+                ]);
+        }
+        return response()->json([
+            "success"=>false,
+            "message"=>"Pas d'article trouvé"
+        ],Response::HTTP_NOT_FOUND);
+    }
+    public function getFlashArticles($limit){
+
+        $article=$this->articleService->getFlashArticles(10);
+        //dd($articles);
+        if ($article){
+            return response()->json([
+                'success'=>true,
+                'data'=>$article,
+                'message'=>"Liste des articles"
+            ],Response::HTTP_OK)
+                ->withHeaders([
+                    'Cache-Control' => 'public, max-age=3600',
+                    'Content-Type' => 'application/json; charset=utf-8',
+                    /*'Content-Encoding' => 'gzip',*/
+                    'Vary' => 'Accept-Encoding',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'X-Frame-Options' => 'DENY',
+                    'X-XSS-Protection' => '1; mode=block',
+                    'ETag' =>  md5(json_encode('getFlashArticles')),
                     'X-Response-Time' => now(),
                 ]);
         }

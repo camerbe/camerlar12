@@ -11,7 +11,8 @@ new class extends Component
     //
     public function mount($iframe){
         //dd($iframe);
-        $this->iframe=$iframe[0];
+        $this->iframe=$iframe[0]?? null;
+        if (is_null($this->iframe)) return;
         $this->pub=\App\Helpers\Helper::extractFromParagraph($this->iframe['pub']);
         if($this->pub) $this->isIframe=true;
 

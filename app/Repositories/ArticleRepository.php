@@ -167,9 +167,10 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function index()
     {
-       return $this->remember('index', now()->addMinutes(10), fn () =>
+       return $this->remember('index', now()->addMinutes(20), fn () =>
         $this->toArray(
             Article::Published()->with(self::RELATIONS)
+                ->where('dateparution','>=',now())
                 ->orderByDesc('dateparution')->limit(100)->get()
             )
         );
@@ -247,40 +248,18 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticles()
     {
-
-        $cache = 'Article-list';
-        $cacheExpiry = now()->addDay();
-        //Cache::forget($cache);
-        $articles= Cache::remember($cache, $cacheExpiry, function () {
-
-            $cmr = Article::Cameroon()
-                ->select('idarticle')
-                ->orderByDesc('dateparution')
-                ->limit(50);
-
-            $other = Article::Other()
-                ->select('idarticle')
-                ->orderByDesc('dateparution')
-                ->limit(50);
-
-            /*$nonCmrIds = Article::Other()
-                //->where('dateparution', '<=', now())
-                //->where('fkpays', '<>', 'CM')
-                ->orderByDesc('dateparution')
-                ->limit(50)
-                ->pluck('idarticle');*/
-
-            //$allIds = $cmrIds->merge($nonCmrIds);
-            $ids = $cmr->unionAll($other)
-                ->pluck('idarticle');
-
-            $data= Article::with(['countries','rubrique','sousrubrique'])
-                ->whereIn('idarticle', $ids)
-                ->orderByDesc('dateparution')
-                ->get();
-            return ArticleResource::collection($data)->resolve();
-            });
-        return $articles;
+        //Cache::forget("art:v{$this->version()}:article-flash");
+        return Cache::flexible(
+            "art:v{$this->version()}:article-flash",
+            [300,600],   // frais 5 min, servi périmé jusqu'à 10 min
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('dateparution','<=',now())
+                    ->latest('dateparution')
+                    ->limit(100)
+                    ->get()
+            )
+        );
 
     }
 
@@ -319,7 +298,7 @@ class ArticleRepository extends Repository implements IArticleRepository
         return $this->remember("top_news_{$period}", now()->addHours(6), fn () =>
         $this->toArray(
             $this->base()
-                ->where('dateref', '>=', $date)      // pas whereDate => index utilisable
+                ->where('dateref', '<=', $date)      // pas whereDate => index utilisable
                 ->where('dateparution', '<=', now())
                 ->orderByDesc('hit')->limit(5)->get()
             )
@@ -447,11 +426,10 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
 
         $cacheKey = "news_for_rss";
-        //Cache::forget($cacheKey);
         $articles= Cache::remember($cacheKey, now()->addDay(), function ()  {
-            return $this->index();
+            return  array_slice($this->index(),0,30) ;
         });
-        //dd($articles);
+
         return $articles;
     }
 
@@ -577,6 +555,22 @@ class ArticleRepository extends Repository implements IArticleRepository
         dispatch(fn () => Article::withoutEvents(
             fn () => Article::whereKey($getKey)->increment('hit')
         ))->afterResponse();
+    }
+    public function getFlashArticles(int $limit = 10): array
+    {
+        return Cache::flexible(
+            "art:v{$this->version()}:article-flash",
+            [300,600],   // frais 5 min, servi périmé jusqu'à 10 min
+            fn () => $this->toArray(
+                $this->base()
+                    ->where('dateparution','<=',now())
+                    ->latest('dateparution')
+                    ->limit($limit)
+                    ->get()
+            )
+        );
+
+
     }
 
 

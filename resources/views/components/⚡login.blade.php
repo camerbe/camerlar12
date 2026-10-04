@@ -158,6 +158,7 @@ new class extends Component
                 @else
                     <!-- FORMULAIRE MOT DE PASSE OUBLIÉ -->
                     <form wire:submit.prevent="sendResetLink" class="space-y-6">
+                        @csrf
                         <h2 class="text-xl font-bold text-gray-800 text-center border-b pb-3">
                             Récupération de mot de passe
                         </h2>

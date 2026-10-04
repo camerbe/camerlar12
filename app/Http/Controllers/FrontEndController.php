@@ -62,10 +62,13 @@ use Illuminate\Support\Str;
         $this->event=$event;
 
         /*-------------------- Accueil --------------------------------------------*/
-        $this->latestArticle=$this->api->laUne();
-        $array=json_decode($this->api->getArticles()->getContent(), true);
-        $this->listItemArticle=array_slice($array["data"],0,10);
+        $data=$this->api->laUne();
+        $array=json_decode($data->getContent(), true);
+        $this->latestArticle=$array["data"];
 
+        $data=$this->api->getFlashArticles(10);
+        $array=json_decode($data->getContent(), true);
+        $this->listItemArticle=$array["data"];
         /*-----------------------------------------------------------------*/
         $this->debat= Cache::remember('articles_debat_json', now()->addHours(12), function () {
             $data = $this->api->getOneRubriqueArticles(27,25);   // API call
@@ -101,7 +104,7 @@ use Illuminate\Support\Str;
             $data3 = $this->api->getTopNews('year');
             $arrayyear = json_decode($data3->getContent(), true);
             $arrayyear = $arrayyear["success"] ? $arrayyear["data"]:[];
-            //dd($arrayyear);
+
             return [
                 'week' => $arrayweek?? [],
                 'month' => $arraymonth ?? [],
@@ -121,6 +124,7 @@ use Illuminate\Support\Str;
         $dataIframe=$this->pub->getIframePub();
         $arrayIframe = json_decode($dataIframe->getContent(), true);
         $this->pubIframe=$arrayIframe['data'] ?? [];
+
         /**************** Event *********************/
         $dataEvent=$this->event->getCachedEvenements();
         $arrayEvent= json_decode($dataEvent->getContent(), true);
@@ -338,13 +342,14 @@ use Illuminate\Support\Str;
     }
 
     private  function latestArticle(){
-        $article=$this->latestArticle;
-        $array = json_decode($article->getContent(), true);
-        return $array['data'] ?? [];
+        //$article=$this->latestArticle;
+        //$array = json_decode($article->getContent(), true);
+        return $this->latestArticle;;
     }
     public function login(Request $request){
         $response=$this->apiAuth->login($request);
         dd($response);
     }
+
 
 }
