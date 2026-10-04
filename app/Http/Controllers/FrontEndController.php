@@ -279,6 +279,7 @@ use Illuminate\Support\Str;
         $cacheKey=md5($auteur);
         $articles=Cache::remember($cacheKey,now()->addHour(1),function() use($auteur){
             $data=$this->api->getNewsByAuthor($auteur);
+            dd($data);
             $array = json_decode($data->getContent(), true);
             return $array['data'];
         });

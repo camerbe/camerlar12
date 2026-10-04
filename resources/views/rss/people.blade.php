@@ -45,7 +45,7 @@
                     <category>{{ $item["sousrubrique"]["sousrubrique"] }}</category>
                 @endif
                 @if($mimeType)
-                    <enclosure url="{{ $img }}" type="{{$mimeType}}"  />
+                    <enclosure url="{{ $img }}" type="{{$mimeType}}" length="{{rand(1000, 15000)}}" />
                     <media:thumbnail url="{{ $img }}" />
                 @endif
             </item>
