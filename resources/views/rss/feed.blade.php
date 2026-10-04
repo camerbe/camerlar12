@@ -13,45 +13,38 @@
         <atom:link href="{{ url('/') }}/rss" rel="self" type="application/rss+xml" />
         <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>
         @foreach($items as $item)
+
             @php
-                $image= App\Helpers\Helper::extractImgSrc($item->image);
-                $image= App\Helpers\Helper::parseImageUrl($image);
-                $media = $item->getMedia('article')->where('name',$item->slug)->first();
-                $auteur=str_replace("&", "et", $item->auteur);
-                $rub=Illuminate\Support\Str::slug($item->rubrique->rubrique);
-                $sousrub=Illuminate\Support\Str::slug($item->sousrubrique->sousrubrique);
-                $img=App\Helpers\Helper::extractImgSrc($item->image);
-                //dd($media->getUrl());
-                /*->toMediaCollection('article');
-                 $mimeType = $media->mime_type;
-                 $sizeInBytes =$media->size;
-                $response = Http::head($image);
-                $mimeType = $response->header('Content-Type');
-                $sizeInBytes = $response->header('Content-Length');*/
-                $titre=App\Helpers\Helper::getTitle($item->countries->pays,$item->titre,$item->countries->country);
+
+                $auteur=str_replace("&", "et", $item["auteur"]);
+                $rub=Illuminate\Support\Str::slug($item["rubrique"]["rubrique"]);
+                $sousrub=Illuminate\Support\Str::slug($item["sousrubrique"]["sousrubrique"]);
+                $img=$item["image_url"];
+                $mimeType = $item["image_mimetype"];
+                $titre=App\Helpers\Helper::getTitle($item["countries"]["pays"],$item["titre"],$item["countries"]["country"]);
             @endphp
             <item>
                 <title><![CDATA[{{ $titre }}]]></title>
-                <link>{{ url('/' . $rub.'/'.$sousrub.'/'.$item->slug) }}</link>
+                <link>{{ url('/' . $rub.'/'.$sousrub.'/'.$item["slug"]) }}</link>
                 <description>
                     <![CDATA[
-                        <p>{!! $item->chapeau !!}</p>
-                        @if($media)
-                            <p><img src="{{ $img }}" alt="{{ $titre }}" width="600"/></p>
-                        @endif
-                        ]]>
+                    <p>{!! $item["chapeau"] !!}</p>
+                    @if($mimeType)
+                        <p><img src="{{ $img }}" alt="{{ $titre }}" width="600"/></p>
+                    @endif
+                    ]]>
                 </description>
-                <guid isPermaLink="true">{{ url('/' . $rub.'/'.$sousrub.'/'.$item->slug) }}</guid>
-                <content:encoded><![CDATA[{!! $item->info ?? $item->chapeau !!}]]></content:encoded>
-                <pubDate>{{ \Carbon\Carbon::parse($item->dateparution)->toRssString()}}</pubDate>
-                @if($item->auteur)
+                <guid isPermaLink="true">{{ url('/' . $rub.'/'.$sousrub.'/'.$item["slug"]) }}</guid>
+                <content:encoded><![CDATA[{!! $item["info"] ?? $item["chapeau"] !!}]]></content:encoded>
+                <pubDate>{{ \Carbon\Carbon::parse($item["dateparution"])->toRssString()}}</pubDate>
+                @if($auteur)
                     <author>{{$auteur}}</author>
                 @endif
-                @if($item->sousrubrique)
-                    <category>{{ $item->sousrubrique->sousrubrique }}</category>
+                @if($item["sousrubrique"])
+                    <category>{{ $item["sousrubrique"]["sousrubrique"] }}</category>
                 @endif
-                @if($media)
-                    <enclosure url="{{ $img }}" type="{{$media->mime_type}}" length="{{$media->size}}" />
+                @if($mimeType)
+                    <enclosure url="{{ $img }}" type="{{$mimeType}}"  />
                     <media:thumbnail url="{{ $img }}" />
                 @endif
             </item>
