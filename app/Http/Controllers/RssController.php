@@ -25,7 +25,7 @@ class RssController extends Controller
     }
     public function feed(){
 
-        $items=ArticleResource::collection($this->articleService->getNewsForRss()->take(20));
+        $items=ArticleResource::collection($this->articleService->getNewsForRss());
         $rss = View::make('rss.feed', compact('items'));
         return response($rss, 200)->header('Content-Type', 'application/xml');
     }
