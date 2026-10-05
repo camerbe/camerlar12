@@ -151,103 +151,68 @@ class Helper
 
     public static function FindYoutube($string)
     {
-
-        $attrs="";
-        $dom = new \DOMDocument();
-        $libxml_previous_state = libxml_use_internal_errors( true );
-//        $html=  ;
-
-        $dom->loadHTML(mb_convert_encoding( $string, 'HTML-ENTITIES', 'UTF-8'),LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
-
-        $iframes = $dom->getElementsByTagName('iframe');
-        foreach($iframes as $ifr)
-        {
-            $attrs = $ifr->getAttribute('src');
-            break;
+        if (blank($string) || stripos($string, '<iframe') === false) {
+            return '';
         }
-        return $attrs;
+
+        $dom = self::loadHtml($string);
+
+        foreach ($dom->getElementsByTagName('iframe') as $ifr) {
+            return $ifr->getAttribute('src');
+        }
+
+        return '';
     }
 
     public static function convertImgToAmpImg(string $html){
-        libxml_use_internal_errors(true);
-        $dom = new DOMDocument();
-        $dom->loadHTML(
-            mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'),
-            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-        );
+        if (stripos($html, '<img') === false) {
+            return $html;
+        }
+
+        $dom = self::loadHtml($html);
         $images = $dom->getElementsByTagName('img');
+
         for ($i = $images->length - 1; $i >= 0; $i--) {
-
             $img = $images->item($i);
+            $ampImg = $dom->createElement('amp-img');
 
-            // New amp-img
-            $ampImg = $dom->createElement("amp-img");
-
-            // Copy attributes
             foreach ($img->attributes as $attr) {
                 $ampImg->setAttribute($attr->nodeName, $attr->nodeValue);
             }
 
-            // AMP requirements
-            if (!$ampImg->hasAttribute("layout")) {
-                $ampImg->setAttribute("layout", "responsive");
-            }
+            $ampImg->setAttribute('layout', $ampImg->getAttribute('layout') ?: 'responsive');
+            $ampImg->setAttribute('width', $ampImg->getAttribute('width') ?: '800');
+            $ampImg->setAttribute('height', $ampImg->getAttribute('height') ?: '600');
 
-            if (!$ampImg->hasAttribute("width")) {
-                $ampImg->setAttribute("width", "800");
-            }
-
-            if (!$ampImg->hasAttribute("height")) {
-                $ampImg->setAttribute("height", "600");
-            }
-
-            // Replace original <img> with <amp-img>
             $img->parentNode->replaceChild($ampImg, $img);
         }
+
         return $dom->saveHTML();
     }
 
     public static function convertYoutubeToAmp(string $html)
     {
-        libxml_use_internal_errors(true);
-        $dom = new DOMDocument();
-        $dom->loadHTML(
-            mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'),
-            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-        );
+        if (stripos($html, '<iframe') === false) {
+            return $html;
+        }
 
+        $dom = self::loadHtml($html);
         $iframes = $dom->getElementsByTagName('iframe');
 
         for ($i = $iframes->length - 1; $i >= 0; $i--) {
-
             $iframe = $iframes->item($i);
+            $src = $iframe->getAttribute('src');
 
-            // Extract src
-            $src = $iframe->getAttribute("src");
-            if (!$src) {
+            if (!$src || !preg_match('#(youtube\.com|youtu\.be)#i', $src)) {
                 continue;
             }
 
-            // Detect YouTube link
-            if (!preg_match('#(youtube\.com|youtu\.be)#i', $src)) {
-                continue;
-            }
-
-            // Extract video ID
             $videoId = null;
-
-            // Format: https://www.youtube.com/embed/VIDEOID
-            if (preg_match('#youtube\.com/embed/([^?&]+)#', $src, $m)) {
+            if (preg_match('#youtube(?:-nocookie)?\.com/embed/([^?&/]+)#i', $src, $m)) {
                 $videoId = $m[1];
-            }
-
-            // Format: https://www.youtube.com/watch?v=VIDEOID
-            elseif (preg_match('#v=([^?&]+)#', $src, $m)) {
+            } elseif (preg_match('#[?&]v=([^?&]+)#', $src, $m)) {
                 $videoId = $m[1];
-            }
-
-            // Format: https://youtu.be/VIDEOID
-            elseif (preg_match('#youtu\.be/([^?&]+)#', $src, $m)) {
+            } elseif (preg_match('#youtu\.be/([^?&/]+)#i', $src, $m)) {
                 $videoId = $m[1];
             }
 
@@ -255,17 +220,13 @@ class Helper
                 continue;
             }
 
-            // Create <amp-youtube>
-            $ampYoutube = $dom->createElement("amp-youtube");
-            $ampYoutube->setAttribute("data-videoid", $videoId);
-            $ampYoutube->setAttribute("layout", "responsive");
+            $amp = $dom->createElement('amp-youtube');
+            $amp->setAttribute('data-videoid', $videoId);
+            $amp->setAttribute('layout', 'responsive');
+            $amp->setAttribute('width', '480');
+            $amp->setAttribute('height', '270');
 
-            // Provide default size if missing
-            $ampYoutube->setAttribute("width", "480");
-            $ampYoutube->setAttribute("height", "270");
-
-            // Replace iframe
-            $iframe->parentNode->replaceChild($ampYoutube, $iframe);
+            $iframe->parentNode->replaceChild($amp, $iframe);
         }
 
         return $dom->saveHTML();
@@ -547,5 +508,29 @@ class Helper
             return Cache::get("{$key}_stale", $empty);
         }
 
+    }
+    private static function loadHtml(string $html): DOMDocument
+    {
+        $previous = libxml_use_internal_errors(true);
+
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        // Le préfixe indique à libxml que le contenu est en UTF-8
+        $dom->loadHTML(
+            '<?xml encoding="UTF-8">' . $html,
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        // Retire la déclaration XML ajoutée
+        foreach ($dom->childNodes as $node) {
+            if ($node instanceof \DOMProcessingInstruction) {
+                $dom->removeChild($node);
+                break;
+            }
+        }
+
+        return $dom;
     }
 }

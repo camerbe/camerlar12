@@ -560,17 +560,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     }
     public function getFlashArticles(int $limit = 10): array
     {
-        return Cache::flexible(
-            "art:v{$this->version()}:article-flash",
-            [300,600],   // frais 5 min, servi périmé jusqu'à 10 min
-            fn () => $this->toArray(
-                $this->base()
-                    ->where('dateparution','<=',now())
-                    ->latest('dateparution')
-                    ->limit($limit)
-                    ->get()
-            )
-        );
+        return array_slice($this->getArticles(),0,10);
 
 
     }
