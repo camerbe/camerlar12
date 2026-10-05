@@ -170,7 +170,7 @@ class ArticleRepository extends Repository implements IArticleRepository
        return $this->remember('index', now()->addMinutes(20), fn () =>
         $this->toArray(
             Article::Published()->with(self::RELATIONS)
-                ->where('dateparution','>=',now())
+                ->where('dateparution','<=',now())
                 ->orderByDesc('dateparution')->limit(100)->get()
             )
         );
@@ -248,18 +248,18 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticles()
     {
-        //Cache::forget("art:v{$this->version()}:article-flash");
-        return Cache::flexible(
-            "art:v{$this->version()}:article-flash",
-            [300,600],   // frais 5 min, servi périmé jusqu'à 10 min
-            fn () => $this->toArray(
+        //Cache::forget("art:article-home");
+        $cacheKey="art:article-home";
+        return Cache::remember($cacheKey,now()->addMinutes(5),function(){
+            return $this->toArray(
                 $this->base()
                     ->where('dateparution','<=',now())
                     ->latest('dateparution')
                     ->limit(100)
                     ->get()
-            )
-        );
+            );
+        });
+
 
     }
 
@@ -288,21 +288,18 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getTopNews(string $period)
     {
-        $date = match ($period) {
-            'week'  => now()->subWeek(),
-            'month' => now()->subMonth(),
-            'year'  => now()->subYear(),
-            default => throw new \InvalidArgumentException("Invalid period: {$period}"),
-        };
+        if (! in_array($period, ['week', 'month', 'year'])) {
+            throw new \InvalidArgumentException("Période invalide : {$period}. Valeurs autorisées : week, month, year.");
+        }
 
-        return $this->remember("top_news_{$period}", now()->addHours(6), fn () =>
-        $this->toArray(
-            $this->base()
-                ->where('dateref', '<=', $date)      // pas whereDate => index utilisable
-                ->where('dateparution', '<=', now())
-                ->orderByDesc('hit')->limit(5)->get()
-            )
-        );
+        return Cache::remember("last{$period}news", now()->addHours(24), function () use ($period) {
+            return Article::query()
+                ->with(['countries', 'rubrique', 'sousrubrique'])
+                ->where('dateref', '=', now()->subUnit($period)->format('Y-m-d'))
+                ->orderByDesc('hit')
+                ->limit(5)
+                ->get();
+        });
 
     }
 
@@ -426,11 +423,16 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
 
         $cacheKey = "news_for_rss";
-        $articles= Cache::remember($cacheKey, now()->addDay(), function ()  {
-            return  array_slice($this->index(),0,30) ;
+        return Cache::remember($cacheKey,now()->addMinutes(10),function(){
+            return
+                $this->toArray(
+                    Article::Published()
+                    ->with(self::RELATIONS)
+                    ->where('dateparution','<=',now())
+                    ->orderByDesc('dateparution')
+                    ->limit(30)->get()
+                );
         });
-
-        return $articles;
     }
 
     /**

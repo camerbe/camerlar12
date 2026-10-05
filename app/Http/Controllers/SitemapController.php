@@ -73,9 +73,10 @@ class SitemapController extends Controller
         return response($sitemapIndex->render(), 200, ['Content-Type' => 'application/xml']);
     }
     public function article(){
-        $articles=$this->articleService->getNewsForRss();
-        $articles=collect($articles)->take(50);
-        //dd($articles);
+
+        $articles=Cache::flexible('sitemap-article',[300,900],function (){
+            return $this->articleService->getNewsForRss();
+        });
         $articleSitemap = Sitemap::create('');
         foreach ($articles as $article){
             $rub=$article["rubrique"]["rubrique"];
@@ -93,11 +94,15 @@ class SitemapController extends Controller
             }
             $articleSitemap->add($url);
         }
-        return response($articleSitemap->render(), 200, ['Content-Type' => 'application/xml']);
+        return response($articleSitemap->render(), 200, ['Content-Type' => 'application/xml'])
+                ->header('Cache-Control', 'public, max-age=300');
     }
     public function googleNews(){
-        $articles=$this->articleService->getNewsForRss();
-        $articles=collect($articles)->take(50);
+        $articles=Cache::flexible('googleNews',[300,900],function (){
+            return $this->articleService->getNewsForRss();
+        });
+
+
         $sitemap = Sitemap::create('');
         foreach ($articles as $article){
             $image=$article["image_url"];
@@ -127,7 +132,8 @@ class SitemapController extends Controller
             }
             $sitemap->add($url);
         }
-        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
+        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml'])
+                ->header('Cache-Control', 'public, max-age=300');
     }
     public function politique(){
         return $this->generateCategorySitemap('POLITIQUE');
@@ -252,7 +258,8 @@ class SitemapController extends Controller
             }
             $sitemap->add($url);
         }
-        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml']);
+        return response($sitemap->render(), 200, ['Content-Type' => 'application/xml'])
+                ->header('Cache-Control', 'public, max-age=300');;
     }
 
 }

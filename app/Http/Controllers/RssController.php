@@ -147,15 +147,15 @@ class RssController extends Controller
         $sousrub=Str::slug($sousrubrique);
         $view="rss.{$sousrub}";
         $id=$result['id'] ?? null;
-
+        //Cache::forget($sousrubrique);
         $items=Cache::flexible($sousrubrique,[300,900],function () use($id){
-            $this->articleService->getArticlesByCategory($id);
+            return $this->articleService->getArticlesByCategory($id);
         });
 
-        //$items = collect($items)->take(20);
 
         $rss = View::make($view, compact('items'));
-        return response($rss, 200)->header('Content-Type', 'application/xml');
+        return response($rss, 200)->header('Content-Type', 'application/xml')
+                ->header('Cache-Control', 'public, max-age=300');;
     }
 
 }

@@ -90,7 +90,7 @@ use Illuminate\Support\Str;
         $this->camer = $array['data'];*/
         /**************** Archives *********************/
         $cacheKey=md5('archive');
-        //Cache::forget( $cacheKey);
+        Cache::forget( $cacheKey);
         $this->archives = Cache::remember($cacheKey, now()->addDay(1), function () {
 
             $data1 = $this->api->getTopNews('week');

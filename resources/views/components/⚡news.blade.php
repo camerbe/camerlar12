@@ -1,41 +1,21 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Computed;
 use App\Services\ArticleService;
-
 use App\Helpers\Helper;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Cache;
 
 new class extends Component
 {
-    /*public ?array $heroArticle = null;
-    public $debat;
-    public $droit;
-    public $camer;
-    public $sopie;
-    public $skypper;
-    public ?array $heroArticle = null;*/
-    public mixed $debat=null;
-    public mixed $droit=null;
-    public mixed $camer=null;
-    public mixed $sopie=null;
-    public mixed $skypper=null;
-    public mixed $event=null;
-    public mixed $iframe=null;
+    // Seules données sérialisées dans le snapshot Livewire :
+    // la clé du cache sidebar + le paginateur.
+    public string $sidebarKey = '';
+    public int $perPage = 10;
 
-
-    /*public array $trendingArticles = [];
-    public array $sidebarArticles = [];
-    public array $feedArticles = [];
-    //public array $allFeedArticles = [];
-    public int $perPage=10;
-    public $hasMore=true;
-    public $mostReaded =[];*/
-    public int $perPage=10;
     public function mount(
-        ArticleService $articleService,
         $debat = null,
         $droit = null,
         $sopie = null,
@@ -43,60 +23,70 @@ new class extends Component
         $skypper = null,
         $event = null,
         $iframe = null,
-    ){
-        $this->debat = $debat;
-        $this->droit = $droit;
-        $this->sopie = $sopie;
-        $this->camer = $camer;
-        $this->skypper = $skypper;
-        $this->event = $event;
-        $this->iframe = $iframe;
+    ) {
+        // Les 7 jeux de données de la sidebar sont stockés en cache
+        // (une entrée par visiteur) au lieu d'être sérialisés dans le
+        // snapshot et renvoyés au serveur à chaque clic "Charger plus".
+        $this->sidebarKey = 'home-sidebar-'.session()->getId();
 
-
-
-
+        Cache::put($this->sidebarKey, [
+            'debat'   => $debat,
+            'droit'   => $droit,
+            'sopie'   => $sopie,
+            'camer'   => $camer,
+            'skypper' => $skypper,
+            'event'   => $event,
+            'iframe'  => $iframe,
+        ], now()->addMinutes(30));
     }
+
     public function loadMore(): void
     {
         $this->perPage += 6;
     }
+
+    #[Computed]
+    public function sidebar(): array
+    {
+        return Cache::get($this->sidebarKey) ?? [];
+    }
+
     #[Computed]
     public function articles()
     {
-        return collect(
-            app(ArticleService::class)->getArticles()
-        );
+        // Une seule requête (ou lecture de cache) par rendu, partagée
+        // par tous les Computed ci-dessous. Le cache fixe évite de
+        // refaire la requête complète à chaque clic "Charger plus".
+        return Cache::remember('home.articles', now()->addMinutes(10), function () {
+            return collect(app(ArticleService::class)->getArticles());
+        });
     }
 
     #[Computed]
     public function heroArticle()
     {
-        //dd($this->articles->first());
         return $this->articles->first();
-
     }
 
     #[Computed]
     public function trendingArticles()
     {
-        return $this->articles
-            ->slice(1, 3)
-            ->values();
+        return $this->articles->slice(1, 3)->values();
     }
 
     #[Computed]
     public function sidebarArticles()
     {
-        return $this->articles
-            ->slice(4, 5)
-            ->values();
+        return $this->articles->slice(4, 5)->values();
     }
 
     #[Computed]
     public function feedArticles()
     {
+        // 1 héros + 3 tendances + 5 sidebar = 9 articles déjà affichés
+        // au-dessus : le flux démarre après, sans doublon.
         return $this->articles
-            ->slice(1)
+            ->slice(9)
             ->take($this->perPage)
             ->values();
     }
@@ -104,37 +94,16 @@ new class extends Component
     #[Computed]
     public function hasMore(): bool
     {
-        return $this->perPage < $this->articles->slice(6)->count();
+        return $this->perPage < $this->articles->slice(9)->count();
     }
 
     #[Computed]
     public function mostReaded()
     {
-
-        return app(ArticleService::class)->getMostReaded();
+        return Cache::remember('home.most-readed', now()->addMinutes(30), function () {
+            return app(ArticleService::class)->getMostReaded();
+        });
     }
-
-    /*public function loadMore(): void
-    {
-        $this->perPage += 6;
-    }
-    public function loadMore(){
-
-        $this->perPage += 6;
-        $articleService = app(ArticleService::class);
-        $collection = collect($articleService->getArticles());
-        $this->updateFeed($collection);
-    }*/
-    private function updateFeed($collection)
-    {
-        $feedSource = $collection->slice(6); // skip hero+trending+sidebar
-        $this->feedArticles = $feedSource->slice(0, $this->perPage)->values()->toArray();
-        $this->hasMore = $this->perPage < $feedSource->count();
-    }
-    //
-    /*public function render(){
-        return view('livewire.news');
-    }*/
 };
 ?>
 
@@ -144,6 +113,7 @@ new class extends Component
     @if($this->heroArticle)
         <livewire:featured-article :article="$this->heroArticle" />
     @endif
+
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-8 space-y-8">
             <section>
@@ -157,38 +127,35 @@ new class extends Component
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     @foreach($this->feedArticles as $item)
                         @php
-                            $sousrubrique=Str::title($item["sousrubrique"]["sousrubrique"]);
-                            $auteur=$item["auteur"];
-                            $url=Helper::makeUrl(
+                            $sousrubrique = Str::title($item["sousrubrique"]["sousrubrique"]);
+                            $auteur = $item["auteur"];
+                            $url = Helper::makeUrl(
                                 $item["rubrique"]["rubrique"],
                                 $item["sousrubrique"]["sousrubrique"],
                                 $item["slug"]
-                                );
-                            $img=$item['image_url'] ?? 'https://picsum.photos/600/400?random=2';
-                            $alt=$item["titre"];
-                            $chapo=$item["chapeau"];
-                            $dateparution=Carbon::parse($item["dateparution"])->locale('fr');
-                            $dateparution=ucfirst(
-                                $dateparution->isoFormat('dddd D MMMM YYYY HH:mm')
                             );
-                            //$dateparution=Helper::formatShort($item["dateparution"]);
-                            $flag="https://flagcdn.com/16x12/".strtolower($item["fkpays"]).".webp";
-                            $titre=$item["titre"];
+                            $img = $item['image_url'] ?? 'https://picsum.photos/600/400?random=2';
+                            $titre = $item["titre"];
+                            $chapo = $item["chapeau"];
+                            $dateparution = Carbon::parse($item["dateparution"])->locale('fr');
+                            $dateparution = ucfirst($dateparution->isoFormat('dddd D MMMM YYYY HH:mm'));
+                            $flag = "https://flagcdn.com/16x12/".strtolower($item["fkpays"]).".webp";
                         @endphp
-                        {{-- Utilisation de composants Flux UI --}}
 
-                        <article wire:key="feed-item-{{ $item['id'] ?? $loop->index }}" class="group flex flex-col bg-white dark:bg-dark-surface rounded-xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-md transition-all">
+                        <article wire:key="feed-item-{{ $item['id'] ?? $loop->index }}"
+                                 class="group flex flex-col bg-white dark:bg-dark-surface rounded-xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-md transition-all">
                             <a href="/{{$url}}" class="relative aspect-video overflow-hidden bg-gray-100">
-                                <img src="{{$img}}" alt="{{$titre}}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <img src="{{$img}}" alt="{{$titre}}" loading="lazy"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-brand-500 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded shadow">
-                                    <img src="{{ $flag }}" class="w-3 h-3 rounded-sm" alt="{{$titre}}" />
+                                    <img src="{{ $flag }}" class="w-3 h-3 rounded-sm" alt="" />
                                     {{ $sousrubrique }}
                                 </span>
                             </a>
                             <div class="p-4 flex flex-col flex-1">
                                 <div class="text-xs text-gray-500 mb-2">{{$dateparution}}</div>
                                 <h3 class="text-base font-bold font-heading text-gray-900 dark:text-white group-hover:text-brand-500 transition line-clamp-2 leading-snug">
-                                    <a href="/{{$url}}">{{$alt}}</a>
+                                    <a href="/{{$url}}">{{$titre}}</a>
                                 </h3>
                                 <p class="text-xs text-gray-600 dark:text-gray-300 mt-2 line-clamp-3">
                                     {{$chapo}}
@@ -196,12 +163,13 @@ new class extends Component
                                 <div class="mt-auto pt-4 flex items-center justify-between text-xs text-gray-500">
                                     <span class="font-medium text-gray-700 dark:text-gray-300">{{$auteur}}</span>
                                     <a href="/{{$url}}">
-                                    <span class="text-brand-500 font-semibold group-hover:translate-x-1 transition-transform">Lire &rarr;</span>
+                                        <span class="text-brand-500 font-semibold group-hover:translate-x-1 transition-transform">Lire &rarr;</span>
                                     </a>
                                 </div>
                             </div>
                         </article>
                     @endforeach
+
                     <!-- Skeleton Loader pendant le chargement Livewire -->
                     <div wire:loading.grid wire:target="loadMore" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                         @for($i = 0; $i < 3; $i++)
@@ -213,9 +181,8 @@ new class extends Component
                             </div>
                         @endfor
                     </div>
-
                 </div>
-                <!-- Bouton Charger Plus -->
+
                 @if($this->hasMore)
                     <div class="text-center mt-10">
                         <flux:button
@@ -227,35 +194,21 @@ new class extends Component
                         >
                             Charger plus d'articles
                         </flux:button>
-                        {{--<button
-                            type="button"
-                            wire:click.prevent="loadMore"
-                            wire:loading.attr="disabled"
-                            class="inline-flex items-center px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-bold text-xs rounded-full hover:bg-brand-500 dark:hover:bg-brand-500 dark:hover:text-white transition shadow-md">
-                            <span wire:loading.remove wire:target="loadMore">Charger plus d'articles</span>
-                            <span wire:loading wire:target="loadMore">Chargement...</span>
-                        </button>--}}
                     </div>
                 @endif
             </section>
-
         </div>
 
-        {{-- Sidebar --}}
+        {{-- Sidebar : les données viennent du cache via $this->sidebar --}}
         <aside class="lg:col-span-4 space-y-6">
-            {{-- 4. Sous-composant Livewire pour la Sidebar--}}
             <livewire:sidebar-news :articles="$this->mostReaded" />
-            <livewire:video :camer="null" :sopie="$sopie" />
-            <livewire:debat :debat="$debat"/>
-            <livewire:pub-iframe :iframe="$iframe"/>
-            <livewire:droit :droit="$droit"/>
-
-            <livewire:video :camer="$camer" :sopie="null" />
-            <livewire:skypper :skypper="$skypper" />
-            <livewire:events :event="$event" />
-
-
+            <livewire:video :camer="null" :sopie="$this->sidebar['sopie'] ?? null" />
+            <livewire:debat :debat="$this->sidebar['debat'] ?? null"/>
+            <livewire:pub-iframe :iframe="$this->sidebar['iframe'] ?? null"/>
+            <livewire:droit :droit="$this->sidebar['droit'] ?? null"/>
+            <livewire:video :camer="$this->sidebar['camer'] ?? null" :sopie="null" />
+            <livewire:skypper :skypper="$this->sidebar['skypper'] ?? null" />
+            <livewire:events :event="$this->sidebar['event'] ?? null" />
         </aside>
     </div>
 </div>
-
