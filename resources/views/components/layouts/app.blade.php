@@ -84,7 +84,7 @@
         />
 
         <!-- Verif Bing -->
-        <meta name="msvalidate.01" content="E86FAE75C1BC7CFCBB2EAAB5142E02CF" />
+        <meta name="msvalidate.01" content="C087F8A3E0F6C1105BBF900D24370480" />
         <!-- Verif Yandex -->
         <meta name="yandex-verification" content="a20383ed17ecd649" />
         <meta property="fb:app_id" content="{{config('analytics.facebook-app-id')}}" />

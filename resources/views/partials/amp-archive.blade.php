@@ -1,5 +1,4 @@
 
-
 @if(count($archives)>0)
     <div class="material-box">
         @php
@@ -8,6 +7,7 @@
                 'month' => 'il y a un mois',
                 'year'  => 'il y a un an',
             ];
+
         @endphp
         @foreach($archives as $periods=>$item)
 
@@ -22,25 +22,26 @@
                         @if($item["success"] ?? false)
 
                             @foreach($item['data'] as $article)
+                                @continue(empty($article['image_url']))
+
                                 @php
-                                    $articleUrl =url("amp/". Illuminate\Support\Str::slug(strtolower($article['rubrique']['rubrique'])) . '/' .
-                                      Illuminate\Support\Str::slug(strtolower($article['sousrubrique']['sousrubrique'])) . '/' .
-                                      $article['slug']);
+                                    $articleUrl = url("amp/" .
+                                        Illuminate\Support\Str::slug(strtolower($article['rubrique']['rubrique'] ?? 'actualites')) . '/' .
+                                        Illuminate\Support\Str::slug(strtolower($article['sousrubrique']['sousrubrique'] ?? 'actualites')) . '/' .
+                                        $article['slug']);
                                 @endphp
-                                <a href="{{$articleUrl }}" class="news-item">
+                                <a href="{{ $articleUrl }}" class="news-item">
                                     <amp-img
-                                        alt="{{$article['titre']}}"
-                                        title="{{$article['titre']}}"
+                                        alt="{{ $article['titre'] }}"
+                                        title="{{ $article['titre'] }}"
                                         class="responsive-img"
-                                        src="{{$article['image_url']}}"
-                                        width="{{$article['image_width'] ?? 300}}"
-                                        height="{{$article['image_height'] ?? 300}}"
+                                        src="{{ $article['image_url'] }}"
+                                        width="{{ $article['image_width'] ?? 300 }}"
+                                        height="{{ $article['image_height'] ?? 300 }}"
                                         layout="responsive">
-
                                     </amp-img>
-                                    <h5 style="font-size: x-small;">{{$article['titre']}}</h5>
+                                    <h5 style="font-size: x-small;">{{ $article['titre'] }}</h5>
                                 </a>
-
 
                             @endforeach
                         @endif
