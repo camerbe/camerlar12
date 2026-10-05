@@ -271,7 +271,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         //Cache::forget("art:article-home");
         $cacheKey="art:article-home";
-        return Cache::remember($cacheKey,now()->addMinutes(5),function(){
+        return Cache::remember($cacheKey,now()->addMinutes(15),function(){
             return $this->toArray(
                 $this->base()
                     ->where('dateparution','<=',now())
@@ -314,12 +314,13 @@ class ArticleRepository extends Repository implements IArticleRepository
         }
 
         return Cache::remember("last{$period}news", now()->addHours(24), function () use ($period) {
-            return Article::query()
+            $archive=  Article::query()
                 ->with(['countries', 'rubrique', 'sousrubrique'])
                 ->where('dateref', '=', now()->subUnit($period)->format('Y-m-d'))
                 ->orderByDesc('hit')
                 ->limit(5)
                 ->get();
+            return ArticleResource::collection($archive);
         });
 
     }
@@ -442,18 +443,8 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getNewsForRss()
     {
+        return array_slice($this->getArticles(),0,50);
 
-        $cacheKey = "news_for_rss";
-        return Cache::remember($cacheKey,now()->addMinutes(10),function(){
-            return
-                $this->toArray(
-                    Article::Published()
-                    ->with(self::RELATIONS)
-                    ->where('dateparution','<=',now())
-                    ->orderByDesc('dateparution')
-                    ->limit(30)->get()
-                );
-        });
     }
 
     /**

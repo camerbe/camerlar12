@@ -7,6 +7,7 @@
                 'month' => 'il y a un mois',
                 'year'  => 'il y a un an',
             ];
+            dd($archives);
 
         @endphp
         @foreach($archives as $periods=>$item)

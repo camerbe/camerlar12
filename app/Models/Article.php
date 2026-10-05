@@ -52,7 +52,7 @@ class Article extends Model implements HasMedia
         Cache::forget('index');
         Cache::forget('rss');
         Cache::forget('laUne');
-        Cache::forget('front.laUne');
+        Cache::forget('art:article-home');
 
         for($i=0;$i<10;$i++){
             $idx=$i+1;

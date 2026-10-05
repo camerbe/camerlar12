@@ -56,7 +56,7 @@ new class extends Component
                 <p class="text-xs font-semibold text-gray-500 uppercase">Programmé(s)</p>
                 <h3 class="text-2xl font-bold mt-1">{{$stat['scheduled']}}</h3>
                 <p class="text-xs text-amber-600 flex items-center gap-1 mt-1">
-                    <i data-lucide="clock" class="w-3 h-3"></i> 
+                    <i data-lucide="clock" class="w-3 h-3"></i>
                 </p>
             </div>
             <div class="p-3 bg-amber-50 dark:bg-amber-900/30 text-amber-600 rounded-xl">
