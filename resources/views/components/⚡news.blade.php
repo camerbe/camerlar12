@@ -86,7 +86,7 @@ new class extends Component
         // 1 héros + 3 tendances + 5 sidebar = 9 articles déjà affichés
         // au-dessus : le flux démarre après, sans doublon.
         return $this->articles
-            ->slice(9)
+            ->slice(1)
             ->take($this->perPage)
             ->values();
     }
