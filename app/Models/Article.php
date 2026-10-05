@@ -53,6 +53,7 @@ class Article extends Model implements HasMedia
         Cache::forget('rss');
         Cache::forget('laUne');
         Cache::forget('front.laUne');
+
         for($i=0;$i<10;$i++){
             $idx=$i+1;
             $cacheKey='cahe_amp_index_'.$idx;

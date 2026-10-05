@@ -183,21 +183,42 @@ class ArticleRepository extends Repository implements IArticleRepository
     function getArticleByUser($user,$perPage=10)
     {
 
-        $page = request()->integer('page', 1);
+        $maxArticles = 100;
 
-        return $this->remember("user_{$user}_p{$page}_{$perPage}", now()->addMinutes(10), function () use ($user, $perPage) {
-            $paginator = $this->base()
-                ->where('fkuser', $user)
-                ->orderByDesc('dateparution')
-                ->paginate($perPage);
+        // Empêche une page de dépasser 100 articles
+        $perPage = max(1, min((int) $perPage, $maxArticles));
+
+        $lastAllowedPage = (int) ceil($maxArticles / $perPage);
+        $page = min(max(request()->integer('page', 1), 1), $lastAllowedPage);
+
+        return $this->remember("user_{$user}_p{$page}_{$perPage}", now()->addMinutes(10), function () use ($user, $perPage, $page, $maxArticles) {
+
+            // Total réel plafonné à 100
+            $total = min(
+                $this->base()->where('fkuser', $user)->count(),
+                $maxArticles
+            );
+
+            // Dernière page ne doit pas déborder au-delà de 100
+            $offset = ($page - 1) * $perPage;
+            $limit  = max(0, min($perPage, $maxArticles - $offset));
+
+            $items = $limit > 0
+                ? $this->base()
+                    ->where('fkuser', $user)
+                    ->orderByDesc('dateparution')
+                    ->offset($offset)
+                    ->limit($limit)
+                    ->get()
+                : collect();
 
             return [
-                'data' => $this->toArray($paginator->getCollection()),
+                'data' => $this->toArray($items),
                 'meta' => [
-                    'total'        => $paginator->total(),
-                    'per_page'     => $paginator->perPage(),
-                    'current_page' => $paginator->currentPage(),
-                    'last_page'    => $paginator->lastPage(),
+                    'total'        => $total,
+                    'per_page'     => $perPage,
+                    'current_page' => $page,
+                    'last_page'    => max(1, (int) ceil($total / $perPage)),
                 ],
             ];
         });
