@@ -581,7 +581,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     }
     public function getFlashArticles(int $limit = 10): array
     {
-        return array_slice($this->getArticles(),0,10);
+        return array_slice($this->getArticles(),0,$limit);
 
 
     }

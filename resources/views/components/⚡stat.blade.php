@@ -53,10 +53,10 @@ new class extends Component
 
         <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between">
             <div>
-                <p class="text-xs font-semibold text-gray-500 uppercase">En Attente de Validation</p>
-                <h3 class="text-2xl font-bold mt-1">7</h3>
+                <p class="text-xs font-semibold text-gray-500 uppercase">Programmé(s)</p>
+                <h3 class="text-2xl font-bold mt-1">{{$stat['scheduled']}}</h3>
                 <p class="text-xs text-amber-600 flex items-center gap-1 mt-1">
-                    <i data-lucide="clock" class="w-3 h-3"></i> Nécessite révision
+                    <i data-lucide="clock" class="w-3 h-3"></i> 
                 </p>
             </div>
             <div class="p-3 bg-amber-50 dark:bg-amber-900/30 text-amber-600 rounded-xl">
