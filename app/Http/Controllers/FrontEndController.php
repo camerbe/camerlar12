@@ -116,7 +116,7 @@ class FrontEndController extends Controller
 
     private function video(string $name): array
     {
-        // AVANT : deux requêtes SQL non cachées à chaque page vue du site
+
         return Cache::remember('front.video.' . $name, now()->addHours(6), function () use ($name) {
             try {
                 return $this->decode($this->video->getOneVideo($name))['data'] ?? [];
