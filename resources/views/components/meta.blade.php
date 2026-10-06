@@ -109,7 +109,7 @@
              },
              {  "@@type": "ListItem",
                 "position": 3,
-                "name": "{{$sousrub}}",
+                "name": "{{\Illuminate\Support\Str::slug($sousrub)}}",
                 "item": "{{config('app.url')}}/{{urlencode($breadcumbUrl)}}"
               }
         ]

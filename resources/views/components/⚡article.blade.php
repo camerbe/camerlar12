@@ -83,10 +83,12 @@ new class extends Component
         $shareText = trim($title.' '.implode(', ', array_map(fn ($h) => '#'.$h, $this->hash)));
 
         return [
-            'url'   => urlencode(url()->current()),
-            'title' => urlencode($title),
-            'text'  => urlencode($shareText),
-            'wa'    => urlencode($shareText."\n\n".url()->current()),
+            'url'       => urlencode(url()->current()),
+            'title'     => urlencode($title),
+            'text'      => urlencode($shareText),
+            'wa'        => urlencode($shareText."\n\n".url()->current()),
+            'media'     => $this->img,
+            'hashtag'   => implode(',', array_map(fn ($h) => ''.$h, $this->hash))
         ];
     }
 };
@@ -221,11 +223,11 @@ new class extends Component
                            class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand-500 hover:text-white transition text-gray-600 dark:text-gray-300">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
                         </a>
-                        <a href="https://twitter.com/intent/tweet?text={{ $this->share['text'] }}&url={{ $this->share['url'] }}"
+                        <a href="https://twitter.com/intent/tweet?text={{ $this->share['title']}}&hashtags={{$this->share['hashtag']}}&url={{$this->share['url']}}"
                            aria-label="Partager sur X" title="Partager sur X"
                            target="_blank" rel="noopener noreferrer"
                            class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand-500 hover:text-white transition text-gray-600 dark:text-gray-300">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.24 2H21l-6.5 7.4L22 22h-6.4l-5-6.5L4.7 22H2l7-8-7.7-12h6.6l4.5 6z"/></svg>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2H21l-6.5 7.4L22 22h-6.4l-5-6.5L4.7 22H2l7-8-7.7-12h6.6l4.5 6z"/></svg>
                         </a>
                         <a href="https://wa.me/?text={{ $this->share['wa'] }}"
                            aria-label="Partager sur WhatsApp" title="Partager sur WhatsApp"
@@ -272,6 +274,7 @@ new class extends Component
 
             <div itemprop="articleBody"
                  class="article-body
+                    [&_hr]:py-2 [&_hr]:my-6 [&_hr]:border-t [&_hr]:border-gray-300 [&_hr]:dark:border-gray-700
                     [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-sm [&_table]:overflow-hidden
                     [&_thead]:bg-gray-100 [&_thead]:dark:bg-gray-800
                     [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_th]:font-bold [&_th]:border [&_th]:border-gray-300 [&_th]:dark:border-gray-700
