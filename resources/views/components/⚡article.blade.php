@@ -98,9 +98,9 @@ new class extends Component
     <!-- ========================================== -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
         <flux:breadcrumbs class="flex items-center flex-wrap gap-1 text-xs text-gray-500 dark:text-gray-400">
-            <flux:breadcrumbs.item href="/" separator="slash">Accueil</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item href="/" separator="slash">{{$this->rubrique}}</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item href="/{{$this->lienCategorie}}" separator="slash"><b>{{$this->sousrubrique}}</b></flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="/"   separator="slash">Accueil</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="{{url()->current()}}"   separator="slash">{{$this->rubrique}}</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="/{{$this->lienCategorie}}" name="{{$this->sousrubrique}}"  separator="slash"><b>{{$this->sousrubrique}}</b></flux:breadcrumbs.item>
         </flux:breadcrumbs>
     </div>
 

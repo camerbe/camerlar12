@@ -70,7 +70,6 @@
                 :plusLus="$plusLus"
                 :sameRubrique="$sameRubrique"
                 :debat="$debat"
-
                 :droit="$droit"
                 :camer="$camer"
                 :sopie="$sopie"

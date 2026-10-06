@@ -104,7 +104,8 @@
             {
                 "@@type": "ListItem",
                 "position": 2,
-                "name": "{{$rub}}"
+                "name": "{{$rub}}",
+                "item": "{{url()->current()}}"
              },
              {  "@@type": "ListItem",
                 "position": 3,
