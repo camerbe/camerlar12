@@ -1695,7 +1695,7 @@
     <div class="footer">
         @include('partials.amp-adaptable')
         <p class="center-text">
-            &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{env('APP_URL')}}/amp" class="footer-logo">Camer.be</a>
+            &copy; 2005 - <?php $today=new DateTime('NOW'); echo $today->format("Y");?>  <a href="{{config('app.url')}}/amp/accueil" class="footer-logo">Camer.be</a>
         </p>
     </div>
 
