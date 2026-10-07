@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Schedule;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -10,5 +11,5 @@ Artisan::command('inspire', function () {
 
 
 Schedule::command('app:clear-all-cache')
-    ->dailyAt('02:40');
+    ->dailyAt('02:50');
 
