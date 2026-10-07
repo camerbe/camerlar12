@@ -11,5 +11,5 @@ Artisan::command('inspire', function () {
 
 
 Schedule::command('app:clear-all-cache')
-    ->dailyAt('00:20');
+    ->dailyAt('00:25');
 
