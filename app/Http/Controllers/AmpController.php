@@ -202,9 +202,11 @@ class AmpController extends Controller
 
         $rubriques=Config::get('rubriques.map') ;
         //dd($rubriques["map"]);
+
         if($request->rubrique!='video'){
             $isVideo=false;
             $fksousrubrique=$rubriques[$request->sousrubrique];
+            //dd($request);
             $fkrubrique=$rubriques[$request->rubrique];
             $data=$this->api->getRubriqueArticles($fksousrubrique,$fkrubrique);
             $array = json_decode($data->getContent(), true);

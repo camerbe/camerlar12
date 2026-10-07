@@ -9,3 +9,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 
+Schedule::command('app:clear-all-cache')
+    ->dailyAt('02:40');
+
