@@ -1,6 +1,7 @@
 
 <div class="material-box  full-top">
     @php
+        //dd($videos);
         $firstVideo=$videos->first();
         $videoType=$firstVideo['typevideo'];
     @endphp
@@ -12,22 +13,30 @@
 
     @php
         //dd($video);
-        $title=$video['titre'];
-        if(is_null($video['youtubeApi'])){
-            $cover_image=$video['cover_image'];
-            $cover_image_width=640;
-            $cover_image_height=480;
-        }
-        else{
-            $snippet=$video['youtubeApi']['snippet'] ?? [];
-            $thumbnails=$snippet['thumbnails']['standard'];
-            $cover_image=$thumbnails['url'];
-            $cover_image_width=$thumbnails['width'];
-            $cover_image_height=$thumbnails['height'];
+        $title = $video['titre'];
 
+        if (is_null($video['youtubeApi'])) {
+            $cover_image = $video['cover_image'];
+            $cover_image_width = 640;
+            $cover_image_height = 480;
+        } else {
+            // Récupération sécurisée du tableau des vignettes
+            $thumbnails = $video['youtubeApi']['snippet']['thumbnails'] ?? [];
+
+            // Recherche de la meilleure résolution disponible (standard, high, medium, ou default)
+            $thumb = $thumbnails['standard']
+                  ?? $thumbnails['high']
+                  ?? $thumbnails['medium']
+                  ?? $thumbnails['default']
+                  ?? null;
+
+            $cover_image = $thumb['url'] ?? $video['cover_image'];
+            $cover_image_width = $thumb['width'] ?? 640;
+            $cover_image_height = $thumb['height'] ?? 480;
         }
-        $videoType=$video['typevideo'];
-        $videoId=$video['video'];
+
+        $videoType = $video['typevideo'];
+        $videoId = $video['video'];
     @endphp
 
 

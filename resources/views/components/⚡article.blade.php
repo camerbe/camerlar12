@@ -337,7 +337,7 @@ new class extends Component
 
             <!-- Publicité native -->
             <div class="flex flex-col items-center justify-center my-8">
-                <div class="h-full w-full max-w-[728px] bg-gray-200 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 rounded overflow-hidden">
+                <div class="h-full w-full max-w-[728px] bg-white/5 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-500 rounded overflow-hidden">
                     @include('partials.themoneytizer-banner')
                 </div>
             </div>
