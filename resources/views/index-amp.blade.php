@@ -28,7 +28,6 @@
 @extends('layouts.amp-master')
 
 @section('content')
-    @include('partials.amp-adaptable')
     @include('partials.amp-index')
     @include('partials.amp-debat-droit')
     @include('partials.amp-event-pub')

@@ -15,16 +15,11 @@
                 <amp-img
                     alt="{{$pub['endpubdate']}}"
                     title="{{$pub['endpubdate']}}"
-                    src="{{$pub['image_url']}}"
-                    width="{{$pub['imagewidth']}}"
-                    height="{{$pub['imageheight']}}"
+                    src="{{$pub['image_url'] ?? 'https://picsum.photos/300'}}"
+                    width="{{$pub['imagewidth']?? 300}}"
+                    height="{{$pub['imageheight']?? 300}}"
                     layout="responsive">
-                    <amp-img
-                        placeholder
-                        src="https://picsum.photos/300"
-                        width="{{ $pub['imagewidth'] ?? 300 }}"
-                        height="{{ $pub['imageheight'] ?? 300 }}">
-                    </amp-img>
+
                 </amp-img>
 
 

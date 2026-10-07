@@ -11,16 +11,11 @@
                     alt="{{$event['eventdate']}}"
                     title="{{$event['eventdate']}}"
                     class="responsive-img"
-                    src="{{$event['image_url']}}"
-                    width="{{$event['imagewidth']}}"
-                    height="{{$event['imageheight']}}"
+                    src="{{$event['image_url'] ?? 'https://picsum.photos/300'}}"
+                    width="{{$event['imagewidth'] ?? 300}}"
+                    height="{{$event['imageheight'] ?? 300}}"
                     layout="responsive">
-                    <amp-img
-                        placeholder
-                        src="https://picsum.photos/300"
-                        width="{{ $event['imagewidth'] ?? 300 }}"
-                        height="{{ $event['imageheight'] ?? 300 }}">
-                    </amp-img>
+
                 </amp-img>
 
 
