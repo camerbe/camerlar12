@@ -205,7 +205,6 @@ class AmpController extends Controller
 
         if($request->rubrique!='video'){
             $isVideo=false;
-            dd($rubriques[$request->rubrique]);
             $fksousrubrique=$rubriques[$request->sousrubrique];
             //dd($request);
             $fkrubrique=$rubriques[$request->rubrique];
