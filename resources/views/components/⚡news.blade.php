@@ -148,7 +148,7 @@ new class extends Component
                                 <img src="{{$img}}" alt="{{$titre}}" loading="lazy"
                                      class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-brand-500 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded shadow">
-                                    <img src="{{ $flag }}" class="w-3 h-3 rounded-sm" alt="" />
+                                    <img src="{{ $flag }}" class="w-4 h-3 rounded-sm" alt="" />
                                     {{ $sousrubrique }}
                                 </span>
                             </a>
