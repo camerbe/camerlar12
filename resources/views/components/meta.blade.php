@@ -91,32 +91,32 @@
 {{-- JSON-LD --}}
 @if($isJson4article)
     @unless($isAmp)
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@@type": "ListItem",
-                "position": 1,
-                "name": "Accueil",
-                "item": "https://www.camer.be/"
-            },
-            {
-                "@@type": "ListItem",
-                "position": 2,
-                "name": "{{\Illuminate\Support\Str::slug($rub)}}",
-                "item": "{{url()->current()}}"
-             },
-             {  "@@type": "ListItem",
-                "position": 3,
-                "name": "{{\Illuminate\Support\Str::slug($sousrub)}}",
-                "item": "{{config('app.url')}}/{{urlencode($breadcumbUrl)}}"
-              }
-        ]
-        }
-    </script>
-
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@@type": "ListItem",
+                    "position": 1,
+                    "name": "Accueil",
+                    "item": "https://www.camer.be/"
+                },
+                {
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "{{\Illuminate\Support\Str::slug($rub)}}",
+                    "item": "{{url()->current()}}"
+                 },
+                 {  "@@type": "ListItem",
+                    "position": 3,
+                    "name": "{{\Illuminate\Support\Str::slug($sousrub)}}",
+                    "item": "{{config('app.url')}}/{{urlencode($breadcumbUrl)}}"
+                  }
+            ]
+            }
+        </script>
+    @endunless
     <script type="application/ld+json">
         {!! json_encode($jld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
