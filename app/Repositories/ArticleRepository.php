@@ -67,6 +67,10 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         return Article::with(self::RELATIONS);
     }
+    private function published(){
+        return Article:: Published()
+            ->with(self::RELATIONS);
+    }
     /**
      * @param array $input
      * @return mixed
@@ -169,9 +173,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
        return $this->remember('index', now()->addMinutes(20), fn () =>
         $this->toArray(
-            Article::Published()->with(self::RELATIONS)
-                ->where('dateparution','<=',now())
-                ->orderByDesc('dateparution')->limit(100)->get()
+            $this->published()->limit(100)->get()
             )
         );
     }
@@ -269,19 +271,8 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getArticles()
     {
-        //Cache::forget("art:article-home");
-        $cacheKey="art:article-home";
-        return Cache::remember($cacheKey,now()->addMinutes(15),function(){
-            return $this->toArray(
-                $this->base()
-                    ->where('dateparution','<=',now())
-                    ->latest('dateparution')
-                    ->limit(100)
-                    ->get()
-            );
-        });
-
-
+       return $this->index();
+ 
     }
 
     /**
@@ -335,10 +326,8 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:same_rubrique_{$fksousrubrique}",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->base()
+                $this->published()
                     ->where('fksousrubrique',$fksousrubrique)
-                    ->where('dateparution', '<=', now())
-                    ->orderByDesc('dateparution')
                     ->limit(10)
                     ->get()
             )
@@ -356,12 +345,10 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:most_read_{$fksousrubrique}_{$fkpays}",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->base()
+                $this->published()
                     ->where('fksousrubrique', $fksousrubrique)
                     ->where('fkpays', $fkpays)
-                    ->where('dateparution', '<=', now())
                     ->orderByDesc('hit')
-                    ->orderByDesc('dateparution')   // départage les égalités
                     ->limit(5)
                     ->get()
             )
@@ -378,10 +365,8 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:most_readed",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->base()
-                    ->where('dateparution', '<=', now())
+                $this->published()
                     ->orderByDesc('hit')
-                    ->orderByDesc('dateparution')   // départage les égalités
                     ->limit(5)
                     ->get()
             )
@@ -393,11 +378,9 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:most_readed_{$fksousrubrique}",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->base()
+                $this->published()
                     ->where('fksousrubrique',$fksousrubrique)
-                    ->where('dateparution', '<=', now())
                     ->orderByDesc('hit')
-                    ->orderByDesc('dateparution')   // départage les égalités
                     ->limit(5)
                     ->get()
             )
@@ -414,10 +397,8 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:news_by_author_{$author}",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->base()
+                $this->published()
                     ->where('auteur',$author)
-                    ->where('dateparution', '<=', now())
-                    ->orderByDesc('dateparution')   // départage les égalités
                     ->limit(100)
                     ->get()
             )
@@ -494,11 +475,9 @@ class ArticleRepository extends Repository implements IArticleRepository
     {
         return $this->remember("rubrique_{$fkrubrique}_{$fksousrubrique}", now()->addMinutes(30), fn () =>
         $this->toArray(
-            $this->base()
+            $this->published()
                 ->where('fkrubrique', $fkrubrique)
                 ->where('fksousrubrique', $fksousrubrique)
-                ->where('dateparution', '<=', now())
-                ->orderByDesc('dateparution')
                 ->limit(100)->get()
         )
         );

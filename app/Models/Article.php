@@ -115,7 +115,9 @@ class Article extends Model implements HasMedia
     // --- Scopes (Filtres réutilisables) ---
     public function scopePublished(Builder $query):Builder
     {
-        return $query->where('dateparution','<=',now());
+        return $query
+                ->where('dateparution','<=',now())
+                ->orderByDesc('dateparution');
     }
     public function scopeCameroon(Builder $query):Builder
     {
