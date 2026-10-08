@@ -42,6 +42,7 @@
     :geoplacename="$geoplacename"
     :isJson4listItem="$isJson4listItem"
     :listElements="$listItemArticles"
+    :isAmp="false"
 >
     <div>
         <livewire:author

@@ -37,6 +37,7 @@
     :isJson4article="$isJson4article"
     :isJson4listItem="$isJson4listItem"
     :listElements="$listItemArticles"
+    :isAmp="false"
 >
     <div>
 

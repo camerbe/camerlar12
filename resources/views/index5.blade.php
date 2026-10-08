@@ -39,6 +39,7 @@
     :published_time="$published_time"
     :georegion="$georegion"
     :geoplacename="$geoplacename"
+    :isAmp="false"
 >
     <div>
         <livewire:qui-sommes-nous

@@ -48,8 +48,8 @@
     <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-    <!--<script async custom-element="amp-geo" src="https://cdn.ampproject.org/v0/amp-geo-0.1.js"></script>-->
-    <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+    <!--<script async custom-element="amp-geo" src="https://cdn.ampproject.org/v0/amp-geo-0.1.js"></script>
+    <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>-->
     <!--AdsenseAMP page-->
     <script async custom-element="amp-auto-ads"
             src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
@@ -637,7 +637,7 @@
         .footer{padding-top:20px;}
         .footer-logo{
             /*	background-image:url(images/logo.png);*/
-            background-image:url({{secure_asset('amp-api/ampmaterial/images/logo-camer.png')}})
+            background-image:url({{secure_asset('amp-api/ampmaterial/images/logo-camer.png')}});
             background-repeat: no-repeat;
             background-size:120px 20px;
             width:120px;

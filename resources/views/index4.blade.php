@@ -46,6 +46,7 @@
     :geoplacename="$geoplacename"
     :listItemVideos="$listItemVideos"
     :isVideo="$isVideo"
+    :isAmp="false"
 >
     <div>
         <livewire:video-list

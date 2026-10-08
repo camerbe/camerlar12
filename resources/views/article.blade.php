@@ -61,6 +61,7 @@
     :hit="$hit"
     :info="$info"
     :jld="$ldjson"
+    :isAmp="false"
 
 >
     <div>

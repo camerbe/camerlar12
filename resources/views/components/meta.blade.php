@@ -29,6 +29,7 @@
     'listElements'=>[],
     'listItemVideos'=>[],
     'jld'=>'[]',
+    'isAmp' => false,
 ])
 
 <!-- Primary Meta Tags -->
@@ -89,7 +90,7 @@
 
 {{-- JSON-LD --}}
 @if($isJson4article)
-
+    @unless($isAmp)
     <script type="application/ld+json">
     {
         "@@context": "https://schema.org",
