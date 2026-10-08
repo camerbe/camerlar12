@@ -87,12 +87,7 @@
             width="{{$article['image_width'] ?? 300}}"
             height="{{$article['image_height'] ?? 300}}"
             layout="responsive">
-            <amp-img
-                placeholder
-                src="https://picsum.photos/300"
-                width="{{ $article['image_width'] ?? 300 }}"
-                height="{{ $article['image_height'] ?? 300 }}">
-            </amp-img>
+
 
         </amp-img>
         <div class="absolute badge"
@@ -179,18 +174,7 @@
             </div>
         </div>
         <section>
-        <h3>Commentaires</h3>
-
-            <amp-iframe
-                width="600" height="400"
-                src="https://camer-be.disqus.com/embed/comments#{{$article['id']}}"
-                layout="responsive"
-                sandbox="allow-scripts allow-same-origin allow-modals allow-popups allow-forms"
-                frameborder="0"
-            >
-
-            </amp-iframe>
-
+       
 
         </section>
 
