@@ -149,6 +149,8 @@ return [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
             'persistent' => env('REDIS_PERSISTENT', false),
+            'serializer' => Redis::SERIALIZER_IGBINARY,
+            'compression' => Redis::COMPRESSION_LZ4,
         ],
 
         'default' => [

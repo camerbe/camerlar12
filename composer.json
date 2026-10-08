@@ -23,7 +23,8 @@
         "spatie/laravel-feed": "^4.4",
         "spatie/laravel-medialibrary": "^11.13",
         "spatie/laravel-sitemap": "^7.3",
-        "unisharp/laravel-filemanager": "^2.15"
+        "unisharp/laravel-filemanager": "^2.15",
+      "ext-redis": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.4",
