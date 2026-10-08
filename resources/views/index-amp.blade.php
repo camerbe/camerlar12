@@ -23,8 +23,8 @@
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
     $published_time=\Carbon\Carbon::parse($firstArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
     $isJson4listItem=true;
-    $isAmp="true";
-    
+    $isAmp=true;
+
 @endphp
 
 @extends('layouts.amp-master')

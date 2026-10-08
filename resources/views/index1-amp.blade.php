@@ -31,7 +31,7 @@
     $breadcumbUrl='amp/'.\Illuminate\Support\Str::slug($rub)."/".strtolower($section);
     $wordCount=App\Helpers\Helper::countArticleCharacters($article["info"]);
     $jld=$ldjson;
-    $isAmp="true";
+    $isAmp=true;
 @endphp
 @extends('layouts.amp-master')
 @section('content')

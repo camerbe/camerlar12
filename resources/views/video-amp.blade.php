@@ -22,7 +22,7 @@
     $author = $firstVideo["typevideo"];
     $source = $author;
     $isVideo=true;
-    $isAmp="true";
+    $isAmp=true;
 @endphp
 
 @extends('layouts.amp-master')

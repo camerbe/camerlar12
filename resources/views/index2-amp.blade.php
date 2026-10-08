@@ -20,7 +20,7 @@
     $author = $firstArticle['auteur'];
     $source = $firstArticle['source'];
     $isJson4listItem=true;
-    $isAmp="true";
+    $isAmp=true;
 @endphp
 
 @extends('layouts.amp-master')
