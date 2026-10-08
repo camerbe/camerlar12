@@ -27,7 +27,7 @@
     $canonical= \App\Helpers\Helper::remove_amp_from_url(url()->current());
     $georegion =$article['fkpays'];
     $geoplacename=$article["countries"]["pays"];
-    $isJson4article=true;
+    $isJson4article=false;
     $breadcumbUrl='amp/'.\Illuminate\Support\Str::slug($rub)."/".strtolower($section);
     $wordCount=App\Helpers\Helper::countArticleCharacters($article["info"]);
     $jld=$ldjson;
