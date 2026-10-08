@@ -89,8 +89,8 @@
 <link rel="preload" as="image" href="{{ $image }}" fetchpriority="high">
 
 {{-- JSON-LD --}}
-@if($isJson4article && !$isAmp)
-
+@if($isJson4article)
+    @unless($isAmp)
         <script type="application/ld+json">
         {
             "@@context": "https://schema.org",
@@ -116,7 +116,7 @@
             ]
             }
         </script>
-
+    @endunless
     <script type="application/ld+json">
         {!! json_encode($jld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>

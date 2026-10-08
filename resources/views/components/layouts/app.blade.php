@@ -81,6 +81,7 @@
             :jld="$jld"
             :listElements="$listElements"
             :listItemVideos="$listItemVideos"
+            :isAmp=false
         />
 
         <!-- Verif Bing -->
