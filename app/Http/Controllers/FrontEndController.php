@@ -137,9 +137,9 @@ class FrontEndController extends Controller
     private function flashArticles(): array
     {
         // AVANT : requête non cachée à chaque requête du site
-        return Cache::remember('front.flash', now()->addMinutes(5), function () {
+        //return Cache::remember('front.flash', now()->addMinutes(5), function () {
             return $this->decode($this->api->getFlashArticles(10))['data'] ?? [];
-        });
+        //});
     }
 
     /* ==================================================================
