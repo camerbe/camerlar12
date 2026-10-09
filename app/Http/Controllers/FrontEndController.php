@@ -129,10 +129,9 @@ class FrontEndController extends Controller
 
     private function latestArticle()
     {
-        // AVANT : requête non cachée à chaque requête du site
-        return Cache::remember('front.laUne', now()->addMinutes(5), function () {
-            return $this->decode($this->api->laUne())['data'] ?? [];
-        });
+
+        return $this->decode($this->api->laUne())['data'] ?? [];
+
     }
 
     private function flashArticles(): array

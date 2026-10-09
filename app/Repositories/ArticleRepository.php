@@ -272,7 +272,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     function getArticles()
     {
        return $this->index();
- 
+
     }
 
     /**
@@ -345,7 +345,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:most_read_{$fksousrubrique}_{$fkpays}",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->published()
+                $this->base()
                     ->where('fksousrubrique', $fksousrubrique)
                     ->where('fkpays', $fkpays)
                     ->orderByDesc('hit')
@@ -365,7 +365,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:most_readed",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->published()
+                $this->base()
                     ->orderByDesc('hit')
                     ->limit(5)
                     ->get()
@@ -378,7 +378,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             "art:v{$this->version()}:most_readed_{$fksousrubrique}",
             [1800, 21600],   // frais 30 min, servi périmé jusqu'à 6 h
             fn () => $this->toArray(
-                $this->published()
+                $this->base()
                     ->where('fksousrubrique',$fksousrubrique)
                     ->orderByDesc('hit')
                     ->limit(5)
@@ -424,7 +424,7 @@ class ArticleRepository extends Repository implements IArticleRepository
      */
     function getNewsForRss()
     {
-        return array_slice($this->getArticles(),0,50);
+        return array_slice($this->index(),0,50);
 
     }
 
@@ -493,11 +493,9 @@ class ArticleRepository extends Repository implements IArticleRepository
         $cacheKey = "cache_one_{$fksousrubrique}_{$fkrubrique}";
 
         $article = Cache::remember($cacheKey, now()->addHours(12), function () use ($fksousrubrique, $fkrubrique) {
-            return Article::with(['countries', 'rubrique', 'sousrubrique'])
+            return $this->published()
                 ->where('fksousrubrique', $fksousrubrique)
                 ->where('fkrubrique', $fkrubrique)
-                ->where('dateparution', '<=', now())
-                ->orderByDesc('dateparution')
                 ->first();
         });
         return new ArticleResource($article);
@@ -531,15 +529,16 @@ class ArticleRepository extends Repository implements IArticleRepository
     public function laUne(){
         $cache="laUne";
         //Cache::forget($cache);
-        $article=Cache::remember($cache,now()->addDay(),function(){
+        /*$article=Cache::remember($cache,now()->addDay(),function(){
             return Article::Published()
                 ->where('dateparution', '<=', now())
                 ->with(['countries', 'rubrique', 'sousrubrique'])
                 ->latest('dateparution')
                 ->first();
-        });
+        });*/
         //dd(new ArticleResource($article));
-        return new ArticleResource($article);
+        $articles = $this->index();
+        return $articles[0] ?? null;
 
     }
 
