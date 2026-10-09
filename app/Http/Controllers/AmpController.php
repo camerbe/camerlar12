@@ -205,9 +205,10 @@ class AmpController extends Controller
 
         if($request->rubrique!='video'){
             $isVideo=false;
-            $fksousrubrique = (int) $request->sousrubrique;
-            $fkrubrique = (int) $request->rubrique;
+            $fksousrubrique = (int) $rubriques[$request->sousrubrique];
+            $fkrubrique = (int) $rubriques[$request->rubrique];
             $data=$this->api->getRubriqueArticles($fksousrubrique,$fkrubrique);
+
             $array = json_decode($data->getContent(), true);
             $articles = collect($array['data']);
         }

@@ -478,7 +478,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             $this->published()
                 ->where('fkrubrique', $fkrubrique)
                 ->where('fksousrubrique', $fksousrubrique)
-                ->limit(100)->get()
+                ->limit(50)->get()
         )
         );
     }
@@ -550,7 +550,7 @@ class ArticleRepository extends Repository implements IArticleRepository
     }
     public function getFlashArticles(int $limit = 10): array
     {
-        return array_slice($this->getArticles(),0,$limit);
+        return array_slice($this->index(),0,$limit);
 
 
     }
