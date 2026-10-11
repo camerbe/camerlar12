@@ -16,8 +16,8 @@
     $canonical=url()->current();
     $ampcanonical = url('amp' . parse_url($canonical, PHP_URL_PATH));
     $source=$heroArticle["source"];
-    $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
-    $published_time=\Carbon\Carbon::parse($heroArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
+    $modified_time=$now=now('Europe/Brussels')->toAtomString();
+    $published_time = \Carbon\Carbon::parse($heroArticle['dateparution'], 'Europe/Brussels')->toAtomString();
     $georegion =$heroArticle['fkpays'];
     $geoplacename=$heroArticle["countries"]["pays"];
     $isJson4listItem=true;
