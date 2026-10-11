@@ -26,7 +26,7 @@
         'pubdimension300'=>300,
         'sopieprod'=>'Sopie',
         'camervideo'=>'Camer',
-        'canaldevie'=>'https://player.infomaniak.com?channel=69990&player=10389?nojump=#',
+        'canaldevie'=>'https://player.infomaniak.com?channel=69990&player=10389?nojump=1',
         'tv5'=>'http://information.tv5monde.com/afprss/francais--special--afrique',
 
     ];

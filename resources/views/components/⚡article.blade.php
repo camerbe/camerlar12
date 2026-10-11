@@ -81,7 +81,7 @@ new class extends Component
 
     protected function buildShareData(): array
     {
-        $title     = Helper::getTitle($this->article['countries']['pays'], $this->titre, '').' | Camer.be';
+        $title     = Helper::getTitle($this->article['countries']['pays'], $this->titre, '');
         $shareText = trim($title.' '.implode(', ', array_map(fn ($h) => '#'.$h, $this->hash)));
 
         return [
