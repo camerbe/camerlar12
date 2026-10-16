@@ -275,7 +275,7 @@ new class extends Component
                     'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
                     'insertdatetime', 'media', 'table', 'help', 'wordcount'];
 
-                let toolbarList = 'undo redo | blocks | ' +
+                let toolbarList = 'undo redo | blocks blockquote | ' +
                     'bold italic backcolor | alignleft aligncenter ' +
                     'alignright alignjustify | bullist numlist outdent indent | ' +
                     'removeformat | help';
