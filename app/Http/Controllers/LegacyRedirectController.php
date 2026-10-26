@@ -11,8 +11,9 @@ use Illuminate\Support\Str;
 class LegacyRedirectController extends Controller
 {
     //
-    public function article(int $id): RedirectResponse
+    public function article(int $id, string $pair = '', string $slug = ''): RedirectResponse
     {
+        $slug = preg_replace('/\.html.*$/i', '.html', $slug);
         $article = Article::with(['countries', 'rubrique', 'sousrubrique'])->findOrFail($id);
 
         $rubrique=Str::slug($article->rubrique->rubrique);

@@ -39,7 +39,8 @@ Route::get('/', function (ArticleService $articleService) {
     Route::get('/{id}/{pair}/{slug}', [LegacyRedirectController::class, 'article'])
         ->whereNumber('id')
         ->where('pair', '\d+:\d+')
-        ->where('slug', '[^/]+\.html?');
+        //->where('slug', '[^/]+\.html?');
+        ->where('slug', '[^/]+\.html[^/]*');
     /*
     |--------------------------------------------------------------------------
     | FILE MANAGER
