@@ -236,6 +236,11 @@ class FrontEndController extends Controller
             return $this->decode($this->api->getMostReadedNewsByAuthor($auteur))['data'] ?? [];
         });
 
+        $articles = array_values(array_filter(
+            $articles,
+            fn ($article) => is_array($article)
+        ));
+
         return view('index3', [
             'articles'        => $articles,
             'heroArticle'     => $articles[0] ?? null,

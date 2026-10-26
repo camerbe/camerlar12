@@ -22,7 +22,24 @@
     $geoplacename=$heroArticle["countries"]["pays"];
     $isJson4listItem=true;
 @endphp
+@if (!is_array($heroArticle ?? null))
+    <x-layouts.app
+        title="Articles de l'auteur — Camer.be"
+        description="Retrouvez les articles publiés sur Camer.be."
+        :canonical="url()->current()"
+        :isAmp="false"
+    >
+        <main class="mx-auto max-w-5xl px-4 py-10">
+            <h1 class="text-2xl font-bold">
+                Articles de l'auteur
+            </h1>
 
+            <p class="mt-4">
+                Aucun article n'est actuellement disponible pour cet auteur.
+            </p>
+        </main>
+    </x-layouts.app>
+@else
 <x-layouts.app
     :title="$title"
     :description="$description"
@@ -60,3 +77,4 @@
 
     </div>
 </x-layouts.app>
+@endif
