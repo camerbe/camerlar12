@@ -77,6 +77,8 @@ new class extends Component
 
 
         $this->share = $this->buildShareData();
+
+
     }
 
     protected function buildShareData(): array
@@ -103,7 +105,7 @@ new class extends Component
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
         <flux:breadcrumbs class="flex items-center flex-wrap gap-1 text-xs text-gray-500 dark:text-gray-400">
             <flux:breadcrumbs.item href="{{config('app.url')}}"   separator="slash">Accueil</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item href="{{$this->share['url'] }}"   separator="slash">{{$this->rubrique}}</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="{{url()->current()}}"   separator="slash">{{$this->rubrique}}</flux:breadcrumbs.item>
             <flux:breadcrumbs.item href="{{$this->lienCategorie}}" name="{{$this->sousrubrique}}"  separator="slash"><b>{{$this->sousrubrique}}</b></flux:breadcrumbs.item>
         </flux:breadcrumbs>
     </div>
@@ -293,7 +295,7 @@ new class extends Component
                 <div class="flex flex-wrap items-center gap-2 mb-8">
                     @if(count($this->hash) > 0)
                         @foreach($this->hash as $hash)
-                            <a href="#" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition">#{{$hash}}</a>
+                            <a href="{{url()->current()}}" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition">#{{$hash}}</a>
                         @endforeach
                     @endif
                 </div>

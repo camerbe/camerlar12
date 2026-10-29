@@ -33,7 +33,7 @@ new class extends Component
         <a href="/{{$this->url}}" class="relative aspect-video overflow-hidden bg-gray-100">
             <img
                 src="{{$debat['image_url'] ??'https://picsum.photos/600/400?random=4' }}"
-                alt="$debat['titre']"
+                alt="{{$debat['titre']}}"
                 class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
             />
             <p class="text-xs text-gray-300 mt-4 md:text-md">
