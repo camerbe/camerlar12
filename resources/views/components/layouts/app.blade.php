@@ -124,7 +124,7 @@
         6. CONSENT MODE + GA4
         ===================================================== -->
         <!-- Lucide Icons -->
-        <script src="https://unpkg.com/lucide@latest"></script>
+        <script src="https://unpkg.com/lucide@latest" defer></script>
 
         @livewireStyles
         @fluxAppearance
