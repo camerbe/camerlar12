@@ -8,6 +8,8 @@
     $description=$dynamicDescription;
     $image=$heroArticle["image_url"];
     $author=$heroArticle["auteur"];
+    $image_width=$heroArticle['image_width'] ?? "300";
+    $image_height=$heroArticle['image_height'] ?? "300";
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
     $section=\Illuminate\Support\Str::title($heroArticle["sousrubrique"]["sousrubrique"]);
     $canonical=url()->current();
@@ -25,6 +27,8 @@
     :title="$title"
     :description="$description"
     :image="$image"
+    :image_width="$image_width"
+    :image_height="$image_height"
     :author="$author"
     :keyword="$keyword"
     :section="$section"
