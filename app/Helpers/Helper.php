@@ -533,4 +533,67 @@ class Helper
 
         return $dom;
     }
+
+    /**
+     * Ajoute rel="sponsored" aux liens pointant vers Supergooal.
+     *
+     * @param string $html
+     * @return string
+     */
+    public static function addSponsoredToSupergooalLinks(string $html): string
+    {
+        if (trim($html) === '' || stripos($html, '<a') === false) {
+            return $html;
+        }
+
+        $dom = self::loadHtml($html);
+
+        $anchors = $dom->getElementsByTagName('a');
+
+        foreach ($anchors as $anchor) {
+
+            $href = trim($anchor->getAttribute('href'));
+
+            if ($href === '') {
+                continue;
+            }
+
+            $url = parse_url($href);
+
+            if (!$url || empty($url['scheme']) || empty($url['host'])) {
+                continue;
+            }
+
+            $host = strtolower($url['host']);
+
+            // Vérifie le domaine Supergooal et ses sous-domaines
+            if (
+                strtolower($url['scheme']) !== 'https' ||
+                !($host === 'supergooal.cm' ||
+                    str_ends_with($host, '.supergooal.cm'))
+            ) {
+                continue;
+            }
+
+            // Récupère les valeurs rel existantes
+            $rel = preg_split(
+                '/\s+/',
+                trim($anchor->getAttribute('rel')),
+                -1,
+                PREG_SPLIT_NO_EMPTY
+            );
+
+            // Ajoute sponsored sans supprimer les autres valeurs
+            $relLower = array_map('strtolower', $rel);
+
+            if (!in_array('sponsored', $relLower, true)) {
+                $rel[] = 'sponsored';
+            }
+
+            $anchor->setAttribute('rel', implode(' ', $rel));
+        }
+
+        return $dom->saveHTML();
+    }
+
 }

@@ -96,7 +96,7 @@ class ArticleRepository extends Repository implements IArticleRepository
         /*$cache="Article-By-User-".$input['fkuser'];
         Cache::forget($cache);
         return parent::create($input);*/
-
+        $input['info']=Helper::addSponsoredToSupergooalLinks($input['info']);
         $article = parent::create($input);
         $this->flushCache();
         return $article;
@@ -148,6 +148,7 @@ class ArticleRepository extends Repository implements IArticleRepository
         if(isset($input['info'])){
             $html=new Html2Text($input['info']);
             $input['chapeau']=Str::of($html->getText())->limit(160);
+            $input['info']=Helper::addSponsoredToSupergooalLinks($input['info']);
         }
         if(isset($input['image'])){
             $input['imageheight']=Helper::extractHeight($input['image']);
