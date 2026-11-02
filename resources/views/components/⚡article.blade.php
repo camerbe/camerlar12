@@ -423,6 +423,7 @@ new class extends Component
 
         <!-- SIDEBAR -->
         <aside class="lg:col-span-4 space-y-8">
+            @include('partials.gam-cam-sidebar')
             <livewire:most-readed-rubrique-country :plusluParPays="$this->plusLus" />
             <livewire:video :camer="null" :sopie="$this->sopie" />
             <livewire:debat :debat="$this->debat"/>

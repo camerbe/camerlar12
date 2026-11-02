@@ -152,7 +152,7 @@ new class extends Component
 
         {{-- Sidebar --}}
         <aside class="lg:col-span-4 space-y-6">
-            {{-- 4. Sous-composant Livewire pour la Sidebar--}}
+            @include('partials.gam-cam-sidebar')
             <livewire:most-readed-author :mostReaded="$mostReaded" />
             <livewire:video :camer="null" :sopie="$sopie" />
             <livewire:debat :debat="$debat"/>

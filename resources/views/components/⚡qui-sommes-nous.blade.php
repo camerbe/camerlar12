@@ -25,6 +25,9 @@ new class extends Component
 
 
     <div class="space-y-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
+            @include('partials.gam-cam-top')
+        </div>
         @if($heroArticle)
             <livewire:featured-article :article="$heroArticle" />
         @endif
@@ -229,13 +232,13 @@ new class extends Component
             </div>
             <aside class="lg:col-span-4 space-y-6">
                 {{-- 4. Sous-composant Livewire pour la Sidebar--}}
-
+                @include('partials.gam-cam-sidebar')
                 <livewire:video :camer="null" :sopie="$sopie" />
-                @include('partials.pub-aside')
+
                 <livewire:debat :debat="$debat"/>
                 <livewire:pub-iframe :iframe="$iframe"/>
                 <livewire:droit :droit="$droit"/>
-                @include('partials.pub-aside')
+               
                 <livewire:video :camer="$camer" :sopie="null" />
                 <livewire:skypper :skypper="$skypper" />
 
