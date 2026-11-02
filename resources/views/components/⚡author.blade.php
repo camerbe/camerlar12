@@ -47,7 +47,9 @@ new class extends Component
 
 <div class="space-y-8">
     <!-- Simplicity is the consequence of refined emotions. - Jean D'Alembert -->
-
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
+        @include('partials.gam-cam-top')
+    </div>
     @if($heroArticle)
         <livewire:featured-article :article="$heroArticle" />
     @endif
