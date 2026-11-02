@@ -48,6 +48,9 @@ new class extends Component
         <livewire:featured-article :article="$heroArticle" />
     @endif
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
+                @include('partials.gam-cam-top')
+            </div>
             <div class="lg:col-span-8 space-y-8">
                 <section>
                     <div class="flex items-center justify-between border-b-2 border-brand-500 pb-2">
