@@ -141,8 +141,18 @@
             async
             src="https://www.googletagmanager.com/gtag/js?id={{config('analytics.googletagmanager-id')}}">
         </script>
+        {{-- =========================================================
+        14. GOOGLE AD MANAGER
+        CHARGEMENT APRÈS LE CHEMIN CRITIQUE
+        ========================================================= --}}
+        <script async
+                src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+                crossorigin="anonymous">
+        </script>
 
-
+        <script>
+            window.googletag = window.googletag || { cmd: [] };
+        </script>
 
         {{-- TABOOLA--}}
         <script type="text/javascript">

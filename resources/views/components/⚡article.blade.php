@@ -115,7 +115,7 @@ new class extends Component
         <!-- COLONNE ARTICLE (8 colonnes) -->
         <article class="lg:col-span-8" itemscope itemtype="https://schema.org/NewsArticle">
             <meta itemprop="mainEntityOfPage" content="{{url()->current()}}" />
-
+            @include('partials.gam-cam-top')
             <!-- En-tête article -->
             <header class="mb-6">
                 <div class="flex items-center space-x-2 mb-4">
