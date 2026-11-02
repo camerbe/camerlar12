@@ -1,4 +1,4 @@
-<div id="div-gpt-ad-cam-sidebar"></div>
+<div id="div-gpt-ad-cam-sidebar" class="bg-white dark:bg-dark-surface p-6 rounded-xl border border-gray-100 dark:border-dark-border shadow-sm"></div>
 
 <script>
     googletag.cmd.push(function () {
