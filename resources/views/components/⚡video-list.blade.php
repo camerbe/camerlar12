@@ -92,7 +92,7 @@ new class extends Component
             @include('partials.gam-cam-top')
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-           
+
             <div class="lg:col-span-8 space-y-8">
                 <section>
                     <div class="flex items-center justify-between border-b-2 border-brand-500 pb-2">
