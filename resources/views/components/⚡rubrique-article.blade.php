@@ -44,12 +44,13 @@ new class extends Component
 };
 ?>
 <div class="space-y-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
+        @include('partials.gam-cam-top')
+    </div>
     @if($heroArticle)
         <livewire:featured-article :article="$heroArticle" />
     @endif
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
-            @include('partials.gam-cam-top')
-        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
             <div class="lg:col-span-8 space-y-8">

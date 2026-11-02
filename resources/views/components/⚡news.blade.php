@@ -180,7 +180,7 @@ new class extends Component
                                 <div class="bg-gray-200 dark:bg-gray-700 h-4 w-2/3 rounded"></div>
                             </div>
                         @endfor
-                        
+
                     </div>
                 </div>
 
