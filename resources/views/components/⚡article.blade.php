@@ -99,6 +99,9 @@ new class extends Component
 ?>
 
 <div xmlns:livewire="http://www.w3.org/1999/html">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
+        @include('partials.gam-cam-top')
+    </div>
     <!-- ========================================== -->
     <!-- FIL D'ARIANE                               -->
     <!-- ========================================== -->
@@ -115,7 +118,8 @@ new class extends Component
         <!-- COLONNE ARTICLE (8 colonnes) -->
         <article class="lg:col-span-8" itemscope itemtype="https://schema.org/NewsArticle">
             <meta itemprop="mainEntityOfPage" content="{{url()->current()}}" />
-            @include('partials.gam-cam-top')
+
+
             <!-- En-tête article -->
             <header class="mb-6">
                 <div class="flex items-center space-x-2 mb-4">
