@@ -202,6 +202,7 @@ new class extends Component
 
         {{-- Sidebar : les données viennent du cache via $this->sidebar --}}
         <aside class="lg:col-span-4 space-y-6">
+            @include('partials.gam-cam-sidebar')
             <livewire:sidebar-news :articles="$this->mostReaded" />
             <livewire:video :camer="null" :sopie="$this->sidebar['sopie'] ?? null" />
             <livewire:debat :debat="$this->sidebar['debat'] ?? null"/>
