@@ -87,8 +87,6 @@ new class extends Component
                 </div>
             @endif
         @endforeach
-            <div class="mx-auto w-[320px] md:w-[970px]">
-                @include('partials.gam-cam-bottom')
-            </div>
+
     </div>
 </div>

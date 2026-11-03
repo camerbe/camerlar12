@@ -268,12 +268,7 @@ new class extends Component
                 <img itemprop="thumbnailUrl" src="{{$this->img}}" width="1200" height="675"
                      alt="{{$this->titre}}" fetchpriority="high" loading="eager"
                      class="w-full h-auto object-cover">
-                <figcaption>
-                    <div class="mx-auto w-[320px] md:w-[728px]">
-                        @include('partials.gam-cam-top')
-                    </div>
 
-                </figcaption>
                 <meta itemprop="url" content="{{$this->img}}" />
                 <meta itemprop="width" content="{{ $this->article['image_width'] }}" />
                 <meta itemprop="height" content="{{ $this->article['image_height'] }}" />
@@ -309,9 +304,7 @@ new class extends Component
                         @endforeach
                     @endif
                 </div>
-                <div class="mx-auto w-[320px] md:w-[728px]">
-                    @include('partials.gam-cam-bottom')
-                </div>
+
             </div>
 
             <!-- Abonnement chaîne WhatsApp -->
@@ -441,6 +434,7 @@ new class extends Component
             <livewire:video :camer="$this->camer" :sopie="null" />
             <livewire:skypper :skypper="$this->skypper" />
             <livewire:events :event="$this->event" />
+            @include('partials.gam-cam-sidebar')
         </aside>
     </div>
 
