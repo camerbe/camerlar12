@@ -20,6 +20,7 @@ new class extends Component
     protected $iframe;
     protected $skypper;
     protected $event;
+    protected $info;
 
     protected $titre;
     protected $auteur;
@@ -46,6 +47,7 @@ new class extends Component
         $iframe = null,
         $skypper = null,
         $event = null,
+
     ) {
         $this->article = $oneArticle;
         $this->plusLus = $plusLus;
@@ -75,7 +77,7 @@ new class extends Component
         $this->lienCategorie = Str::slug($this->rubrique).'/'.Str::slug($this->sousrubrique);
         $this->lienCategorie = config('app.url').'/'.$this->lienCategorie;
 
-
+        $this->info=Helper::injectAdInArticle($this->article['info'] );
         $this->share = $this->buildShareData();
 
 
@@ -295,7 +297,7 @@ new class extends Component
                     [&_p]:mb-4 [&_p:last-child]:mb-0
                     md:[&_h2]:text-2xl [&_h2]:uppercase [&_h2]:mb-2 [&_h2]:text-gray-950 [&_h2]:dark:text-white [&_h2]:font-bold
                     leading-relaxed font-read text-[1.05rem] text-gray-800 dark:text-gray-200 text-justify">
-                {!! $this->article['info'] !!}
+                {!! $this->info !!}
 
                 <div class="flex flex-wrap items-center gap-2 mb-8">
                     @if(count($this->hash) > 0)

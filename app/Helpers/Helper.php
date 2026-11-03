@@ -595,5 +595,68 @@ class Helper
 
         return $dom->saveHTML();
     }
+    /**
+     * Détection simple du device via le User-Agent.
+     */
+    public static function detectDevice(): string
+    {
+        $ua = request()->userAgent() ?? '';
+
+        return preg_match('/Mobile|Android|iPhone|iPod|Windows Phone|Opera Mini|BlackBerry/i', $ua)
+            ? 'mobile'
+            : 'desktop';
+    }
+
+    /**
+     * Injecte la pub (partial Blade) après le 2e paragraphe de l'article.
+     *
+     * @param string      $html     Contenu HTML de l'article
+     * @param string|null $device   'mobile' | 'desktop' (détecté via le User-Agent si null)
+     * @param int         $position Après quel paragraphe injecter (2 par défaut)
+     */
+    public static function injectAdInArticle(string $html, ?string $device = null, int $position = 2): string
+    {
+        if (trim($html) === '' || stripos($html, '<p') === false) {
+            return $html;
+        }
+
+        $device ??= self::detectDevice();
+
+        $dom   = self::loadHtml($html);
+        $xpath = new \DOMXPath($dom);
+
+        // Paragraphes "de premier niveau" : on ignore ceux dans une citation, un tableau, une figure, une liste
+        $nodes = $xpath->query('//p[not(ancestor::blockquote or ancestor::table or ancestor::figure or ancestor::li)]');
+
+        // On ne garde que les paragraphes avec du vrai texte (pas les <p>&nbsp;</p>)
+        $paragraphs = [];
+        foreach ($nodes as $p) {
+            $text = trim(str_replace("\u{00A0}", ' ', $p->textContent));
+            if ($text !== '') {
+                $paragraphs[] = $p;
+            }
+        }
+
+        // Pas assez de paragraphes : on n'injecte rien
+        if (count($paragraphs) < $position) {
+            return $html;
+        }
+
+        $target = $paragraphs[$position - 1];
+
+        // Marqueur temporaire (commentaire HTML). On n'injecte pas la pub directement dans le DOM
+        // car les scripts publicitaires (AdSense, etc.) ne sont pas du XML valide.
+        $marker = '<!--PUB_SLOT-->';
+        $target->parentNode->insertBefore($dom->createComment('PUB_SLOT'), $target->nextSibling);
+
+        $result = $dom->saveHTML();
+
+        $ad = ($device==='mobile') ?
+                  view('partials.gam-cam-mid-mobile')->render()
+                : view('partials.gam-cam-mid-desktop')->render();
+        //$ad = view('partials.pub', ['device' => $device])->render();
+
+        return str_replace($marker, $ad, $result);
+    }
 
 }
