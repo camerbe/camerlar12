@@ -1,4 +1,4 @@
-<amp-ad
+{{-- <amp-ad
     width="100vw"
     height="320"
     type="adsense"
@@ -7,5 +7,23 @@
     data-auto-format="rspv"
     data-full-width
 >
+    <div overflow></div>
+</amp-ad>
+
+partials/amp-adaptable.blade.php --}}
+
+@props([
+    'slot' => '6927429462',
+    'height' => 320,
+])
+
+<amp-ad
+    width="100vw"
+    height="{{ $height }}"
+    type="adsense"
+    data-ad-client="{{ config('analytics.ca-pub') }}"
+    data-ad-slot="{{ $slot }}"
+    data-auto-format="rspv"
+    data-full-width>
     <div overflow></div>
 </amp-ad>

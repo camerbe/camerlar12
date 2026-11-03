@@ -1574,9 +1574,11 @@
 
 
 <body>
+    {{--
     <amp-auto-ads type="adsense"
                   data-ad-client="ca-pub-8638642715460968">
-    </amp-auto-ads>
+    </amp-auto-ads> --}}
+    @include('partials.gam-amp-cam-mid')
     <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
     <button on="tap:sidebar.toggle" class="ampstart-btn caps m2 header-icon-1"><i class="fa fa-navicon"></i></button>
     <a href="{{env('APP_URL')}}/amp/accueil" class="header-logo">
@@ -1681,11 +1683,7 @@
 
 <div class="page-content">
 
-    <div class="sliders full-bottom">
-        {{--@yield('slider')--}}
-        <amp-auto-ads type="adsense" data-ad-client="{{config('analytics.ca-pub')}}">
-        </amp-auto-ads>
-    </div>
+
     <div class="decoration decoration-margins"></div>
     <div class="news-full">
         @yield('content')

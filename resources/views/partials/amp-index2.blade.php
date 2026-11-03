@@ -39,6 +39,7 @@
                                 height="{{ $article['image_height'] ?? 300 }}">
                             </amp-img>
                         </amp-img>
+                        @include('partials.gam-amp-cam-mid')
                         <meta itemprop="datePublished" content="{{ $articleDate }}">
                         <meta itemprop="dateModified" content="{{ $today }}">
                         <meta itemprop="inLanguage" content="fr-FR">

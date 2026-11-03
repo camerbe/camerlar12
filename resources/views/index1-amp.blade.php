@@ -36,6 +36,7 @@
 @extends('layouts.amp-master')
 @section('content')
     @include('partials.amp-article')
+    @include('partials.gam-amp-cam-mid')
     @include('partials.amp-debat-droit')
     @include('partials.amp-event-pub')
     @include('partials.amp-video')
