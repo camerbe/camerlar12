@@ -284,7 +284,7 @@ new class extends Component
             </div>
 
             <div itemprop="articleBody"
-                 class="article-body 
+                 class="article-body
                     [&_hr]:py-2 [&_hr]:my-6 [&_hr]:border-t [&_hr]:border-gray-300 [&_hr]:dark:border-gray-700
                     [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:text-sm [&_table]:overflow-hidden
                     [&_thead]:bg-gray-100 [&_thead]:dark:bg-gray-800
