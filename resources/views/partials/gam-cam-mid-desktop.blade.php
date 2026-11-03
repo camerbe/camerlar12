@@ -1,7 +1,15 @@
-<div class="md:float-right md:mx-0 md:ml-5 md:mt-1 md:mb-3
-            lg:min-h-[600px]
-            [&_iframe]:!w-auto [&_iframe]:!aspect-auto [&_iframe]:!my-0 [&_iframe]:!rounded-none
-            [&_img]:!w-auto [&_img]:!my-0">
+
+<style>
+    .pub-mid { width:300px; max-width:100%; margin:16px auto; min-height:250px; }
+    @media (min-width: 768px) {
+        .pub-mid { float:right; margin:4px 0 12px 20px; }
+    }
+    @media (min-width: 1024px) {
+        .pub-mid { min-height:600px; }
+    }
+    .pub-mid iframe { width:auto !important; aspect-ratio:auto !important; margin:0 !important; border-radius:0 !important; }
+</style>
+<div class="pub-mid">
     <div id="div-gpt-ad-cam-mid-desktop"></div>
 </div>
 <script>
