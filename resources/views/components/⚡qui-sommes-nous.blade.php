@@ -241,7 +241,7 @@ new class extends Component
 
                 <livewire:video :camer="$camer" :sopie="null" />
                 <livewire:skypper :skypper="$skypper" />
-
+                @include('partials.gam-cam-sidebar')
 
             </aside>
         </div>
