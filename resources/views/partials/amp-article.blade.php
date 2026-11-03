@@ -95,6 +95,7 @@
             {{$article['sousrubrique']['sousrubrique']}}
         </div>
     </div>
+    @include('partials.gam-amp-cam-mid')
         <meta itemprop="thumbnailUrl" content="{{$article['image_url']}}" />
         <meta itemprop="description" content="{{$description}}" />
         <meta itemprop="datePublished" content="{{ $articleDate }}">

@@ -1563,8 +1563,9 @@
 
 <body>
 
-    <amp-auto-ads type="adsense"
-                  data-ad-client="ca-pub-8638642715460968">
+    <amp-auto-ads
+        type="adsense"
+        data-ad-client="ca-pub-8638642715460968">
     </amp-auto-ads>
 
     <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">

@@ -43,7 +43,9 @@
 
 
             </div>
-
+                @if ($loop->iteration == 5)
+                    @include('partials.gam-amp-cam-mid')
+                @endif
 
 
 @endforeach
