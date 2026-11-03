@@ -9,6 +9,7 @@
             <p class="bg-green-dark uppercase">{{$firstArticle['sousrubrique']['sousrubrique']}}</p>
             <div class="bg-green-dark full-bottom"></div>
         </div>
+        @include('partials.gam-amp-cam-mid')
         @foreach($articles as $article)
             @php
                 $today = now()->format('Y-m-d\TH:i:s+00:00');
@@ -39,7 +40,7 @@
                                 height="{{ $article['image_height'] ?? 300 }}">
                             </amp-img>
                         </amp-img>
-                        @include('partials.gam-amp-cam-mid')
+
                         <meta itemprop="datePublished" content="{{ $articleDate }}">
                         <meta itemprop="dateModified" content="{{ $today }}">
                         <meta itemprop="inLanguage" content="fr-FR">
@@ -79,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-
+                i
                 @endforeach
             </div>
             <div class="news-item">
