@@ -9,7 +9,7 @@
             <p class="bg-green-dark uppercase">{{$firstArticle['sousrubrique']['sousrubrique']}}</p>
             <div class="bg-green-dark full-bottom"></div>
         </div>
-        @include('partials.gam-amp-cam-mid')
+
         @foreach($articles as $article)
             @php
                 $today = now()->format('Y-m-d\TH:i:s+00:00');
@@ -80,7 +80,10 @@
                         </div>
                     </div>
                 </div>
-                i
+                {{-- Publicité après le 5e article --}}
+                @if ($loop->iteration == 5)
+                    @include('partials.gam-amp-cam-mid')
+                @endif
                 @endforeach
             </div>
             <div class="news-item">
