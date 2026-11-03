@@ -56,12 +56,13 @@
             src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
     </script>
 
-
-    <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
     <!--non-AMP page
+    <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
+
 <link rel="canonical" href="{{config('APP_URL')}}">
--->
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
@@ -1574,11 +1575,11 @@
 
 
 <body>
-    {{--
+
     <amp-auto-ads type="adsense"
                   data-ad-client="ca-pub-8638642715460968">
-    </amp-auto-ads> --}}
-    @include('partials.gam-amp-cam-mid')
+    </amp-auto-ads>
+
     <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
     <button on="tap:sidebar.toggle" class="ampstart-btn caps m2 header-icon-1"><i class="fa fa-navicon"></i></button>
     <a href="{{env('APP_URL')}}/amp/accueil" class="header-logo">
