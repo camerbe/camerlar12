@@ -241,8 +241,7 @@
             -ms-text-size-adjust: none;
             -webkit-tap-highlight-color: rgba(0,0,0,0);
             -webkit-font-smoothing: antialiased;
-            -webkit-transform: translate3d(1,1,1);
-            transform:translate3d(1,1,1);
+
             text-rendering: auto;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -582,18 +581,6 @@
             font-family: 'FontAwesome';
         }
 
-
-
-        .body-bg{
-            background-image:url({{secure_asset('amp-api/ampmaterial/images/pictures_vertical/bg3.jpg')}});
-            background-size:cover;
-            position:fixed;
-            top:0px;
-            left:0px;
-            right:0px;
-            bottom:0px;
-            z-index:5;
-        }
 
         /*Header*/
         header{
