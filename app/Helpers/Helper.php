@@ -657,15 +657,16 @@ class Helper
         $target->parentNode->insertBefore($dom->createComment('PUB_SLOT'), $target->nextSibling);
 
         $result = $dom->saveHTML();
+        $adData = [
+            'section'  => $section,
+            'lang'     => $lang,
+            'pagetype' => 'article',
+        ];
+        $partial = $device === 'mobile'
+            ? 'partials.gam-cam-mid-mobile'
+            : 'partials.gam-cam-mid-desktop';
 
-        $ad = ($device==='mobile') ?
-                  view('partials.gam-cam-mid-mobile',[
-                      'section'=>$section,
-                      'lang'=>$lang,
-                      'pagetype'=>'article',
-                  ])->render()
-                : view('partials.gam-cam-mid-desktop')->render();
-        //$ad = view('partials.pub', ['device' => $device])->render();
+        $ad = view($partial, $adData)->render();
 
         return str_replace($marker, $ad, $result);
     }
