@@ -107,7 +107,11 @@ new class extends Component
 
 <div xmlns:livewire="http://www.w3.org/1999/html">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mb-4">
-        @include('partials.gam-cam-top')
+        @include('partials.gam-cam-top', [
+                'section'  => $this->section,
+                'lang'     => $this->lang,
+                'pagetype' => 'article',
+              ])
     </div>
     <!-- ========================================== -->
     <!-- FIL D'ARIANE                               -->
