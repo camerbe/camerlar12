@@ -29,7 +29,7 @@ new class extends Component
         // (une entrée par visiteur) au lieu d'être sérialisés dans le
         // snapshot et renvoyés au serveur à chaque clic "Charger plus".
         $this->sidebarKey = 'home-sidebar-'.session()->getId();
-        dd($this->section);
+        
         Cache::put($this->sidebarKey, [
             'debat'   => $debat,
             'droit'   => $droit,
