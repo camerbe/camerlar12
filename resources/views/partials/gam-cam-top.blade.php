@@ -32,11 +32,7 @@
             .defineSizeMapping(mapping)
             .addService(googletag.pubads());
 
-        googletag.setConfig({
-            singleRequest: true
-        });
 
-        googletag.enableServices();
 
         googletag.display('div-gpt-ad-1793752751975-0');
     });

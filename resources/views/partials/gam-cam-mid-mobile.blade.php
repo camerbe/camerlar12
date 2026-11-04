@@ -27,12 +27,6 @@
             .defineSizeMapping(mapping)
             .addService(googletag.pubads());
 
-        googletag.setConfig({
-            singleRequest: true
-        });
-
-        googletag.enableServices();
-
         googletag.display('div-gpt-ad-1793801008417-0');
     });
 </script>
