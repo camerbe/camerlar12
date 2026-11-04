@@ -1,4 +1,5 @@
-<div id="div-gpt-ad-1793753581942-0" class="bg-white dark:bg-dark-surface p-6 rounded-xl border border-gray-100 dark:border-dark-border shadow-sm"></div>
+<div id="div-gpt-ad-1793753581942-0">
+</div>
 
 <script>
     googletag.cmd.push(function () {
