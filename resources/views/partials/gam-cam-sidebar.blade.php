@@ -1,4 +1,4 @@
-<div id="div-gpt-ad-cam-sidebar" class="bg-white dark:bg-dark-surface p-6 rounded-xl border border-gray-100 dark:border-dark-border shadow-sm"></div>
+<div id="div-gpt-ad-1793753581942-0" class="bg-white dark:bg-dark-surface p-6 rounded-xl border border-gray-100 dark:border-dark-border shadow-sm"></div>
 
 <script>
     googletag.cmd.push(function () {
@@ -22,7 +22,7 @@
                 [300, 600],
                 [160, 600]
             ],
-            'div-gpt-ad-cam-sidebar'
+            'div-gpt-ad-1793753581942-0'
         )
             .defineSizeMapping(mapping)
             .addService(googletag.pubads());
@@ -33,6 +33,6 @@
 
         googletag.enableServices();
 
-        googletag.display('div-gpt-ad-cam-sidebar');
+        googletag.display('div-gpt-ad-1793753581942-0');
     });
 </script>

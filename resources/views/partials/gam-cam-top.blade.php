@@ -1,4 +1,4 @@
-<div id="div-gpt-ad-cam-top"></div>
+<div id="div-gpt-ad-1793752751975-0"></div>
 
 <script>
     googletag.cmd.push(function () {
@@ -27,7 +27,7 @@
                 [320, 100],
                 [320, 50]
             ],
-            'div-gpt-ad-cam-top'
+            'div-gpt-ad-1793752751975-0'
         )
             .defineSizeMapping(mapping)
             .addService(googletag.pubads());
@@ -38,6 +38,6 @@
 
         googletag.enableServices();
 
-        googletag.display('div-gpt-ad-cam-top');
+        googletag.display('div-gpt-ad-1793752751975-0');
     });
 </script>
