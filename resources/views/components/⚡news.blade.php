@@ -15,6 +15,7 @@ new class extends Component
     public string $sidebarKey = '';
     public int $perPage = 10;
 
+
     public function mount(
         $debat = null,
         $droit = null,
@@ -28,7 +29,7 @@ new class extends Component
         // (une entrée par visiteur) au lieu d'être sérialisés dans le
         // snapshot et renvoyés au serveur à chaque clic "Charger plus".
         $this->sidebarKey = 'home-sidebar-'.session()->getId();
-
+        dd($this->section);
         Cache::put($this->sidebarKey, [
             'debat'   => $debat,
             'droit'   => $droit,
@@ -202,7 +203,11 @@ new class extends Component
 
         {{-- Sidebar : les données viennent du cache via $this->sidebar --}}
         <aside class="lg:col-span-4 space-y-6">
-            @include('partials.gam-cam-mid')
+            @include('partials.gam-cam-mid', [
+                'section'  => 'home',
+                'lang'     => 'fr',
+                'pagetype' => 'home',
+            ])
             <livewire:sidebar-news :articles="$this->mostReaded" />
             <livewire:video :camer="null" :sopie="$this->sidebar['sopie'] ?? null" />
             <livewire:debat :debat="$this->sidebar['debat'] ?? null"/>

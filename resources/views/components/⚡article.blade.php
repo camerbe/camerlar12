@@ -35,6 +35,8 @@ new class extends Component
     protected $nowFormatted;
     protected $hash = [];
     protected $share = [];
+    protected $section;
+    protected $lang;
 
     public function mount(
         $oneArticle,
@@ -78,9 +80,9 @@ new class extends Component
         $this->lienCategorie = config('app.url').'/'.$this->lienCategorie;
 
 
-        $section = Str::slug($this->sousrubrique);
-        $lang = app()->getLocale();
-        $this->info=Helper::injectAdInArticle($this->article['info'],$section,$lang);
+        $this->section = Str::slug($this->sousrubrique);
+        $this->lang = app()->getLocale();
+        $this->info=Helper::injectAdInArticle($this->article['info'],$this->section,$this->lang);
         $this->share = $this->buildShareData();
 
 
@@ -430,7 +432,11 @@ new class extends Component
 
         <!-- SIDEBAR -->
         <aside class="lg:col-span-4 space-y-8">
-            @include('partials.gam-cam-mid')
+            @include('partials.gam-cam-mid', [
+                'section'  => $this->section,
+                'lang'     => $this->lang,
+                'pagetype' => 'article',
+              ])
             <livewire:most-readed-rubrique-country :plusluParPays="$this->plusLus" />
             <livewire:video :camer="null" :sopie="$this->sopie" />
             <livewire:debat :debat="$this->debat"/>

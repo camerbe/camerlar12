@@ -22,8 +22,10 @@ new class extends Component
     public $skypper;
     public $iframe;
     public string $cacheKey;
+    protected $section;
 
     public function mount($rubriqueArticles){
+        $this->section=Str::slug($rubriqueArticles[0]['sousrubrique']['sousrubrique']);
         $this->cacheKey = "rubrique_articles_{$rubriqueArticles[0]['sousrubrique']['sousrubrique']}_" . md5(serialize(array_column($rubriqueArticles, 'id')));
         Cache::put($this->cacheKey, $rubriqueArticles, now()->addMinutes(10));
         $this->updateFeed($rubriqueArticles);
@@ -144,7 +146,11 @@ new class extends Component
             {{-- Sidebar --}}
             <aside class="lg:col-span-4 space-y-6">
                 {{-- 4. Sous-composant Livewire pour la Sidebar--}}
-                @include('partials.gam-cam-sidebar')
+                @include('partials.gam-cam-mid', [
+                    'section'  => $this->section,
+                    'lang'     => 'fr',
+                    'pagetype' => 'category',
+                ])
                 <livewire:most-readed-rubrique :mostReaded="$mostReaded" />
                 <livewire:video :camer="null" :sopie="$sopie" />
                 <livewire:debat :debat="$debat"/>

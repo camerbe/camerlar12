@@ -2,7 +2,16 @@
 
 <script>
     googletag.cmd.push(function () {
+        googletag.pubads().setTargeting(
+            'section', @json($section)
+        );
+        googletag.pubads().setTargeting(
+            'lang', @json($lang)
+        );
 
+        googletag.pubads().setTargeting(
+            'pagetype', @json($pagetype)
+        );
         const mapping = googletag.sizeMapping()
             // Desktop (≥ 1024px)
             .addSize([1024, 0], [

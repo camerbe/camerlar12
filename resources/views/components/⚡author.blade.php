@@ -152,7 +152,11 @@ new class extends Component
 
         {{-- Sidebar --}}
         <aside class="lg:col-span-4 space-y-6">
-            @include('partials.gam-cam-mid')
+            @include('partials.gam-cam-mid', [
+                'section'  => 'author',
+                'lang'     => 'fr',
+                'pagetype' => 'author',
+              ])
             <livewire:most-readed-author :mostReaded="$mostReaded" />
             <livewire:video :camer="null" :sopie="$sopie" />
             <livewire:debat :debat="$debat"/>
