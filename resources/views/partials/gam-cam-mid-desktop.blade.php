@@ -44,7 +44,7 @@
             [300, 350],
             [336, 280]
         ],
-        'div-gpt-ad-1793793364353-00'
+        'div-gpt-ad-1793793364353-0'
     )
     .defineSizeMapping(mapping)
     .addService(googletag.pubads());
