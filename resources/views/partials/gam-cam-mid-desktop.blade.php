@@ -10,11 +10,21 @@
     .pub-mid iframe { width:auto !important; aspect-ratio:auto !important; margin:0 !important; border-radius:0 !important; }
 </style>
 <div class="pub-mid">
-    <div id="div-gpt-ad-1793753722963-0"></div>
+    <div id="div-gpt-ad-1793793364353-0"></div>
 </div>
 <script>
     googletag.cmd.push(function () {
+        googletag.pubads().setTargeting(
+            'section', @json($section)
+        );
 
+        googletag.pubads().setTargeting(
+            'lang', @json($lang)
+        );
+
+        googletag.pubads().setTargeting(
+            'pagetype', @json($pagetype)
+        );
         const mapping = googletag.sizeMapping()
             ///Desktop (≥ 1024px)
             .addSize([1024, 0], [
@@ -28,13 +38,13 @@
             .build();
 
     googletag.defineSlot(
-        '/10680407/CAM_MID',
+        '/10680407/CAM_MID_DESKTOP',
         [
             [300, 600],
             [300, 350],
             [336, 280]
         ],
-        'div-gpt-ad-1793753722963-0'
+        'div-gpt-ad-1793793364353-00'
     )
     .defineSizeMapping(mapping)
     .addService(googletag.pubads());
@@ -45,6 +55,6 @@
 
     googletag.enableServices();
 
-    googletag.display('div-gpt-ad-1793753722963-0');
+    googletag.display('div-gpt-ad-1793793364353-0');
     });
 </script>

@@ -77,7 +77,7 @@ new class extends Component
         $this->lienCategorie = Str::slug($this->rubrique).'/'.Str::slug($this->sousrubrique);
         $this->lienCategorie = config('app.url').'/'.$this->lienCategorie;
 
-        $this->info=Helper::injectAdInArticle($this->article['info'] );
+        $this->info=Helper::injectAdInArticle($this->article['info'],$this->sousrubrique,app()->getLocale() );
         $this->share = $this->buildShareData();
 
 

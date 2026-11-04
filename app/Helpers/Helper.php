@@ -614,7 +614,14 @@ class Helper
      * @param string|null $device   'mobile' | 'desktop' (détecté via le User-Agent si null)
      * @param int         $position Après quel paragraphe injecter (2 par défaut)
      */
-    public static function injectAdInArticle(string $html, ?string $device = null, int $position = 2): string
+    public static function injectAdInArticle(
+        string $html,
+        string $section,
+        string $lang,
+        ?string $device = null,
+        int $position = 2
+
+    ): string
     {
         if (trim($html) === '' || stripos($html, '<p') === false) {
             return $html;
@@ -652,7 +659,11 @@ class Helper
         $result = $dom->saveHTML();
 
         $ad = ($device==='mobile') ?
-                  view('partials.gam-cam-mid-mobile')->render()
+                  view('partials.gam-cam-mid-mobile',[
+                      'section'=>$section,
+                      'lang'=>$lang,
+                      'pagetype'=>'article',
+                  ])->render()
                 : view('partials.gam-cam-mid-desktop')->render();
         //$ad = view('partials.pub', ['device' => $device])->render();
 
