@@ -1,4 +1,4 @@
-<div id="div-gpt-ad-1793799610062-0"></div>
+<div id="div-gpt-ad-1793799610062-0" class="pb-2"></div>
 
 <script>
     googletag.cmd.push(function () {
@@ -23,7 +23,7 @@
 
                 [336, 280]
             ])
-            
+
             .build();
 
         googletag.defineSlot(
