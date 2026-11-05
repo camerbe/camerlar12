@@ -16,18 +16,14 @@
             // Desktop (≥ 1024px)
             .addSize([1024, 0], [
                 [300, 600],
-                [336, 280],
-                [300, 250]
+                [336, 280]
             ])
             // Mobile / petits écrans (< 1024px)
             .addSize([375, 0], [
-                [300, 350],
+
                 [336, 280]
             ])
-            // Petits mobiles
-            .addSize([0, 0], [
-                [300, 250]
-            ])
+            
             .build();
 
         googletag.defineSlot(
