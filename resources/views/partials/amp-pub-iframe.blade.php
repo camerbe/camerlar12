@@ -1,6 +1,6 @@
 @php
 
-    $pubIframe=$iframe[0];
+    $pubIframe=$iframe;
     $pub=\App\Helpers\Helper::extractFromParagraph($pubIframe['pub']) ?? null;
     $titre=$pubIframe["editor"];
     $isPub = !is_null($pub);

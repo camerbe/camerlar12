@@ -43,5 +43,6 @@ class ClearAllCache extends Command
         Evenement::where('eventdate','<',now())->delete();
 
         $this->info('All caches have been cleared successfully.');
+        $this->info('All passed Events and Ads have been deleted.');
     }
 }

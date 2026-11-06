@@ -67,7 +67,7 @@ class AmpController extends Controller
         $array = json_decode($data->getContent(), true);
         $this->publicite = $array['data'] ?? [];
         //dd($pub);
-        $dataIframe=$this->pub->getIframePub();
+        $dataIframe=$this->pub->getInfomaniakPub();
         $arrayIframe = json_decode($dataIframe->getContent(), true);
         $this->pubIframe=$arrayIframe['data'] ?? [];
 
