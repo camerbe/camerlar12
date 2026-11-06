@@ -219,7 +219,7 @@
                 });
             });
         </script>
-
-
+        <!-- Ferox -->
+        <script src="/ferox-floating.js?v=1"></script>
     </body>
 </html>
