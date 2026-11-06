@@ -50,6 +50,8 @@
             :camer="$camer"
             :skypper="$skypper"
             :event="$event"
+            :iframe="$iframe"
+            :infomaniak="$infomaniak"
         />
 
     </div>

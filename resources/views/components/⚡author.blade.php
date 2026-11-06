@@ -15,6 +15,8 @@ new class extends Component
     public  array $mostReaded=[] ;
     public $debat;
     public $droit;
+    public $iframe;
+    public $infomaniak;
     public $camer;
     public $sopie;
     public $skypper;
@@ -163,7 +165,9 @@ new class extends Component
               ])
             <livewire:most-readed-author :mostReaded="$mostReaded" />
             <livewire:video :camer="null" :sopie="$sopie" />
+            <livewire:pub-iframe :iframe="$this->iframe" type="iframe" />
             <livewire:debat :debat="$debat"/>
+            <livewire:pub-iframe :iframe="$this->infomaniak" type="infomaniak"/>
             <livewire:droit :droit="$droit"/>
             <livewire:video :camer="$camer" :sopie="null" />
             <livewire:skypper :skypper="$skypper"  />

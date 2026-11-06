@@ -17,6 +17,8 @@ new class extends Component
     public $droit = null;
     public $camer = null;
     public $skypper = null;
+    public $iframe = null;
+    public $infomaniak = null;
     //
     #[Validate('required',message: "Le nom est requis.")]
     #[Validate('min:2',message: "Le nom doit avoir au moins 2 caractères.")]
@@ -279,8 +281,9 @@ new class extends Component
                     'pagetype' => 'other',
                 ])
                 <livewire:video :camer="null" :sopie="$sopie" />
+                <livewire:pub-iframe :iframe="$this->iframe" type="iframe" />
                 <livewire:debat :debat="$debat"/>
-                <livewire:pub-iframe :iframe="$iframe"/>
+                <livewire:pub-iframe :iframe="$this->infomaniak" type="infomaniak"/>
                 <livewire:droit :droit="$droit"/>
                 <livewire:video :camer="$camer" :sopie="null" />
                 <livewire:skypper :skypper="$skypper" />

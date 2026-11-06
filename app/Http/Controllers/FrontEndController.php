@@ -62,7 +62,8 @@ class FrontEndController extends Controller
             'droit'    => $this->rubriqueBlock(33, 30, 'front.droit', 12 * 60),
             'debat'    => $this->rubriqueBlock(27, 25, 'front.debat', 12 * 60),
             'event'    => $this->events(),
-            'iframe'   => $this->iframePub(),
+            'iframe'        => $this->iframePub(),
+            'infomaniak'   => $this->infomaniakPub(),
             'sopie'    => $this->video('Sopie'),
             'camer'    => $this->video('Camer'),
         ];
@@ -103,10 +104,13 @@ class FrontEndController extends Controller
 
     private function iframePub(): array
     {
-        // sans cache interne visible côté contrôleur : on le met ici
-        return Cache::remember('front.pubIframe', now()->addHours(12), function () {
-            return $this->decode($this->pub->getIframePub())['data'] ?? [];
-        });
+        return $this->decode($this->pub->getIframePub())['data'] ?? [];
+
+    }
+    private function infomaniakPub(): array
+    {
+       return $this->decode($this->pub->getInfomaniakPub())['data'] ?? [];
+
     }
 
     private function events(): array

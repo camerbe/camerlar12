@@ -18,6 +18,7 @@ new class extends Component
     protected $camer;
     protected $sopie;
     protected $iframe;
+    protected $ifomaniak;
     protected $skypper;
     protected $event;
     protected $info;
@@ -47,6 +48,7 @@ new class extends Component
         $camer,
         $sopie = null,
         $iframe = null,
+        $infomaniak = null,
         $skypper = null,
         $event = null,
 
@@ -59,6 +61,7 @@ new class extends Component
         $this->camer   = $camer;
         $this->sopie   = $sopie;
         $this->iframe  = $iframe;
+        $this->infomaniak  = $infomaniak;
         $this->skypper = $skypper;
         $this->event   = $event;
 
@@ -443,8 +446,9 @@ new class extends Component
               ])
             <livewire:most-readed-rubrique-country :plusluParPays="$this->plusLus" />
             <livewire:video :camer="null" :sopie="$this->sopie" />
+            <livewire:pub-iframe :iframe="$this->iframe" type="iframe" />
             <livewire:debat :debat="$this->debat"/>
-            <livewire:pub-iframe :iframe="$this->iframe"/>
+            <livewire:pub-iframe :iframe="$this->infomaniak" type="infomaniak"/>
             <livewire:droit :droit="$this->droit"/>
             <livewire:video :camer="$this->camer" :sopie="null" />
             <livewire:skypper :skypper="$this->skypper" />

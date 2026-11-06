@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Evenement;
+use App\Models\Pub;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
@@ -31,6 +33,15 @@ class ClearAllCache extends Command
         Artisan::call('config:clear');
         Artisan::call('route:clear');
         Artisan::call('view:clear');
+        /**
+         * Supprime toutes les pubblicités périmées
+         */
+        Pub::where('endpubdate', '<', now())->delete();
+        /**
+         * Supprime touts les évènements passés
+         */
+        Evenement::where('eventdate','<',now())->delete();
+
         $this->info('All caches have been cleared successfully.');
     }
 }

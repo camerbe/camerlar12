@@ -24,6 +24,7 @@ new class extends Component
         $skypper = null,
         $event = null,
         $iframe = null,
+        $infomaniak = null,
     ) {
         // Les 7 jeux de données de la sidebar sont stockés en cache
         // (une entrée par visiteur) au lieu d'être sérialisés dans le
@@ -38,7 +39,8 @@ new class extends Component
             'skypper' => $skypper,
             'event'   => $event,
             'iframe'  => $iframe,
-        ], now()->addMinutes(30));
+            'infomaniak'  => $infomaniak,
+        ], now()->addMinutes(1));
     }
 
     public function loadMore(): void
@@ -210,8 +212,9 @@ new class extends Component
             ])
             <livewire:sidebar-news :articles="$this->mostReaded" />
             <livewire:video :camer="null" :sopie="$this->sidebar['sopie'] ?? null" />
+            <livewire:pub-iframe :iframe="$this->sidebar['iframe'] ?? null" type="iframe" />
             <livewire:debat :debat="$this->sidebar['debat'] ?? null"/>
-            <livewire:pub-iframe :iframe="$this->sidebar['iframe'] ?? null"/>
+            <livewire:pub-iframe :iframe="$this->sidebar['infomaniak'] ?? null" type="infomaniak"/>
             <livewire:droit :droit="$this->sidebar['droit'] ?? null"/>
             <livewire:video :camer="$this->sidebar['camer'] ?? null" :sopie="null" />
             <livewire:skypper :skypper="$this->sidebar['skypper'] ?? null" />
@@ -221,6 +224,6 @@ new class extends Component
                 'lang'     => 'fr',
                 'pagetype' => 'home',
             ])
-        </aside>
-    </div>
+</aside>
+</div>
 </div>

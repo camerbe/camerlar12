@@ -53,12 +53,13 @@
             :heroArticle="$heroArticle"
             :mostReaded="$mostReaded"
             :droit="$droit"
-
             :debat="$debat"
             :sopie="$sopie"
             :camer="$camer"
             :skypper="$skypper"
             :event="$event"
+            :iframe="$iframe"
+            :infomaniak="$infomaniak"
 
         />
 

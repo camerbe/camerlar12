@@ -33,6 +33,9 @@ class PubService
     function getIframePub(){
         return $this->pubRepository->getIframePub();
     }
+    function getInfomaniakPub(){
+        return $this->pubRepository->getInfomaniakPub();
+    }
     function allPubDimension(){
         return $this->pubRepository->allPubDimension();
     }

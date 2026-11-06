@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Cache;
 
 class PubRepository extends Repository implements IPubRepository
 {
+
     use DimensionTypeRubrique;
+    private const INFOMANIAK_KEYWORD = 'infomaniak';
     /**
      * @param $model
      */
@@ -65,8 +67,12 @@ class PubRepository extends Repository implements IPubRepository
      */
     function update(array $input, $id)
     {
+        $currentPub=Pub::with(['typepubs'])
+            ->where('idpub',$id)
+            ->firstOrFail();
+        //dd($currentPubType[]);
+        //$currentPub = $this->findById($id);
 
-        $currentPub = $this->findById($id);
         $input['endpubdate'] = isset($input['endpubdate']) ?
             Carbon::parse($input['endpubdate'])->format('Y-m-d H:i:s') : $currentPub->endpubdate;
         $input['fkdimension'] = $input['fkdimension'] ?? $currentPub->fkdimension;
@@ -74,8 +80,20 @@ class PubRepository extends Repository implements IPubRepository
         $input['pub'] = $input['pub'] ?? $currentPub->pub;
         $input['editor'] = $input['editor'] ?? $currentPub->editor;
         $input['href'] = $input['href'] ?? $currentPub->href;
-        $input['imageheight']=Helper::extractHeight($input['pub']);
-        $input['imagewidth']=Helper::extractWidth($input['pub']);
+        //dd($currentPub->typepubs->pubtype);
+        $typePub = strtoupper($currentPub->typepubs->pubtype ?? '');
+        if ($typePub === 'IMAGE') {
+            $height = Helper::extractHeight($input['pub']);
+            $width  = Helper::extractWidth($input['pub']);
+
+            $input['imageheight'] = is_numeric($height) ? (int) $height : null;
+            $input['imagewidth']  = is_numeric($width)  ? (int) $width  : null;
+        } else {
+            $input['imageheight'] = null;
+            $input['imagewidth']  = null;
+        }
+
+
 
         return parent::update($input, $id);
     }
@@ -131,10 +149,45 @@ class PubRepository extends Repository implements IPubRepository
     /**
      * @return mixed
      */
+    function getInfomaniakPub()
+    {
+        return Cache::remember('pub-iframe-infomaniak', now()->addDay(), function () {
+            return Pub::Iframe()
+                ->where('pub', 'like', '%' . self::INFOMANIAK_KEYWORD . '%')
+                ->first();
+        });
+    }
+
+    /**
+     * @return mixed
+     */
+    function getOtherIframePubs()
+    {
+        Cache::forget('pub-iframe-others');
+        return Cache::remember('pub-iframe-others', now()->addDay(), function () {
+            return Pub::Iframe()
+                ->where('pub', 'not like', '%' . self::INFOMANIAK_KEYWORD . '%')
+                ->get();
+        });
+    }
+    function getIframePub()
+    {
+        $pubs = $this->getOtherIframePubs();
+        if ($pubs->isEmpty()) {
+            return null; // Or return new PubResource(null); depending on how PubResource handles null
+        }
+        //dd($pubs);
+        // random() lève une exception sur une collection vide
+        return $pubs->random();
+    }
+    /**
+     * @return mixed
+
     function getIframePub()
     {
         //dd(Pub::Iframe()->get());
         $cacheKey="pub-iframe";
+
         //Cache::forget($cacheKey);
         return Cache::remember($cacheKey, now()->addDay(), function () {
             return Pub::Iframe()
@@ -142,7 +195,7 @@ class PubRepository extends Repository implements IPubRepository
                 ->select('*')
                 ->get();
         });
-    }
+    } */
 
     /**
      * @return mixed

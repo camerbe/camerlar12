@@ -30,18 +30,24 @@ class Pub extends Model implements HasMedia
             Cache::forget($cache);
             Cache::forget('pub-list-cache');
             Cache::forget('pub-iframe');
+            Cache::forget('pub-iframe-others');
+            Cache::forget('pub-iframe-infomaniak');
         });
         Pub::updated((function ($model){
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
             Cache::forget('pub-list-cache');
             Cache::forget('pub-iframe');
+            Cache::forget('pub-iframe-others');
+            Cache::forget('pub-iframe-infomaniak');
         }));
         Pub::deleted((function ($model){
             $cache=($model->fkdimension===728)? 'Pub-728':'Pub-300';
             Cache::forget($cache);
             Cache::forget('pub-list-cache');
             Cache::forget('pub-iframe');
+            Cache::forget('pub-iframe-others');
+            Cache::forget('pub-iframe-infomaniak');
         }));
     }
     public function dimensions():BelongsTo{

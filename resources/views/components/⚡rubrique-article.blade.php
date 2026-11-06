@@ -21,6 +21,7 @@ new class extends Component
     public $droit;
     public $skypper;
     public $iframe;
+    public $infomaniak;
     public string $cacheKey;
     protected $section;
 
@@ -157,8 +158,9 @@ new class extends Component
                 ])
                 <livewire:most-readed-rubrique :mostReaded="$mostReaded" />
                 <livewire:video :camer="null" :sopie="$sopie" />
+                <livewire:pub-iframe :iframe="$this->iframe" type="iframe" />
                 <livewire:debat :debat="$debat"/>
-                <livewire:pub-iframe :iframe="$iframe"/>
+                <livewire:pub-iframe :iframe="$this->infomaniak" type="infomaniak"/>
                 <livewire:droit :droit="$droit"/>
                 <livewire:video :camer="$camer" :sopie="null" />
                 <livewire:skypper :skypper="$skypper"  />

@@ -48,6 +48,7 @@
         <livewire:news
             :debat="$debat"
             :iframe="$iframe"
+            :infomaniak="$infomaniak"
             :droit="$droit"
             :sopie="$sopie"
             :camer="$camer"
