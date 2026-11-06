@@ -39,14 +39,8 @@
             .defineSizeMapping(mapping)
             .addService(googletag.pubads());
 
-        // Lazy loading : doit être appelé AVANT enableServices()
-        googletag.pubads().enableLazyLoad({
-            fetchMarginPercent: 200,   // lance la requête à 2 viewports de distance
-            renderMarginPercent: 100,  // affiche la pub à 1 viewport de distance
-            mobileScaling: 2.0         // marges doublées sur mobile
-        });
 
-        googletag.enableServices(); // une seule fois par page
+        //googletag.enableServices(); // une seule fois par page
         googletag.display('div-gpt-ad-1793799610062-0');
     });
 </script>

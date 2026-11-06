@@ -155,7 +155,8 @@
             googletag.cmd.push(function () {
 
                 googletag.setConfig({
-                    singleRequest: true
+                    singleRequest: true,
+                    lazyLoad: { fetchMarginPercent: 200, renderMarginPercent: 100, mobileScaling: 2.0 }
                 });
                 googletag.enableServices();
             });
