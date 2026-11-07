@@ -157,20 +157,7 @@
                 googletag.setConfig({
                     singleRequest: true,
                     lazyLoad: { fetchMarginPercent: 200, renderMarginPercent: 100, mobileScaling: 2.0 },
-                    collapseDiv: 'ON_NO_FILL'
                 });
-
-                var mapping = googletag.sizeMapping()
-                    .addSize([1024, 0], [[300, 600], [300, 250], [336, 280], [160, 600]])
-                    .addSize([728, 0],  [[300, 250], [336, 280]])
-                    .addSize([0, 0],    [[300, 250], [320, 100], [320, 50]])   // ne plus laisser vide
-                    .build();
-
-                googletag.defineSlot('/10680407/CAM_MID', [[300, 600], [300, 250], [336, 280]], 'div-gpt-ad-mid')
-                    .defineSizeMapping(mapping)
-                    .setTargeting('section', 'actualites')   // utile pour les règles de prix
-                    .addService(googletag.pubads());
-
                 googletag.enableServices();
             });
         </script>
