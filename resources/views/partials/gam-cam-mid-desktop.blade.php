@@ -28,7 +28,9 @@
         const mapping = googletag.sizeMapping()
             ///Desktop (≥ 1024px)
             .addSize([1024, 0], [
-                [300, 600]
+                [300, 600],
+                [300, 250],
+                [336, 280]
             ])
             .addSize([0, 0], [])
             .build();
@@ -36,12 +38,19 @@
     googletag.defineSlot(
         '/10680407/CAM_MID_DESKTOP',
         [
-            [300, 600]
+            [300, 600],
+            [300, 250],
+            [336, 280]
         ],
         'div-gpt-ad-1793793364353-0'
     )
     .defineSizeMapping(mapping)
     .addService(googletag.pubads());
+    googletag.pubads().addEventListener('slotRenderEnded', function (e) {
+        if (e.slot === slot && e.isEmpty) {
+                document.getElementById('wrap-gpt-1793793364353').style.display = 'none';
+        }
+    });
 
     googletag.display('div-gpt-ad-1793793364353-0');
     });
