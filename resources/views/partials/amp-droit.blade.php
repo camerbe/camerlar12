@@ -1,3 +1,23 @@
+@php
+    $image_width=$droit['image_width'];
+    $image_height=$droit['image_height'];
+    $isEmpty=strlen($image_width)<=1;
+    $articleUrl =url("amp/". Illuminate\Support\Str::slug(strtolower($droit['rubrique']['rubrique'])) . '/' .
+                     Illuminate\Support\Str::slug(strtolower($droit['sousrubrique']['sousrubrique'])) . '/' .
+                     $droit['slug']);
+
+    if($isEmpty){
+        $image=\App\Helpers\Helper::extractImgSrc($droit['image']) ;
+        $arrImgDimension=\App\Helpers\Helper::getImageDimensions($image);
+        $image_height=$arrImgDimension['height'];
+        $image_width=$arrImgDimension['width'];
+    }
+
+
+
+@endphp
+
+
 <div class="material-box">
     <div class="news-category">
         <p class="bg-green-dark uppercase">{{$droit['sousrubrique']['sousrubrique']}}</p>
@@ -5,20 +25,15 @@
     </div>
     <div class="full-bottom">
         <div class="news-full">
-            @php
-                //dd($droit);
-                $articleUrl =url("amp/". Illuminate\Support\Str::slug(strtolower($droit['rubrique']['rubrique'])) . '/' .
-                     Illuminate\Support\Str::slug(strtolower($droit['sousrubrique']['sousrubrique'])) . '/' .
-                     $droit['slug']);
-            @endphp
+
             <a href="{{$articleUrl}}" class="news-item">
                 <amp-img
                     alt="{{$droit['titre']}}"
                     title="{{$droit['titre']}}"
                     class="responsive-img"
                     src="{{$droit['image_url']}}"
-                    width="{{$droit['image_width']}}"
-                    height="{{$droit['image_height']}}"
+                    width="{{$image_width ?? 300}}"
+                    height="{{$image_height ?? 300}}"
                     layout="responsive">
                     <amp-img
                         placeholder
