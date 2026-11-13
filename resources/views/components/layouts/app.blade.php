@@ -220,7 +220,20 @@
                 });
             });
         </script>
+        {{-- =========================================================
+         FEROX FLOATING
+        ACTIVATION JUSQU'AU 21 NOVEMBRE 2026 INCLUS
+        ========================================================= --}}
+
+        @php
+            $feroxEndDate = \Carbon\Carbon::parse('2026-11-21 23:59:59');
+        @endphp
+
+        @if (now()->lte($feroxEndDate))
+            <script src="/ferox-floating.js?v=1"  defer></script>
+            
+        @endif
         <!-- Ferox -->
-        <script src="/ferox-floating.js?v=1"></script>
+
     </body>
 </html>
