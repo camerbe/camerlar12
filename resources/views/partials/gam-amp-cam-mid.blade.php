@@ -1,4 +1,4 @@
-<div class="material-box  full-top">
+<div style="padding-top: 3px;padding-bottom: 3px;">
     <amp-ad
         width="300"
         height="250"

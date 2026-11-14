@@ -181,8 +181,8 @@ class Helper
             }
 
             $ampImg->setAttribute('layout', $ampImg->getAttribute('layout') ?: 'responsive');
-            $ampImg->setAttribute('width', $ampImg->getAttribute('width') ?: '800');
-            $ampImg->setAttribute('height', $ampImg->getAttribute('height') ?: '600');
+            $ampImg->setAttribute('width', $ampImg->getAttribute('width') ?: '1200');
+            $ampImg->setAttribute('height', $ampImg->getAttribute('height') ?: '675');
 
             $img->parentNode->replaceChild($ampImg, $img);
         }

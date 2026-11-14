@@ -84,8 +84,8 @@
             alt="{{$article['titre']}}"
             class="full-bottom"
             src="{{$article['image_url']}}"
-            width="{{$article['image_width'] ?? 300}}"
-            height="{{$article['image_height'] ?? 300}}"
+            width="{{$article['image_width'] ?? 1200}}"
+            height="{{$article['image_height'] ?? 675}}"
             layout="responsive">
 
 
