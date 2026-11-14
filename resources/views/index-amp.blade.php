@@ -10,11 +10,16 @@
     $description=$dynamicDescription;
     $rub=$firstArticle["rubrique"]["rubrique"];
     $sousrub=$firstArticle["sousrubrique"]["sousrubrique"];
-    $image=url('assets/img/camer-logo.png');
-    $image_width=190;
-    $image_height=52;
+    //$image=url('assets/img/camer-logo.png');
+    $image=$firstArticle["image_url"];
+    $image_width=$heroArticle['image_width'] ?? "300";
+    $image_height=$heroArticle['image_height'] ?? "300";
+
+    //$image_width=190;
+    //$image_height=52;
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
-    $section=$firstArticle["rubrique"]["rubrique"]." / ".$firstArticle["sousrubrique"]["sousrubrique"];
+    //$section=$firstArticle["rubrique"]["rubrique"]." / ".$firstArticle["sousrubrique"]["sousrubrique"];
+    $section=\Illuminate\Support\Str::title($firstArticle["sousrubrique"]["sousrubrique"]);
     $author=$firstArticle["auteur"];
     $source=$firstArticle["source"];
     $breadcumbUrl =null;
@@ -22,6 +27,8 @@
     $canonical= \App\Helpers\Helper::remove_amp_from_url(url()->current());
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
     $published_time=\Carbon\Carbon::parse($firstArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
+    $georegion =$firstArticle['fkpays'];
+    $geoplacename=$firstArticle["countries"]["pays"];
     $isJson4listItem=true;
     $isAmp=true;
 

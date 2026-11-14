@@ -21,7 +21,7 @@
     $geoplacename=$heroArticle["countries"]["pays"];
     $isJson4listItem=true;
     $isJson4article=false;
-    
+
 
 @endphp
 <x-layouts.app

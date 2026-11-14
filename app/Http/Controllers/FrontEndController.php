@@ -283,4 +283,5 @@ class FrontEndController extends Controller
     {
         return $this->apiAuth->login($request);
     }
+
 }

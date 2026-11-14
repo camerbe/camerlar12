@@ -168,6 +168,7 @@ class AmpController extends Controller
         return view('index-amp', [
             'articles' => $paginated,
             'listItemArticles'=>$ldJson,
+            'firstArticle'=>$this->latestArticle(),
         ])->render();
         /*Cache::forget($cacheKey);
         return Cache::remember($cacheKey, now()->addHours(12), function ()
@@ -264,5 +265,15 @@ class AmpController extends Controller
             'listItemVideos'=>$ldJson,
 
         ])->render();
+    }
+    private function latestArticle()
+    {
+
+        return $this->decode($this->api->laUne())['data'] ?? [];
+
+    }
+    private function decode($response): array
+    {
+        return json_decode($response->getContent(), true);
     }
 }

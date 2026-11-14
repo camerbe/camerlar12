@@ -20,7 +20,8 @@
     $keyword=$article['keyword'];
     $modified_time=$today;
     $published_time=$articleDate;
-    $section=$article["sousrubrique"]["sousrubrique"];
+    //$section=$article["sousrubrique"]["sousrubrique"];
+    $section=\Illuminate\Support\Str::title($article["sousrubrique"]["sousrubrique"]);
     $rub=$article["rubrique"]["rubrique"];
     $author=$article["auteur"];
     $source=$article["source"];
