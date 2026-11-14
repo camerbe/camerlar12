@@ -17,7 +17,7 @@
         :author="$author?? ''"
         :source="$source?? ''"
         :publisher="$publisher?? ''"
-        :canonical="$canonical?? ''"
+        :canonical="$canonical?? url('/')"
         :georegion="$georegion ?? 'BE'"
         :geoplacename="$geoplacename ?? 'Belgique'"
         :hashtags="$hashtags ?? []"

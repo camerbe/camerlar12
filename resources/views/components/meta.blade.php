@@ -81,11 +81,19 @@
 <meta name="author" content="{{ $author }}">
 <link rel="publisher" href="https://www.camer.be">
 
-<!-- Canonical -->
-<link rel="canonical" href="{{ $canonical }}">
-@if($ampcanonical)
-<link rel="amphtml" href="{{ $ampcanonical }}">
+
+{{-- Canonical SEO --}}
+@if(!empty($canonical))
+    <link rel="canonical" href="{{ $canonical }}">
 @endif
+
+{{-- Lien vers la version AMP : uniquement sur la page classique --}}
+@if(!$isAmp && !empty($ampcanonical))
+    <link rel="amphtml" href="{{ $ampcanonical }}">
+@endif
+
+
+
 <link rel="preload" as="image" href="{{ $image }}" fetchpriority="high">
 
 {{-- JSON-LD --}}
