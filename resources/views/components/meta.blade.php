@@ -88,7 +88,7 @@
 @endif
 
 {{-- Lien vers la version AMP : uniquement sur la page classique --}}
-@if(!$isAmp)
+@if(!$isAmp && !empty($ampcanonical))
     <link rel="amphtml" href="{{ $ampcanonical }}">
 @endif
 

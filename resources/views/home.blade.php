@@ -13,6 +13,7 @@
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
     $section=\Illuminate\Support\Str::title($heroArticle["sousrubrique"]["sousrubrique"]);
     $canonical=url()->current();
+    $ampcanonical = url('amp' . parse_url($canonical, PHP_URL_PATH).'/accueil');
     $source=$heroArticle["source"];
     $modified_time=$now=now()->format('Y-m-d\TH:i:s+00:00');
     $published_time=\Carbon\Carbon::parse($heroArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
@@ -20,7 +21,7 @@
     $geoplacename=$heroArticle["countries"]["pays"];
     $isJson4listItem=true;
     $isJson4article=false;
-
+    
 
 @endphp
 <x-layouts.app
@@ -33,6 +34,7 @@
     :keyword="$keyword"
     :section="$section"
     :canonical="$canonical"
+    :ampcanonical="$ampcanonical"
     :source="$source"
     :modified_time="$modified_time"
     :published_time="$published_time"
