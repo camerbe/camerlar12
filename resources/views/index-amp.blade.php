@@ -4,16 +4,17 @@
     $dynamicDescription .="À la une : {$firstArticle['titre']}";
     $dynamicDescription = mb_substr($dynamicDescription, 0, 155, 'UTF-8') . '…';
 
-    //dd($firstArticle);
-    //$title=\App\Helpers\Helper::getTitle($firstArticle["countries"]["pays"],$firstArticle["titre"],$firstArticle["countries"]["country"]);
+    $img=\App\Helpers\Helper::extractImgSrc($firstArticle["image"]) ;
+    $mimeType=\App\Helpers\Helper::getImageMimeType($img) ;
+    $arrImgDimension=\App\Helpers\Helper::getImageDimensions($img);
     $title='Actualités Cameroun, Info & Analyse – Politique, Sport, Diaspora | Camer.be';
     $description=$dynamicDescription;
     $rub=$firstArticle["rubrique"]["rubrique"];
     $sousrub=$firstArticle["sousrubrique"]["sousrubrique"];
     //$image=url('assets/img/camer-logo.png');
     $image=$firstArticle["image_url"];
-    $image_width=$heroArticle['image_width'] ?? "300";
-    $image_height=$heroArticle['image_height'] ?? "300";
+    $image_width=$firstArticle['image_width'] ?? $arrImgDimension["width"];
+    $image_height=$firstArticle['image_height'] ?? $arrImgDimension["height"];
 
     //$image_width=190;
     //$image_height=52;
