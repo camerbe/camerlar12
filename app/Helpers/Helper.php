@@ -237,15 +237,15 @@ class Helper
         $path = $parsed['path'] ?? '';
         // Remove only leading /amp or /amp/
         $path = preg_replace('#^/amp(/|$)#', '/', $path);
-
+        $path = preg_replace('#/accueil/?$#', '/', $path);
         // Normalize double slashes
         $path = preg_replace('#//+#', '/', $path);
-        return ($parsed['scheme'] ?? 'http') . '://' .
+        return($parsed['scheme'] ?? 'http') . '://' .
             ($parsed['host'] ?? '') .
             (isset($parsed['port']) ? ':' . $parsed['port'] : '') .
             $path .
             (isset($parsed['query']) ? '?' . $parsed['query'] : '') .
-            (isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '');
+            (isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '') ;
     }
 
     public static function extractFromParagraph(?string $html): ?string
