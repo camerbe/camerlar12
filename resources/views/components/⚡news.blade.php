@@ -60,7 +60,7 @@ new class extends Component
         // Une seule requête (ou lecture de cache) par rendu, partagée
         // par tous les Computed ci-dessous. Le cache fixe évite de
         // refaire la requête complète à chaque clic "Charger plus".
-        return Cache::remember('home.articles', now()->addMinutes(10), function () {
+        return Cache::remember('home.articles', now()->addMinutes(5), function () {
             return collect(app(ArticleService::class)->getArticles());
         });
     }

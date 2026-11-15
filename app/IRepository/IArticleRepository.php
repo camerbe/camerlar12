@@ -20,5 +20,6 @@ interface IArticleRepository
     function getSportArticle();
     function getRubriqueArticles($fksousrubrique,$fkrubrique);
     function getOneRubriqueArticles($fksousrubrique,$fkrubrique);
+    function getUrlByHashtag(string $hashtag, int $excludeId): ?string;
 
 }

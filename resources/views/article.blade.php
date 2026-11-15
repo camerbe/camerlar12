@@ -68,6 +68,7 @@
         <livewire:article
                 :jld="$ldjson"
                 :oneArticle="$oneArticle"
+                :arrHash="$arrHash"
                 :plusLus="$plusLus"
                 :sameRubrique="$sameRubrique"
                 :debat="$debat"

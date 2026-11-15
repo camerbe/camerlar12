@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\api\V1\ArticleController;
 use App\Http\Controllers\api\V1\AuthController;
 use App\Http\Controllers\api\V1\EvenementController;
@@ -22,6 +23,7 @@ class FrontEndController extends Controller
     protected $video;
     protected $pub;
     protected $event;
+    protected $articleService;
     protected $collectionPageSchema;
 
     private ?array $layoutData = null;
@@ -33,6 +35,8 @@ class FrontEndController extends Controller
         AuthController $apiAuth,
         CollectionPageSchema $collectionPageSchema,
         EvenementController $event,
+        ArticleService $articleService,
+
     ) {
         $this->api = $api;
         $this->video = $video;
@@ -40,6 +44,7 @@ class FrontEndController extends Controller
         $this->apiAuth = $apiAuth;
         $this->event = $event;
         $this->collectionPageSchema = $collectionPageSchema;
+        $this->articleService=$articleService;
 
         // Toutes les données du layout ne sont chargées qu'au moment où une
         // vue est réellement rendue (une réponse sans vue — redirect, abort,
@@ -185,12 +190,27 @@ class FrontEndController extends Controller
                 )['data'] ?? [];
             }
         );
+        $hashs   = Helper::nettoyerHashtags(explode(',', $oneArticle['keyword']));
+        $arrHash=[];
+        if(count($hashs)>0)
+        {
+
+            foreach ($hashs as $hash){
+                $url = $this->articleService->getUrlByHashtag("#" . $hash, (int) $oneArticle["id"]);
+                if ($url) {
+                    $arrHash[$hash] = $url;
+                }
+            }
+
+        }
+
 
         return view('article', [
             'slug'         => $oneArticle['slug'],
             'oneArticle'   => $oneArticle,
             'plusLus'      => $plusLus,
             'sameRubrique' => $sameRubrique,
+            'arrHash'      => $arrHash,
             'ldjson'       => $this->collectionPageSchema->newsArticle($oneArticle),
         ]);
     }

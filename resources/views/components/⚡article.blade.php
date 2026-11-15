@@ -38,6 +38,7 @@ new class extends Component
     protected $share = [];
     protected $section;
     protected $lang;
+    protected array $arrHash = [];
 
     public function mount(
         $oneArticle,
@@ -51,6 +52,8 @@ new class extends Component
         $infomaniak = null,
         $skypper = null,
         $event = null,
+        $arrHash = null,
+
 
     ) {
         $this->article = $oneArticle;
@@ -64,6 +67,7 @@ new class extends Component
         $this->infomaniak  = $infomaniak;
         $this->skypper = $skypper;
         $this->event   = $event;
+        $this->arrHash   = $arrHash;
 
         $this->hash   = Helper::nettoyerHashtags(explode(',', $oneArticle['keyword']));
         $this->titre  = $oneArticle['titre'];
@@ -312,9 +316,9 @@ new class extends Component
                 {!! $this->info !!}
 
                 <div class="flex flex-wrap items-center gap-2 mb-8">
-                    @if(count($this->hash) > 0)
-                        @foreach($this->hash as $hash)
-                            <a href="{{url()->current()}}" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition">#{{$hash}}</a>
+                    @if(count($this->arrHash) > 0)
+                        @foreach($this->arrHash as $hash=>$url)
+                           <a href="/{{$url}}" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-brand-500 hover:text-white transition">#{{$hash}}</a>
                         @endforeach
                     @endif
                 </div>

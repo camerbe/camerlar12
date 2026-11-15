@@ -99,4 +99,9 @@ class ArticleService
     function getFlashArticles(int $limit){
         return $this->articleRepository->getFlashArticles($limit);
     }
+
+    function getUrlByHashtag(string $hashtag, int $excludeId): ?string
+    {
+        return $this->articleRepository->getUrlByHashtag($hashtag,$excludeId);
+    }
 }

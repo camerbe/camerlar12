@@ -557,4 +557,47 @@ class ArticleRepository extends Repository implements IArticleRepository
     }
 
 
+    function getUrlByHashtag(string $hashtag, int $excludeId): ?string
+    {
+        // Nettoyage : on retire le # et les opérateurs du mode BOOLEAN
+        $tag = ltrim(trim($hashtag), '#');
+        $tag = preg_replace('/[+\-<>()~*"@]+/u', ' ', $tag);
+        $tag = trim(preg_replace('/\s+/u', ' ', $tag));
+
+        if (mb_strlen($tag) < 3) {
+            return null; // FULLTEXT ignore les mots de moins de 3 caractères
+        }
+
+        // On met en cache les 2 plus récents (id + URL déjà construite) :
+        // une seule entrée par tag, quel que soit l'article exclu.
+        $candidates = $this->remember(
+            'hashtag_url_' . md5(mb_strtolower($tag)),
+            now()->addMinutes(30),
+            fn () => Article::query()
+                ->published()                       // inclut déjà RELATIONS
+                ->whereRaw('MATCH(keyword) AGAINST (? IN BOOLEAN MODE)', ['"' . $tag . '"'])
+                ->whereNotNull('slug')
+                ->where('slug', '<>', '')
+                ->orderByDesc('dateparution')
+                ->limit(2)
+                ->get()
+                ->map(fn ($item) => [
+                    'id'  => (int) $item->idarticle,
+                    'url' => Helper::makeUrl(
+                        $item['rubrique']['rubrique'],
+                        $item['sousrubrique']['sousrubrique'],
+                        $item['slug']
+                    ),
+                ])
+                ->all()
+        );
+
+        foreach ($candidates as $candidate) {
+            if ($candidate['id'] !== $excludeId) {
+                return $candidate['url'];
+            }
+        }
+
+        return null;
+    }
 }
