@@ -22,6 +22,7 @@
     $geoplacename=$heroArticle["countries"]["pays"];
     $isJson4listItem=true;
     $isJson4article=false;
+    $ogType="website";
 @endphp
 
 <x-layouts.app
@@ -45,6 +46,7 @@
     :isJson4listItem="$isJson4listItem"
     :listElements="$listItemArticles"
     :isAmp="false"
+    :og-type="$ogType"
 >
     <div>
         <livewire:rubrique-article

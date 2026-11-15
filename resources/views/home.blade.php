@@ -6,10 +6,15 @@
 
     $title='Actualités Cameroun, Info & Analyse – Politique, Sport, Diaspora | Camer.be';
     $description=$dynamicDescription;
+    //$image=$heroArticle["image_url"];
+    $image=\App\Helpers\Helper::extractImgSrc($heroArticle["image"]) ;
+    $mimeType=\App\Helpers\Helper::getImageMimeType($image) ;
+    $arrImgDimension=\App\Helpers\Helper::getImageDimensions($image);
     $image=$heroArticle["image_url"];
+
     $author=$heroArticle["auteur"];
-    $image_width=$heroArticle['image_width'] ?? "300";
-    $image_height=$heroArticle['image_height'] ?? "300";
+    $image_width=$heroArticle['image_width'] ?? $arrImgDimension["width"];
+    $image_height=$heroArticle['image_height'] ??  $arrImgDimension["height"];
     $keyword="actualités cameroun en direct, info cameroun dernière minute, politique cameroun, sport camerounais, lions indomptables, diaspora camerounaise, économie cameroun, Douala, Yaoundé, revue de presse camerounaise, investir au cameroun";
     $section=\Illuminate\Support\Str::title($heroArticle["sousrubrique"]["sousrubrique"]);
     $canonical=url()->current();
@@ -21,7 +26,7 @@
     $geoplacename=$heroArticle["countries"]["pays"];
     $isJson4listItem=true;
     $isJson4article=false;
-
+    $ogType="website";
 
 @endphp
 <x-layouts.app
@@ -30,6 +35,7 @@
     :image="$image"
     :image_width="$image_width"
     :image_height="$image_height"
+    :image_type="$mimeType"
     :author="$author"
     :keyword="$keyword"
     :section="$section"
@@ -44,6 +50,7 @@
     :isJson4listItem="$isJson4listItem"
     :listElements="$listItemArticles"
     :isAmp="false"
+    :og-type="$ogType"
 >
     <div>
 

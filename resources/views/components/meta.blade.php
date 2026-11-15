@@ -30,6 +30,7 @@
     'listItemVideos'=>[],
     'jld'=>'[]',
     'isAmp' => false,
+    'ogType' => '',
 ])
 
 <!-- Primary Meta Tags -->
@@ -49,7 +50,7 @@
 <meta property="og:image:alt" content="{{ $title }}">
 <meta property="og:image:height" content="{{ $image_height }}">
 <meta property="og:image:width" content="{{ $image_width }}">
-<meta property="og:type" content="article">
+<meta property="og:type" content="{{ $ogType ?? 'article'}}">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:site_name" content="Camer.be">

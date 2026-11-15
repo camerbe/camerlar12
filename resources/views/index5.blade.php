@@ -20,6 +20,7 @@
     $published_time=\Carbon\Carbon::parse($heroArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
     $georegion =$heroArticle['fkpays'];
     $geoplacename=$heroArticle["countries"]["pays"];
+    $ogType="article";
 @endphp
 
 <x-layouts.app
@@ -40,6 +41,7 @@
     :georegion="$georegion"
     :geoplacename="$geoplacename"
     :isAmp="false"
+    :og-type="$ogType"
 >
     <div>
         <livewire:qui-sommes-nous

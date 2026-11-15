@@ -17,6 +17,7 @@
     $published_time=\Carbon\Carbon::parse($heroArticle['dateparution'])->format('Y-m-d\TH:i:s+00:00');
     $georegion =$heroArticle['fkpays'];
     $geoplacename=$heroArticle["countries"]["pays"];
+    $ogType="website";
 
     //dd($sopie);
 @endphp
@@ -34,6 +35,7 @@
     :published_time="$published_time"
     :georegion="$georegion"
     :geoplacename="$geoplacename"
+    :og-type="$ogType"
 >
     <div>
         <livewire:contact

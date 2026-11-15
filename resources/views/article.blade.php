@@ -31,7 +31,7 @@
     $wordCount=App\Helpers\Helper::countArticleCharacters($oneArticle["info"]);
     $hit=$oneArticle["hit"];
     $info=$oneArticle["info"];
-
+    $ogType="article";
 
 @endphp
 
@@ -62,6 +62,7 @@
     :info="$info"
     :jld="$ldjson"
     :isAmp="false"
+    :og-type="$ogType"
 
 >
     <div>

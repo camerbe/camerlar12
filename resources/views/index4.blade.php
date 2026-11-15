@@ -28,7 +28,7 @@
     //listItemVideos=$listItemVideos
     //dd($listItemVideos);
     $isVideo=true;
-
+    $ogType="website";
 @endphp
 
 <x-layouts.app
@@ -47,6 +47,7 @@
     :listItemVideos="$listItemVideos"
     :isVideo="$isVideo"
     :isAmp="false"
+    :og-type="$ogType"
 >
     <div>
         <livewire:video-list

@@ -21,6 +21,7 @@
     $georegion =$heroArticle['fkpays'];
     $geoplacename=$heroArticle["countries"]["pays"];
     $isJson4listItem=true;
+    $ogType="website";
 @endphp
 @if (!is_array($heroArticle ?? null))
     <x-layouts.app
@@ -60,6 +61,7 @@
     :isJson4listItem="$isJson4listItem"
     :listElements="$listItemArticles"
     :isAmp="false"
+    :og-type="$ogType"
 >
     <div>
         <livewire:author

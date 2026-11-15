@@ -31,6 +31,7 @@
     'listItemVideos'=>[],
     'rssFeeds' => [],
     'robots' => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    'og-type'=>''
 
 
 ])
@@ -82,6 +83,7 @@
             :listElements="$listElements"
             :listItemVideos="$listItemVideos"
             :isAmp=false
+            :og-type="$ogType"
         />
 
         <!-- Verif Bing -->
@@ -231,7 +233,7 @@
 
         @if (now()->lte($feroxEndDate))
             <script src="/ferox-floating.js?v=1"  defer></script>
-            
+
         @endif
         <!-- Ferox -->
 
