@@ -355,7 +355,7 @@ new class extends Component
                 <div>
                     <div class="text-sm font-bold text-gray-900 dark:text-white">{{$this->auteur}}</div>
                     <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                        <a href="{{config('app_url')}}/auteur/{{$this->auteur}}"
+                        <a href="{{config('app_url')}}/auteur/{{rawurlencode($this->auteur)}}"
                            class="hover:text-brand-500 dark:hover:text-brand-400 hover:underline transition-colors duration-200">
                             Retrouvez ses articles
                         </a>
