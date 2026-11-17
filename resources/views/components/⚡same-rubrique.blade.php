@@ -33,7 +33,7 @@ new class extends Component
     @endphp
     <article class="group flex flex-col bg-white dark:bg-dark-surface rounded-xl overflow-hidden border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-md transition-all">
         <a href="/{{$url}}" class="relative aspect-video overflow-hidden bg-gray-100">
-            <img src="{{$img}}" width="600" height="400" alt="Chantier de modernisation d'une route au Cameroun" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+            <img src="{{$img}}" width="600" height="400" alt="{{$titre}}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
             <span class="absolute top-3 left-3 bg-brand-500 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded shadow">{{$sousrubrique}}</span>
         </a>
         <div class="p-4 flex flex-col flex-1">
