@@ -1,4 +1,4 @@
-<div style="padding-top: 3px;padding-bottom: 3px;">
+<div style="padding-bottom: 4px;">
     <amp-ad
         width="300"
         height="250"

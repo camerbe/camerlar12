@@ -8,6 +8,12 @@
                       Illuminate\Support\Str::slug(strtolower($article['sousrubrique']['sousrubrique'])) . '/' .
                       $article['slug']);
     $description =$article['chapeau'];
+
+    $image=\App\Helpers\Helper::extractImgSrc($article["image"]) ;
+    $mimeType=\App\Helpers\Helper::getImageMimeType($image) ;
+    $arrImgDimension=\App\Helpers\Helper::getImageDimensions($image);
+    $image_width=$arrImgDimension["width"] ?? "1200";
+    $image_height=$arrImgDimension["height"] ?? "675";
     $jsonLdArticle= [
             "@context" => "https://schema.org",
             "@type" => "NewsArticle",
@@ -84,8 +90,8 @@
             alt="{{$article['titre']}}"
             class="full-bottom"
             src="{{$article['image_url']}}"
-            width="{{$article['image_width'] ?? 1200}}"
-            height="{{$article['image_height'] ?? 675}}"
+            width="{{$image_width}}"
+            height="{{$image_height}}"
             layout="responsive">
 
 
