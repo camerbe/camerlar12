@@ -12,6 +12,8 @@ use App\Http\Controllers\SitemapController;
 use App\Services\ArticleService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use UniSharp\LaravelFilemanager\Lfm;
+
 //use App\Livewire\Auth\ResetPassword;
 /*
 Route::get('/', function (ArticleService $articleService) {
@@ -47,7 +49,7 @@ Route::get('/', function (ArticleService $articleService) {
     |--------------------------------------------------------------------------
     */
     Route::group(['prefix' => 'laravel-filemanager'], function () {
-        \UniSharp\LaravelFilemanager\Lfm::routes();
+        Lfm::routes();
     })->middleware('auth:web');
     /*
     |--------------------------------------------------------------------------

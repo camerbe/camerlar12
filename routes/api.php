@@ -113,9 +113,6 @@ Route::prefix('sousrubriques')->controller(SousRubriqueController::class)->group
 
 
     });
-/*Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
 
-});*/
 
 

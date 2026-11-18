@@ -329,6 +329,7 @@ class ArticleRepository extends Repository implements IArticleRepository
             fn () => $this->toArray(
                 $this->published()
                     ->where('fksousrubrique',$fksousrubrique)
+                    ->where('idarticle','<>',$idarticle)
                     ->limit(10)
                     ->get()
             )
