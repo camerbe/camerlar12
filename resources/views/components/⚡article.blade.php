@@ -18,7 +18,7 @@ new class extends Component
     protected $camer;
     protected $sopie;
     protected $iframe;
-    protected $ifomaniak;
+    protected $infomaniak;
     protected $skypper;
     protected $event;
     protected $info;
